@@ -103,6 +103,8 @@ function validate_config($config) {
     exit;
   }
 
+  // TODO: LOTS MORE VALIDATION HERE!!!!
+
   // Generate a few capitalization variations
   $config['package'] = strtolower($config['package']);
   $config['PACKAGE'] = strtoupper($config['package']);

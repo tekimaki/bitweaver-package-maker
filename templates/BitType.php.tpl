@@ -66,10 +66,10 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 			'maintainer_url'      => 'http://www.bitweaver.org'
 {/if}{literal}		));
 		// Permission setup
+		$this->mAdminContentPerm   = 'p_{/literal}{$package}{literal}_admin';
 		$this->mViewContentPerm    = 'p_{/literal}{$render.class|lower}{literal}_view';
 		$this->mCreateContentPerm  = 'p_{/literal}{$render.class|lower}{literal}_create';
 		$this->mUpdateContentPerm  = 'p_{/literal}{$render.class|lower}{literal}_update';
-		$this->mAdminContentPerm   = 'p_{/literal}{$render.class|lower}{literal}_admin';
 		$this->mExpungeContentPerm = 'p_{/literal}{$render.class|lower}{literal}_expunge';
 	}
 
@@ -186,15 +186,7 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 			$pParamHash['{/literal}{$render.class|lower}{literal}_store']['content_id'] = $pParamHash['content_id'];
 		}
 
-		// check some lengths, if too long, then truncate
-		if( $this->isValid() && !empty( $this->mInfo['description'] ) && empty( $pParamHash['description'] ) ) {
-			// someone has deleted the description, we need to null it out
-			$pParamHash['{/literal}{$render.class|lower}{literal}_store']['description'] = '';
-		} else if( empty( $pParamHash['description'] ) ) {
-			unset( $pParamHash['description'] );
-		} else {
-			$pParamHash['{/literal}{$render.class|lower}{literal}_store']['description'] = substr( $pParamHash['description'], 0, 200 );
-		}
+		$this->validateFields($pParamHash);
 
 		if( !empty( $pParamHash['data'] ) ) {
 			$pParamHash['edit'] = $pParamHash['data'];
@@ -314,6 +306,55 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * previewFields prepares the fields in this type for preview
+	 */
+	function previewFields($pParamHash) {
+		prepVerify();
+		LibertyValidator::preview(
+			$this->mVerification,
+			$pParamHash[{/literal}{$render.class}{literal}],
+			$pParamHash['{/literal}{$render.class}{literal}_store']);
+	}
+
+	/**
+	 * validateFields validates the fields in this type
+	 */
+	function validateFields($pParamHash) {
+		prepVerify();
+		LibertyValidator::validate(
+			$this->mVerification,
+			$pParamHash[{/literal}{$render.class}{literal}],
+			$this, $pParamHash['{/literal}{$render.class}{literal}_store']);
+	}
+
+	/**
+	 * prepVerify prepares the object for input verification
+	 */
+	function prepVerify() {
+		if (empty($this->mVerification)) {
+{/literal}
+{foreach from=$render.fields key=fieldName item=field name=fields}
+{if !empty($field.validator)}
+			$this->mVerification['{$field.validator.type}']['{$fieldName}'] = array(
+{foreach from=$field.validator key=k item=v name=keys}
+{if $k != 'type'}
+				'{$k}' => {if is_array($v)}array(
+{foreach from=$v key=vk item=vv name=values}
+					{if is_numeric($vk)}{$vk}{else}'{$vk}'{/if} => '{$vv}'{if !$smarty.foreach.values.last},{/if}
+
+{/foreach}
+					){else}'{$v}'{/if}{if !$smarty.foreach.keys.last},{/if}
+
+{/if}
+{/foreach}
+			);
+{/if}
+{/foreach}
+{literal}
+		}
 	}
 }
 {/literal}
