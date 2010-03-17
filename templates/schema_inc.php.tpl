@@ -88,9 +88,11 @@ $gBitInstaller->registerPreferences( {/literal}{$PACKAGE}{literal}_PKG_NAME, arr
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_list_{$typeName}_id'               , 'y'              ),
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_title'            , 'y'              ),
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_summary'          , 'y'              ),
+{if $config.homeable}
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_home_id'               , 0                ),
 {if $smarty.foreach.types.first}
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_home_type'                    , 'bit{$typeName}'      ),
+{/if}
 {/if}
 {/foreach}{literal}
 ));

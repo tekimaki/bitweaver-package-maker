@@ -4,6 +4,7 @@ description: An example package to show the power of the pkgmkr package.
 version: 0.1
 requirements:
 	liberty: {min: 2.5.0}
+homeable: true
 types:
   sample:
     description: A sample class which shows the power of the pkgmkr package.
