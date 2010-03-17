@@ -1,0 +1,76 @@
+---
+admin homing ui: >
+
+  The admin UI for controlling package homing is not complete.
+
+index.php: >
+
+  The index.php needs to be updated to support multi type homing and lookup
+
+list/edit/display UI fields: >
+
+  We need to update the UI in the list edit and display parts to display
+  the fields in the type.
+
+field set support: >
+
+  It would be nice to suppport sub-maps of fields for one to many on
+  content types
+
+extra table support: >
+
+  Sometimes there is a need for extra tables beyond one to many from
+  content and we need to support sticking these in the schema_inc
+  somehow.
+
+more validators: >
+
+  We need to add support for validation by more types including:
+   - regexp
+   - url
+   - email
+   - choice
+
+validation messages: >
+
+  It would nice to be able to customize the error messages given back
+  by the validators.
+
+client side validation: >
+
+  It would be nice if the generator output client side javascript validation
+  when it was otputing the edit templates. No reason not to!
+
+preview support: >
+
+  Currently the preview support is not really there. We want this!
+
+YAML validation: >
+
+  We currently do almost no validation on the input YAML. This is very bad.
+
+service generation: >
+
+  We would like to be able to generate services as well as a portion
+  of a package.
+
+package modifications: >
+
+  We would like to support the hand modification of a package and
+  preservation of those changes on regeneration of a package.
+
+update script generation: >
+
+  Upon regeneration we would like to support the output of an update
+  script automatically so you can edit a package regenerate and run
+  the updater to pick up the new schema. This may require user intervention
+  sometimes but it would be nice to warn on that. There are a lot more
+  questions than answers still on supporting this. Do we need the old
+  YAML to do this properly?
+
+wrap it in a package: >
+
+  It would be nice to wrap the whole generator in a package so that
+  we have a nice UI for generating the YAML document that drives the
+  generator. This would allow non-developers to create new content types
+  and install them like some other well known CMSes.

@@ -1,0 +1,22 @@
+---
+what: Bitweaver Package Maker
+authors:
+  - Nick Palmer (nick@overtsolutions.com)
+license: LGPL http://www.gnu.org/copyleft/lesser.html
+about: >
+  This system is designed to generate bitweaver packages.
+
+  The basic idea is that we should be able to declare a package
+  using a YAML document and then use this document to generate
+  a new bitweaver package.
+
+  It is very much still a work in progress. See the TODO for things you can
+  do to help out.
+
+running: >
+
+  You can generate a sample package using the following:
+    - ./generate.php pkg_sample.yaml
+
+  This will create a folder with the name of the package which you
+  can then place in your bitweaver install and load.
