@@ -1,0 +1,89 @@
+---
+package: sample
+description: An example package to show the power of the pkgmkr package.
+version: 0.1
+requirements:
+	liberty: {min: 2.5.0}
+types:
+  sample:
+    description: A sample class which shows the power of the pkgmkr package.
+    class_name: BitSample
+    base_class: LibertyMime
+    base_package: liberty
+    maintainer_url: http://www.bitweaver.org
+    content_description: A Sample Data Type
+    fields:
+      field_var_char:
+        name: A Var Char Field
+        schema: {type: C, notnull: true, default: varchar}
+        validator: {type: string, required: true, max_length: 10}
+        field_var_char2:
+        name: Another Var Char Field
+        schema: {type: C, notnull: true, default: varchar}
+        validator: {type: choice, choices: [First Choice, Second Choice], multiple: false}
+      field_large_var_char: 
+        name: A large var char field
+        schema: {type: X}
+        validator: {type: regex, pattern: .*@.*, match_required: true}
+      field_mb_var_char: 
+        name: Multibyte Var Char Field
+        schema: {type: C2}
+        validator: {type: url}
+      field_large_mb_var_char: 
+        name: Large Multibyte Var Char Field
+        schema: {type: X2}
+        validator: {type: email}
+      field_blob: 
+        name: Blob Field
+        schema: {type: B}
+      field_date: 
+        name: Date Field
+        schema: {type: D}
+        validator: {type: date}
+      field_timestamp: 
+        name: Timestamp Field
+        schema: {type: T}
+        validator: {type: timestamp}
+      field_boolean: 
+        name: Boolean Field
+        schema: {type: L}
+        validator: {type: boolean} 
+      field_int: 
+        name: Int Field
+        schema: {type: I}
+        validator: {type: int, min: 1, max: 10}
+      field_byte: 
+        name: Byte Field
+        schema: {type: I1}
+      field_word: 
+        name: Word Field
+        schema:    {type: I2}
+      field_int4: 
+        name: Another Int Field
+        schema: {type: I4}
+      field_long: 
+        name: Long Field
+        schema: {type: I8}
+        validator: {type: long}
+      field_float:
+        name: Float Field
+        schema: {type: F}
+        validator: {type: float}
+      field_double: 
+        name: Double Field
+        schema: {type: N(6.2) }
+        validator: {type: double}
+    constraints:
+      - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample (sample_id)
+      - field_int_ref FOREIGN KEY (field_int) REFERENCES sample (sample_id)
+    defaults:
+      - "(field_long) VALUES ('1000')"
+tables:
+  sample_map:
+    description: A map table for mapping samples to each other
+    fields:
+      sample_left: {type: I, notnull: true}
+      sample_right: {type: I, notnull: true}
+    constraints:
+      - FOREIGN KEY (sample_left) REFERENCES sample (sample_id)
+      - FOREIGN KEY (sample_right) REFERENCES sample (sample_id)
