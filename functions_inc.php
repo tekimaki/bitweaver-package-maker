@@ -91,6 +91,10 @@ function render_file($dir, $file, $template, $config) {
   }
   
   fclose($handle);
+
+  if (preg_match("/.php$/", $filename)) {
+    lint_file($filename);
+  }
 }
 
 function validate_config($config) {
@@ -175,7 +179,7 @@ function generate_package($config) {
     
     foreach ($actions as $action => $files) {
       if ($action == "generate") {
-	generate_files($config, $dir, $files);
+	generate_files($config, $dir, $files);	
       } elseif ($action == "render") {
 	render_files($config, $dir, $files);
       } elseif ($action == "copy") {
@@ -185,5 +189,17 @@ function generate_package($config) {
 	exit;
       }
     }
+  }
+}
+
+function lint_file($filename) {
+  global $gVerbose;
+  if ($gVerbose) echo " ... verifying ...\n";
+
+  exec("php -l $filename", $output, $ret);
+  if ($ret != 0) {
+    echo "ERROR: The generated file: $filename is invalid.";
+    echo $output;
+    exit;
   }
 }
