@@ -14,7 +14,7 @@
  */
 
 global $gContent;
-require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'Bit{/literal}{$Package}{literal}.php');
+require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'{/literal}{$render.class_name}{literal}.php');
 require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
 
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.

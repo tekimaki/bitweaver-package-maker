@@ -19,7 +19,7 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
 
-require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$package}{literal}_inc.php' );
+require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$render.class}{literal}_inc.php' );
 
 // Now check permissions to access this page
 if( $gContent->isValid() ){
@@ -28,25 +28,27 @@ if( $gContent->isValid() ){
 	$gContent->verifyCreatePermission();
 }
 
-if( isset( $_REQUEST['{/literal}{$package}{literal}']["title"] ) ) {
-	$gContent->mInfo["title"] = $_REQUEST['{/literal}{$package}{literal}']["title"];
+// TODO: Move these! They should not be here
+if( isset( $_REQUEST['{/literal}{$render.class}{literal}']["title"] ) ) {
+	$gContent->mInfo["title"] = $_REQUEST['{/literal}{$render.class}{literal}']["title"];
 }
 
 if( isset( $_REQUEST['{/literal}{$package}{literal}']["description"] ) ) {
-	$gContent->mInfo["description"] = $_REQUEST['{/literal}{$package}{literal}']["description"];
+	$gContent->mInfo["description"] = $_REQUEST['{/literal}{$render.class}{literal}']["description"];
 }
 
 if( isset( $_REQUEST["format_guid"] ) ) {
 	$gContent->mInfo['format_guid'] = $_REQUEST["format_guid"];
 }
 
-if( isset( $_REQUEST['{/literal}{$package}{literal}']["edit"] ) ) {
-	$gContent->mInfo["data"] = $_REQUEST['{/literal}{$package}{literal}']["edit"];
+if( isset( $_REQUEST['{/literal}{$render.class}{literal}']["edit"] ) ) {
+	$gContent->mInfo["data"] = $_REQUEST['{/literal}{$render.class}{literal}']["edit"];
 	$gContent->mInfo['parsed_data'] = $gContent->parseData();
 }
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
+	// TODO: prepare preview here?
 	$gContent->invokeServices( 'content_preview_function' );
 } else {
 	$gContent->invokeServices( 'content_edit_function' );
@@ -54,12 +56,12 @@ if( isset( $_REQUEST["preview"] ) ) {
 
 // Pro
 // Check if the page has changed
-if( !empty( $_REQUEST["save_{/literal}{$package}{literal}"] ) ) {
+if( !empty( $_REQUEST["save_{/literal}{$render.class}{literal}"] ) ) {
 
 	// Check if all Request values are delivered, and if not, set them
 	// to avoid error messages. This can happen if some features are
 	// disabled
-	if( $gContent->store( $_REQUEST['{/literal}{$package}{literal}'] ) ) {
+	if( $gContent->store( $_REQUEST['{/literal}{$render.class}{literal}'] ) ) {
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	} else {
@@ -68,6 +70,6 @@ if( !empty( $_REQUEST["save_{/literal}{$package}{literal}"] ) ) {
 }
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$package}{literal}.tpl', tra('{/literal}{$Package}{literal}') , array( 'display_mode' => 'edit' ));
+$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$render.class}{literal}.tpl', tra('Edit {/literal}{$render.class|capitalize}{literal}') , array( 'display_mode' => 'edit' ));
 
 {/literal}
