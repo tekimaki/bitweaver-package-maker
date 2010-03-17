@@ -110,7 +110,7 @@ function validate_config($config) {
   $config['PACKAGE'] = strtoupper($config['package']);
   $config['Package'] = ucfirst(strtolower($config['package']));
 
-  print_r($config);
+  // print_r($config);
 
   return $config;
 }
