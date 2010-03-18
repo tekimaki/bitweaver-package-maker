@@ -19,22 +19,38 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
 
-// Check permissions to access this page before even try to get content
-$gBitSystem->verifyPermission( 'p_{/literal}{$package}{literal}_view' );
+$typeIds = array({/literal}
+{foreach from=$config.types key=typeName item=type name=types}
+		"{$typeName}_id"{if !$smarty.foreach.types.last},{/if}
+{/foreach}{literal}
+	);
 
-// Get the default content if none is requested 
-if( !isset( $_REQUEST['{/literal}{$package}{literal}_id'] ) ) {
-	$_REQUEST['{/literal}{$package}{literal}_id'] = $gBitSystem->getConfig( "{/literal}{$package}{literal}_home_id" );
+$requestType = NULL;
+foreach( $_REQUEST as $key => $val ) {
+	if (in_array($key, $typeIds)) {
+		$requestType = substr($key, 0, -3);
+		break;
+	}
 }
 
-// If there is a {/literal}{$package}{literal} id to get, specified or default, then attempt to get it and display
-if( !empty( $_REQUEST['{/literal}{$package}{literal}_id'] ) ) {
+if (empty($requestType)) {
+	// Use the home type and home content
+	$requestType = $gBitSystem->getConfig("{/literal}{$package}_home_type", "{foreach from=$config.types key=typeName item=type name=types}{if $smarty.foreach.types.first}{$typeName}{/if}{/foreach}{literal}");
+	$_REQUEST[$requestType.'_id'] = $gBitSystem->getConfig( "{/literal}{$package}{literal}_".$requestType."_home_id" );
+}
+
+// If there is an id to get, specified or default, then attempt to get it and display
+if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 	// Look up the content
-	require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$package}{literal}_inc.php' );
+	require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_'.$requestType.'_inc.php' );
 
 	if( !$gContent->isValid() ) {
+		// Check permissions to access this content in general
+		$gContent->verifyUserPermission( 'p_'.$requestType.'_view' );
+
+		// They are allowed to see that this does not exist.
 		$gBitSystem->setHttpStatus( 404 );
-		$gBitSystem->fatalError( tra( "The requested {/literal}{$package}{literal} (id=".$_REQUEST['{/literal}{$package}{literal}_id'].") could not be found." ) );
+		$gBitSystem->fatalError( tra( "The requested ".$typeName." (id=".$_REQUEST[$requestType.'_id'].") could not be found." ) );
 	}
 
 	// Now check permissions to access this content 
@@ -44,15 +60,15 @@ if( !empty( $_REQUEST['{/literal}{$package}{literal}_id'] ) ) {
 	$gContent->addHit();
 
 	// Display the template
-	$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/display_{/literal}{$package}{literal}.tpl', tra( '{/literal}{$Package}{literal}' ) , array( 'display_mode' => 'display' ));
+	$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/display_'.$requestType.'.tpl', htmlentities($gContent->getField('title', '{/literal}{$Package}{literal} '.ucfirst($requestType))) , array( 'display_mode' => 'display' ));
 
 } else if ( $gBitUser->hasPermission( 'p_{/literal}{$package}{literal}_admin' ) ) {
-    // Redirect to det up the default {/literal}{$package}{literal} data to display
+    // Redirect to set up the default {/literal}{$package}{literal} data to display
 	header( "Location: ".KERNEL_PKG_URL.'admin/index.php?page='.{/literal}{$PACKAGE}{literal}_PKG_NAME );
 
 } else {
 	$gBitSystem->setHttpStatus( 404 );
-	$gBitSystem->fatalError( tra( "The default {/literal}{$package}{literal} data has not been configured." ) );
+	$gBitSystem->fatalError( tra( "The default {/literal}{$package}{literal} page has not been configured." ) );
 }
 
 {/literal}

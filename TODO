@@ -1,12 +1,4 @@
 ---
-admin homing ui: >
-
-  The admin UI for controlling package homing is not complete.
-
-index.php: >
-
-  The index.php needs to be updated to support multi type homing and lookup
-
 list/edit/display UI fields: >
 
   We need to update the UI in the list edit and display parts to display
