@@ -33,6 +33,8 @@ class LibertyValidator {
 			case 'time':
 				preview_times($vars, $pParamHash, $store);
 				break;
+			case 'null':
+				preview_null($vars, $pParamHash, $store);
 			default:
 				global $gBitSystem;
 				$gBitSystem->fatalError("Unsupported validation type: ".$type);
@@ -68,11 +70,28 @@ class LibertyValidator {
 			case 'time':
 				validate_times($vars, $pParamHash, $pObject, $store);
 				break;
+			case 'null':
+				validate_null($vars, $pParamHash, $pObject, $store);
+				break;
 			default:
 				global $gBitSystem;
 				$gBitSystem->fatalError("Unsupported validation type: ".$type);
 				break;
 			}
+		}
+	}
+
+	function preview_null(&$pVars, &$pParamHash, &$pStore) {
+		 foreach( $pVars as $var ) {
+		 	  $pStore[$var] = isset($pParamHash[$var]) ? 
+				$pParamHash[$var] : NULL;
+		}
+	}
+
+	function validate_null($pVars, &$pParamHash, &$pObject, &$store) {
+		 foreach( $pVars as $var ) {
+		 	  $pStore[$var] = isset($pParamHash[$var]) ? 
+				$pParamHash[$var] : NULL;
 		}
 	}
 
