@@ -1,4 +1,4 @@
----
+S---
 package: sample
 description: An example package to show the power of the pkgmkr package.
 version: 0.1
@@ -16,11 +16,11 @@ types:
     fields:
       field_var_char:
         name: A Var Char Field
-        schema: {type: C, notnull: true, default: varchar}
+        schema: {type: C(128), notnull: true, default: varchar}
         validator: {type: string, required: true, max_length: 10}
         field_var_char2:
         name: Another Var Char Field
-        schema: {type: C, notnull: true, default: varchar}
+        schema: {type: C(128), notnull: true, default: varchar}
         validator: {type: choice, choices: [First Choice, Second Choice], multiple: false}
       field_large_var_char: 
         name: A large var char field
@@ -28,7 +28,7 @@ types:
         validator: {type: regex, pattern: .*@.*, match_required: true}
       field_mb_var_char: 
         name: Multibyte Var Char Field
-        schema: {type: C2}
+        schema: {type: C2(128)}
         validator: {type: url}
       field_large_mb_var_char: 
         name: Large Multibyte Var Char Field
@@ -75,8 +75,8 @@ types:
         schema: {type: N(6.2) }
         validator: {type: double}
     constraints:
-      - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample (sample_id)
-      - field_int_ref FOREIGN KEY (field_int) REFERENCES sample (sample_id)
+      - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample_data (sample_id)
+      - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
     defaults:
       - "(field_long) VALUES ('1000')"
 tables:
