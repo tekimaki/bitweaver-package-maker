@@ -337,6 +337,7 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 		if (empty($this->mVerification)) {
 {/literal}
 {foreach from=$render.fields key=fieldName item=field name=fields}
+	 		/* Validation for {$fieldName} */
 {if !empty($field.validator)}
 			$this->mVerification['{$field.validator.type}']['{$fieldName}'] = array(
 {foreach from=$field.validator key=k item=v name=keys}
@@ -351,6 +352,8 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 {/if}
 {/foreach}
 			);
+{else}
+			$this->mVerification['null']['{$fieldName}'] = TRUE;
 {/if}
 {/foreach}
 {literal}
