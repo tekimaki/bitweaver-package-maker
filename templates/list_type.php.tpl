@@ -36,7 +36,7 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		$formHash['delete'] = TRUE;
 		$formHash['submit_mult'] = 'remove_{/literal}{$package}{literal}_data';
 		foreach( $_REQUEST["checked"] as $del ) {
-			$tmpPage = new {/literal}{$render.class_name}{literal}( $del);
+			$tmpPage = new {/literal}{$render.class_name}{literal}($del);
 			if ( $tmpPage->load() && !empty( $tmpPage->mInfo['title'] )) {
 				$info = $tmpPage->mInfo['title'];
 			} else {

@@ -14,8 +14,6 @@
 	<div class="header">
 		<h1>{$gContent->mInfo.title|escape|default:"{/literal}{$render.class|capitalize}{literal}"}</h1>
 
-		TODO: Other fields here!
-
 		<div class="date">
 			{tr}Created by{/tr}: {displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name}, {tr}Last modification by{/tr}: {displayname user=$gContent->mInfo.modifier_user user_id=$gContent->mInfo.modifier_user_id real_name=$gContent->mInfo.modifier_real_name}, {$gContent->mInfo.last_modified|bit_long_datetime}
 		</div>
@@ -24,7 +22,17 @@
 	<div class="body">
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
+
+{/literal}
+{foreach from=$render.fields key=fieldName item=field name=fields}
+			<div class="row {$fieldName}">
+			     {$field.name|capitalize}:&nbsp;{ldelim}$gContent->getField('{$fieldName}')|escape{rdelim}
+			</div>
+{/foreach}
+{literal}
+
 			{$gContent->mInfo.parsed_data}
+
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .{/literal}{$render.class}{literal} -->

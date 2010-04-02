@@ -23,6 +23,7 @@
 */
 
 require_once( {/literal}{$render.base_package|upper}{literal}_PKG_PATH.'{/literal}{$render.base_class}{literal}.php' );
+require_once( PKGMKR_PKG_PATH . 'LibertyValidator.php' );
 
 /**
 * This is used to uniquely identify the object
@@ -312,10 +313,10 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 	 * previewFields prepares the fields in this type for preview
 	 */
 	function previewFields($pParamHash) {
-		prepVerify();
+		$this->prepVerify();
 		LibertyValidator::preview(
 			$this->mVerification,
-			$pParamHash[{/literal}{$render.class}{literal}],
+			$pParamHash['{/literal}{$render.class}{literal}'],
 			$pParamHash['{/literal}{$render.class}{literal}_store']);
 	}
 
@@ -323,10 +324,10 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 	 * validateFields validates the fields in this type
 	 */
 	function validateFields($pParamHash) {
-		prepVerify();
+		$this->prepVerify();
 		LibertyValidator::validate(
 			$this->mVerification,
-			$pParamHash[{/literal}{$render.class}{literal}],
+			$pParamHash['{/literal}{$render.class}{literal}'],
 			$this, $pParamHash['{/literal}{$render.class}{literal}_store']);
 	}
 
@@ -340,6 +341,7 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 	 		/* Validation for {$fieldName} */
 {if !empty($field.validator)}
 			$this->mVerification['{$field.validator.type}']['{$fieldName}'] = array(
+                               'name' => '{$fieldName}',
 {foreach from=$field.validator key=k item=v name=keys}
 {if $k != 'type'}
 				'{$k}' => {if is_array($v)}array(

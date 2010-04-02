@@ -34,8 +34,18 @@
 								<input type="text" size="50" name="{/literal}{$render.class}{literal}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
+{/literal}
+{foreach from=$render.fields key=fieldName item=field name=fields}
+						<div class="row {$sample.class}_{$fieldName}">
+							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
+							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
+							{ldelim}forminput{rdelim}
+							{include file="bitpackage:pkgmkr/edit_field.tpl"}
 
-						TODO: OTHER FIELDS HERE
+							{ldelim}/forminput{rdelim}
+						</div>
+{/foreach}
+{literal}
 
 						{textarea name="{/literal}{$render.class}{literal}[edit]"}{$gContent->mInfo.data}{/textarea}
 
@@ -48,7 +58,22 @@
 						</div>
 					{/legend}
 				{/jstab}
+{/literal}
+{if $render.attachments}
+{literal}
+				{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
+					{jstab title="Attachments"}
+						<div class=row>
+						{legend legend="Attachments"}
+							{include file="bitpackage:liberty/edit_storage.tpl"}
 
+						{/legend}
+						</div>
+					{/jstab}
+				{/if}
+{/literal}
+{/if}
+{literal}
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl"}
 			{/jstabs}

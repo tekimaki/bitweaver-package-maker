@@ -47,31 +47,31 @@ class LibertyValidator {
 		foreach($pVars as $type => $vars) {
 			switch($type) {
 			case 'string':
-				validate_strings($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_strings($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'int':
 			case 'long':
-				validate_integers($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_integers($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'real':
 			case 'float':
 			case 'double':
-				validate_reals($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_reals($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'boolean':
-				validate_booleans($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_booleans($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'phone':
-				validate_phones($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_phones($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'date':
-				validate_dates($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_dates($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'time':
-				validate_times($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_times($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'null':
-				validate_null($vars, $pParamHash, $pObject, $store);
+				LibertyValidator::validate_null($vars, $pParamHash, $pObject, $store);
 				break;
 			default:
 				global $gBitSystem;

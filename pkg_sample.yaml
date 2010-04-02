@@ -13,11 +13,13 @@ types:
     base_package: liberty
     maintainer_url: http://www.bitweaver.org
     content_description: A Sample Data Type
+    attachments: true
     fields:
       field_var_char:
         name: A Var Char Field
         schema: {type: C(128), notnull: true, default: varchar}
         validator: {type: string, required: true, max_length: 10}
+        smarty: {start_year: +1}
       field_var_char2:
         name: Another Var Char Field
         schema: {type: C(128), notnull: true, default: varchar}
@@ -62,6 +64,7 @@ types:
       field_int4: 
         name: Another Int Field
         schema: {type: I4}
+        validator: {type: time}
       field_long: 
         name: Long Field
         schema: {type: I8}
