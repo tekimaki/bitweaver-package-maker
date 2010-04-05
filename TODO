@@ -56,3 +56,7 @@ wrap it in a package: >
   we have a nice UI for generating the YAML document that drives the
   generator. This would allow non-developers to create new content types
   and install them like some other well known CMSes.
+
+smarty validator generation: >
+
+  Length should not be required if it can be infered from the schema.

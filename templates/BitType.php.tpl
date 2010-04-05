@@ -343,9 +343,9 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 		$ret = NULL;
 		if( @$this->isValid() ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
-				$ret = {/literal}{$render.class|upper}{literal}_PKG_URL.$this->m{/literal}{$render.class|capitalize}{literal}Id;
+				$ret = {/literal}{$PACKAGE}_PKG_URL.{if empty($render.rewrite_path)}{$render.class}{else}{$render.rewrite_path}{/if}/$this->m{$render.class|capitalize}{literal}Id;
 			} else {
-				$ret = {/literal}{$render.class|upper}{literal}_PKG_URL."index.php?{/literal}{$render.class|lower}{literal}_id=".$this->m{/literal}{$render.class|capitalize}{literal}Id;
+				$ret = {/literal}{$PACKAGE}{literal}_PKG_URL."index.php?{/literal}{$render.class|lower}{literal}_id=".$this->m{/literal}{$render.class|capitalize}{literal}Id;
 			}
 		}
 		return $ret;
