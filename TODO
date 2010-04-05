@@ -41,11 +41,6 @@ service generation: >
   We would like to be able to generate services as well as a portion
   of a package.
 
-package modifications: >
-
-  We would like to support the hand modification of a package and
-  preservation of those changes on regeneration of a package.
-
 update script generation: >
 
   Upon regeneration we would like to support the output of an update
