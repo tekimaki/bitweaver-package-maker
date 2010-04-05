@@ -19,11 +19,17 @@
 						<th>{smartlink ititle="{/literal}{$render.class|capitalize}{literal} Id" isort={/literal}{$render.class}_id{literal} offset=$control.offset iorder=desc idefault=1}</th>
 					{/if}
 
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}__list_title{literal}' ) eq 'y'}
+					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_title{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 					{/if}
 
-					TODO: other list fields here!
+{/literal}
+{foreach from=$render.fields key=fieldName item=field name=fields}
+	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$render.class}_list_{$fieldName}' ) eq 'y'{rdelim}
+						<th>{ldelim}smartlink ititle="{$field.name|capitalize}" isort={$fieldName} offset=$control.offset{rdelim}</th>
+					{ldelim}/if{rdelim}
+{/foreach}
+{literal}
 
 					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_summary{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
@@ -32,18 +38,26 @@
 					<th>{tr}Actions{/tr}</th>
 				</tr>
 
-				{foreach item={/literal}{$render.class}{literal} from=${/literal}{$render.class}{literal}List}
+				{foreach item=dataItem from=${/literal}{$render.class}{literal}List}
 					<tr class="{cycle values="even,odd"}">
 						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$render.class}_id{literal}' )}
-							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$render.class}_id{literal}={${/literal}{$render.class}{literal}.{/literal}{$render.class}{literal}_id|escape:"url"}" title="{${/literal}{$render.class}{literal}.{/literal}{$render.class}{literal}_id}">{${/literal}{$render.class}{literal}.{/literal}{$render.class}{literal}_id}</a></td>
+							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$render.class}_id{literal}={$dataItem.{/literal}{$render.class}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$render.class}{literal}_id}">{$dataItem.{/literal}{$render.class}{literal}_id}</a></td>
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_title{literal}' )}
-							<td>{${/literal}{$render.class}{literal}.title|escape}</td>
+							<td>{$dataItem.title|escape}</td>
 						{/if}
 
+{/literal}
+{foreach from=$render.fields key=fieldName item=field name=fields}
+	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$render.class}_list_{$fieldName}' ) eq 'y'{rdelim}
+							   <td>{ldelim}$dataItem.{$fieldName}|{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}</td>
+						{ldelim}/if{rdelim}
+{/foreach}
+{literal}
+
 						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_summary{literal}' )}
-							<td>{${/literal}{$package}{literal}.summary|escape}</td>
+							<td>{$dataItem.summary|escape}</td>
 						{/if}
 
 
@@ -52,7 +66,7 @@
 							{smartlink ititle="Edit" ifile="{/literal}edit_{$render.class}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$render.class}_id=${$render.class}.{$render.class}_id{literal}}
 						{/if}
 						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$render.class}_expunge{literal}' )}
-							<input type="checkbox" name="checked[]" title="{${/literal}{$render.class}{literal}.title|escape}" value="{${/literal}{$render.class}.{$render.class}_id{literal}}" />
+							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{${/literal}{$render.class}.{$render.class}_id{literal}}" />
 						{/if}
 						</td>
 					</tr>

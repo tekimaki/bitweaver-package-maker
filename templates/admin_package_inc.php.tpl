@@ -24,9 +24,12 @@ $form{$typeName}Lists = array(
 		'label' => 'Title',
 		'note' => 'Display the title.',
 	),
-
-	// TODO: Other fields here
-
+{foreach from=$type.fields key=fieldName item=field name=fields}
+        "{$package}_{$typeName}_list_{$fieldName}" => array(
+                'label' => '{$fieldName|capitalize}',
+		'note' => 'Display the {$fieldName}',
+	),
+{/foreach}
 	"{$package}_{$typeName}_list_summary" => array(
 		'label' => 'Text',
 		'note' => 'Display the summary.',
