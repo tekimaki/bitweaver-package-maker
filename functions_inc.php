@@ -79,14 +79,15 @@ function render_file($dir, $file, $template, $config) {
      	if (is_readable($filename)) {
 	   if ($contents = file_get_contents($filename)) {
 	      $count = preg_match_all(
-	      	      '|\s*'
-		      .'/\* =-=- CUSTOM BEGIN: ([^\s]*) -=-= \*/'
+	      	      '@\s*'
+		      .'(?:/\*|#|\{\*) =-=- CUSTOM BEGIN: ([^\s]*) -=-= (?:\*/|#|\{\*)'
 		      .'(.*)'
-		      .'/\* =-=- CUSTOM END: \1 -=-= \*/\s*'
-		      .'|ms'
+		      .'(?:/\*|#|\{\*) =-=- CUSTOM END: \1 -=-= (?:\*/|#|\*\})'
+		      .'@ms'
 		      ,
 		      $contents,
 		      $matches);
+              // print_r($matches);
 	      if ($count > 0) {
 		  $customBlock = array();
 		  foreach($matches[1] as $id => $field) {
@@ -105,41 +106,88 @@ function render_file($dir, $file, $template, $config) {
      }
   }
 
-  if (!$handle = fopen($filename, 'w+')) {
-    echo "Cannot open file ($filename)";
-    exit;
-    }
-  
   // Get the contents of the file from smarty
   $content = $gBitSmarty->fetch('bitpackage:pkgmkr/'.$template);
-  
-  // Write $somecontent to our opened file.
-  if (fwrite($handle, $content) === FALSE) {
-    echo "Cannot write to file ($filename)";
-    exit;
-  }
-  
-  fclose($handle);
+  if (!empty($content)) {
+    if (!$handle = fopen($filename, 'w+')) {
+      echo "Cannot open file ($filename)";
+      exit;
+    }
 
-  if (preg_match("/.php$/", $filename)) {
-    lint_file($filename);
+    // Write $content to our opened file.
+    if (fwrite($handle, $content) === FALSE) {
+      echo "Cannot write to file ($filename)";
+      exit;
+    }
+  
+    fclose($handle);
+
+    if (preg_match("/.php$/", $filename)) {
+      lint_file($filename);
+    }
+  } else {
+    echo "Error generating file: $filename\n";
+    exit;
   }
 }
 
 function validate_config($config) {
   if (empty($config['package'])) {
-    echo "A package is required.";
+    echo "A package is required.\n";
     exit;
   }
 
+  if (empty($config['description'])) {
+    echo "A description is required.\n";
+    exit;
+  }
+
+  if (empty($config['version'])) {
+    echo "A version number is required.\n";
+    exit;
+  }
+  
+  foreach ($config['types'] as $typeName => $type) {
+    if (empty($type['description'])) {
+      echo "A description is required for $typeName\n";
+      exit;
+    }
+    if (empty($type['class_name'])) {
+      echo "A class name is required for $typeName\n";
+      exit;
+    }
+    if (empty($type['base_class'])) {
+      echo "A base class is required for $typeName\n";
+      exit;
+    }
+    if (empty($type['base_package'])) {
+      echo "A base package is required for $typeName\n";
+      exit;
+    }
+    if (empty($type['content_description'])) {
+      echo "A content description is required for $typeName\n";
+      exit;
+    }
+    foreach ($type['fields'] as $fieldName => $field) {
+      if (empty($field['schema'])) {
+        echo "A schema is required for field $fieldName in type $typeName\n";
+	exit;
+      }
+      if (empty($field['schema']['type'])) {
+        echo "A type is required in the schema for field $fieldName in type $typeName\n";
+	exit;
+      }
+    }
+  }
+
   // TODO: LOTS MORE VALIDATION HERE!!!!
+
+  //  print_r($config);
 
   // Generate a few capitalization variations
   $config['package'] = strtolower($config['package']);
   $config['PACKAGE'] = strtoupper($config['package']);
   $config['Package'] = ucfirst(strtolower($config['package']));
-
-  // print_r($config);
 
   return $config;
 }
