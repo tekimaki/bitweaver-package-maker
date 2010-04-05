@@ -1,4 +1,4 @@
-<?php
+\<?php
 /**
  * $Header: $
  *
@@ -74,7 +74,33 @@ function render_file($dir, $file, $template, $config) {
   $filename = $dir."/".$file;
   if ($gVerbose) echo " ".$filename."\n";
 
-  // TODO: Read the old contents first!
+  if (file_exists($filename)) {
+     if (is_file($filename)) {
+     	if (is_readable($filename)) {
+	   if ($contents = file_get_contents($filename)) {
+	      $count = preg_match_all(
+	      	      '|\s*'
+		      .'/\* =-=- CUSTOM BEGIN -=-= \*/\s*'
+		      .'(.*)'
+		      .'/\* =-=- CUSTOM END -=-= \*/\s*'
+		      .'|ms'
+		      ,
+		      $contents,
+		      $matches);
+	      if ($count == 1) {
+	          global $gBitSmarty;
+	          $gBitSmarty->assign('customBlock', $matches[1][0]);	      
+	      }
+	   } else {
+	     echo "Unable to read old file: $filename";
+	     exit;
+	   }
+	}
+     } else {
+       echo "$filename exists but is not a file!";
+       exit;
+     }
+  }
 
   if (!$handle = fopen($filename, 'w+')) {
     echo "Cannot open file ($filename)";
