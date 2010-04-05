@@ -1,9 +1,4 @@
 ---
-list/edit/display UI fields: >
-
-  We need to update the UI in the list edit and display parts to display
-  the fields in the type.
-
 field set support: >
 
   It would be nice to suppport sub-maps of fields for one to many on
