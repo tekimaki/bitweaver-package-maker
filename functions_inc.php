@@ -1,4 +1,4 @@
-\<?php
+<?php
 /**
  * $Header: $
  *
@@ -80,16 +80,19 @@ function render_file($dir, $file, $template, $config) {
 	   if ($contents = file_get_contents($filename)) {
 	      $count = preg_match_all(
 	      	      '|\s*'
-		      .'/\* =-=- CUSTOM BEGIN -=-= \*/\s*'
+		      .'/\* =-=- CUSTOM BEGIN: ([^\s]*) -=-= \*/'
 		      .'(.*)'
-		      .'/\* =-=- CUSTOM END -=-= \*/\s*'
+		      .'/\* =-=- CUSTOM END: \1 -=-= \*/\s*'
 		      .'|ms'
 		      ,
 		      $contents,
 		      $matches);
-	      if ($count == 1) {
-	          global $gBitSmarty;
-	          $gBitSmarty->assign('customBlock', $matches[1][0]);	      
+	      if ($count > 0) {
+		  $customBlock = array();
+		  foreach($matches[1] as $id => $field) {
+		      $customBlock[$field] = substr($matches[2][$id], 1, -3);
+		  }
+		  $gBitSmarty->assign('customBlock', $customBlock);
 	      }
 	   } else {
 	     echo "Unable to read old file: $filename";

@@ -13,6 +13,16 @@
  * @subpackage class
  */
 
+/* 
+   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   Portions of this file are modifiable
+
+   Anything between the CUSTOM BEGIN: and CUSTOM END:
+   comments will be preserved on regeneration of this
+   file.
+   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
+
 /**
 * {/literal}{$render.class_name}{literal} class
 * {/literal}{$render.description}{literal}
@@ -200,7 +210,15 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 			$this->mErrors['title'] = 'You must enter a title for this {/literal}{$render.class|lower}{literal}.';
 		}
 
-		$this->customVerify($pParamHash);
+{/literal}
+		/* =-=- CUSTOM BEGIN: verify -=-= */
+{if !empty($customBlock.verify)}
+{$customBlock.verify}
+{else}
+
+{/if}
+		/* =-=- CUSTOM END: verify -=-= */
+{literal}
 
 		return( count( $this->mErrors )== 0 );
 	}
@@ -214,9 +232,20 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 	function expunge() {
 		global $gBitSystem;
 		$ret = FALSE;
-		if( $this->isValid() && $this->canExpunge() ) {
+		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
-			$this->customExpunge();
+
+{/literal}
+
+			/* =-=- CUSTOM BEGIN: expunge -=-= */
+{if !empty($customBlock.expunge)}
+{$customBlock.expunge}
+{else}
+
+{/if}
+			/* =-=- CUSTOM END: expunge -=-= */
+{literal}
+
 			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$render.class|lower}{literal}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyMime::expunge() ) {
@@ -257,7 +286,15 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 		array_push( $bindVars, $this->mContentTypeGuid );
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-		$this->customGetList($pParamHash, $bindVars, $selectSql, $joinSql, $whereSql);
+{/literal}
+		/* =-=- CUSTOM BEGIN: getList -=-= */
+{if !empty($customBlock.getList)}
+{$customBlock.getList}
+{else}
+
+{/if}
+		/* =-=- CUSTOM END: getList -=-= */
+{literal}
 
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
@@ -367,42 +404,15 @@ class {/literal}{$render.class_name}{literal} extends {/literal}{$render.base_cl
 		}
 	}
 
-	/* 
-	   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-	   User Modifiable Functions to add Custom Code
-
-	   Anything between the CUSTOM BEGIN and CUSTOM END
-	   comments will be preserved on regeneration of this
-	   file.
-	   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-	*/
 {/literal}
-	/* =-=- CUSTOM BEGIN -=-= */
-{if empty($customBlock)}
-	function customVerify(&$pParamHash) 
-	{ldelim}
-
-	{rdelim}
-
-	function canExpunge() 
-	{ldelim}
-	    return TRUE;
-	{rdelim}
-
-	function customExpunge() 
-	{ldelim}
-
-	{rdelim}
-
-	function customGetList(&$pParamHash, &$bindVars, 
-		 &$selectSql, &$joinSql, &$whereSql) 
-	{ldelim}
-
-	{rdelim}
+	/* This section is for any helper methods you wish to create */
+	/* =-=- CUSTOM BEGIN: methods -=-= */
+{if !empty($customBlock.methods)}
+{$customBlock.methods}
 {else}
-{$customBlock}
+
 {/if}
-	/* =-=- CUSTOM END -=-= */
+	/* =-=- CUSTOM END: methods -=-= */
 {literal}
 }
 {/literal}
