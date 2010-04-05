@@ -21,7 +21,7 @@ $tables = array(
 		content_id I4 NOTNULL,
 {/if}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-                {$fieldName} {$field.schema.type}{if !empty($field.schema.notnull)} NOTNULL{/if}{if !empty($field.schema.default)} DEFAULT '{$field.schema.default}'{/if}{if !$smarty.foreach.fields.last},{/if}
+                {$fieldName} {$field.schema.type}{if !empty($field.schema.notnull)} NOTNULL{/if}{if !empty($field.schema.default)} DEFAULT '{$field.schema.default}'{/if}{if !empty($field.schema.unique)} UNIQUE{/if}{if !$smarty.foreach.fields.last},{/if}
 
 {/foreach}{if !empty($type.constraints) || $type.base_package == "liberty"}
 	        CONSTRAINT '

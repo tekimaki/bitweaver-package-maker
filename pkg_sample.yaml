@@ -17,7 +17,7 @@ types:
     fields:
       field_var_char:
         name: A Var Char Field
-        schema: {type: C(128), notnull: true, default: varchar}
+        schema: {type: C(128), notnull: true, default: varchar, unique: true}
         validator: {type: string, required: true, max_length: 10}
         smarty: {start_year: +1}
       field_var_char2:
