@@ -35,6 +35,9 @@ preview support: >
 YAML validation: >
 
   We currently do almost no validation on the input YAML. This is very bad.
+  It would be nice to abstract this in some way so that the generator was
+  generic and didn't know it was rendering a bitweaver package so we could
+  use it to generate other repetitive things.
 
 service generation: >
 
