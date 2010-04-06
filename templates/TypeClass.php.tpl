@@ -1,12 +1,11 @@
 {literal}<?php
 /**
  * $Header: $
- *
- * Copyright (c) 2010 bitweaver.org
- * Copyright (c) 2010 nick palmer@overtsolutions.com
- *
+ *{/literal}
+{foreach from=$config.copyright item=copyright} * Copyright (c) {$copyright.year} {$copyright.name} {$copyright.contact}
+{/foreach}{literal} *
  * All Rights Reserved. See below for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
+ * {/literal}{if $config.license}{$config.license.description} {if $config.license.url}See {$config.license.url} for details{/if}{/if}{literal}
  *
  * $Id: $
  * @package {/literal}{$package|lower}{literal}

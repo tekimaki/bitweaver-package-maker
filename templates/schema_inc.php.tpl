@@ -5,7 +5,7 @@
 {foreach from=$config.copyright item=copyright} * Copyright (c) {$copyright.year} {$copyright.name} {$copyright.contact}
 {/foreach}{literal} *
  * All Rights Reserved. See below for details and a complete list of authors.
- * {/literal}{if $config.license}Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details{/if}{literal}
+ * {/literal}{if $config.license}{$config.license.description} {if $config.license.url}See {$config.license.url} for details{/if}{/if}{literal}
  *
  * $Id: $
  * @package {/literal}{$package}{literal}
@@ -25,7 +25,7 @@ $tables = array(
 {/foreach}{if !empty($type.constraints) || $type.base_package == "liberty"}
 	        CONSTRAINT '
 {if $type.base_package == "liberty"}
-                , CONSTRAINT `{$typeName}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+                , CONSTRAINT `{$typeName}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `liberty_content` (`content_id`)
 {/if}
 {foreach from=$type.constraints item=constraint}
 		, CONSTRAINT {$constraint}
@@ -44,7 +44,7 @@ foreach( array_keys( $tables ) AS $tableName ) {
 
 $gBitInstaller->registerPackageInfo( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 	'description' => "{/literal}{$config.description}{literal}",
-	{/literal}{if $config.license}'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',{/if}{literal}
+	{/literal}{if $config.license}'license' => '{if $config.license.url}<a href="{$config.license.url}">{/if}{$config.license.name}{if $config.license.url}</a>{/if}',{/if}{literal}
 ));
 
 // $indices = array();
@@ -61,7 +61,7 @@ $gBitInstaller->registerSchemaSequences( {/literal}{$PACKAGE}{literal}_PKG_NAME,
 $defaults = array(
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
 {foreach from=$type.defaults item=default}
-	"INSERT INTO `".BIT_DB_PREFIX."{$typeName}_data` {$default}"{if !$smarty.foreach.types.last},{/if}
+	"INSERT INTO `{$typeName}_data` {$default}"{if !$smarty.foreach.types.last},{/if}
 {/foreach}{/foreach}{literal}
 );
 if (count($defaults) > 0) {

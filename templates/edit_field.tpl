@@ -7,11 +7,11 @@
 		{/foreach}
 	    </select>
     {elseif $field.validator.type=="date"}
-    	    {ldelim}html_select_date prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}"{/foreach} {rdelim}
+    	    {ldelim}html_select_date prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}" {/foreach} {rdelim}
     {elseif $field.validator.type=="time"}
-    	    {ldelim}html_select_time prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}"{/foreach} {rdelim}
+    	    {ldelim}html_select_time prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}" {/foreach} {rdelim}
     {elseif $field.validator.type=="timestamp"}
-    	    {ldelim}html_select_date prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}"{/foreach} {rdelim}{ldelim}html_select_time prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}"{/foreach} {rdelim}
+    	    {ldelim}html_select_date prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}" {/foreach} {rdelim}{ldelim}html_select_time prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}"{/foreach} {rdelim}
     {elseif $field.validator.type=="boolean"}
     	    <input type="checkbox" id="{$fieldName}" name="{$fieldName}" {ldelim}if $gContent->getField("{$fieldName}"){rdelim}checked="checked"{ldelim}/if{rdelim}/>
     {elseif $field.validator.type=="int" || $field.validator.type=="long"}
