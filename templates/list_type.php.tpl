@@ -7,7 +7,7 @@ require_once( '../kernel/setup_inc.php' );
 $gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
 
 // Look up the content
-require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$package}{literal}_inc.php' );
+require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$type.name}{literal}_inc.php' );
 
 // Now check permissions to access this page
 $gContent->verifyViewPermission();

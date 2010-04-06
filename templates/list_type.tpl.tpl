@@ -50,8 +50,8 @@
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
-							   <td>{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}</td>
+	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
+								<td>{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}{rdelim}</td>
 						{ldelim}/if{rdelim}
 {/foreach}
 {literal}
