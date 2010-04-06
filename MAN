@@ -40,7 +40,15 @@ features:
   templates:
     label: Templates
     description: How to use and build templates
-    sections:
+    sections: > 
+
+      common_vars are variables which are available in all
+      templates. type_vars are variables which are only available in
+      type render mode and are set with the contents of the type
+      node being rendered. per_type_vars are available in either mode in
+      the type hash. That is $config.types.$key.name in package mode is
+      the same as $type.name in type mode and both will be equal to $key.
+
     common_vars:
       config: Contains the entire hash generated from a pkg_foo.yaml definition file including the types array
       package: The lower case package name
@@ -48,7 +56,9 @@ features:
       PACKAGE: The upper case package name, generally for constant definitions
     type_vars:
       type: A hash of "type" data as defined under 'types"' in the pkg_foo.yaml definition file
+    per_type_vars:
       name: Currently this is auto generated from each types: key: value, it is lowercase
       class_name: This is optional in the yaml definition file, and if not set will be auto generated as 'Bit'.ucfirst($type.name)
+
 
 
