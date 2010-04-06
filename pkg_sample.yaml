@@ -5,13 +5,12 @@ version: 0.1
 requirements:
 	liberty: {min: 2.5.0}
 homeable: true
+maintainer_url: http://www.bitweaver.org
 types:
   sample:
     description: A sample class which shows the power of the pkgmkr package.
-    class_name: BitSample
     base_class: LibertyMime
     base_package: liberty
-    maintainer_url: http://www.bitweaver.org
     content_description: A Sample Data Type
     attachments: true
     fields:
