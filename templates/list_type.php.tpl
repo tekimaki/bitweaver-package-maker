@@ -24,11 +24,11 @@ require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$package
 // Now check permissions to access this page
 $gContent->verifyViewPermission();
 
-// Remove {/literal}{$render.class}{literal} data if we don't want them anymore
-if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{/literal}{$render.class}{literal}_data" ) {
+// Remove {/literal}{$type.name}{literal} data if we don't want them anymore
+if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{/literal}{$type.name}{literal}_data" ) {
 
 	// Now check permissions to remove the selected {/literal}{$package}{literal} data
-	$gBitSystem->verifyPermission( 'p_{/literal}{$render.class}{literal}_expunge' );
+	$gBitSystem->verifyPermission( 'p_{/literal}{$type.name}{literal}_expunge' );
 
 	if( !empty( $_REQUEST['cancel'] ) ) {
 		// user cancelled - just continue on, doing nothing
@@ -36,7 +36,7 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		$formHash['delete'] = TRUE;
 		$formHash['submit_mult'] = 'remove_{/literal}{$package}{literal}_data';
 		foreach( $_REQUEST["checked"] as $del ) {
-			$tmpPage = new {/literal}{$render.class_name}{literal}($del);
+			$tmpPage = new {/literal}{$type.class_name}{literal}($del);
 			if ( $tmpPage->load() && !empty( $tmpPage->mInfo['title'] )) {
 				$info = $tmpPage->mInfo['title'];
 			} else {
@@ -52,7 +52,7 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		);
 	} else {
 		foreach( $_REQUEST["checked"] as $deleteId ) {
-			$tmpPage = new {/literal}{$render.class_name}{literal}( $deleteId );
+			$tmpPage = new {/literal}{$type.class_name}{literal}( $deleteId );
 			if( !$tmpPage->load() || !$tmpPage->expunge() ) {
 				array_merge( $errors, array_values( $tmpPage->mErrors ) );
 			}
@@ -63,15 +63,15 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 	}
 }
 
-// Create new {/literal}{$render.class_name}{literal} object
-$obj = new {/literal}{$render.class_name}{literal}();
+// Create new {/literal}{$type.class_name}{literal} object
+$obj = new {/literal}{$type.class_name}{literal}();
 $list = $obj->getList( $_REQUEST );
-$gBitSmarty->assign_by_ref( '{/literal}{$render.class}{literal}List', $list );
+$gBitSmarty->assign_by_ref( '{/literal}{$type.name}{literal}List', $list );
 
 // getList() has now placed all the pagination information in $_REQUEST['listInfo']
 $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$render.class}.tpl{literal}', tra( 'List {/literal}{$render.class|capitalize}{literal}' ) , array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( 'List {/literal}{$type.name|capitalize}{literal}' ) , array( 'display_mode' => 'list' ));
 
 {/literal}

@@ -1,9 +1,9 @@
 {literal}{strip}
 <div class="floaticon">{bithelp}</div>
 
-<div class="listing {/literal}{$package} {$render.class}{literal}">
+<div class="listing {/literal}{$package} {$type.name}{literal}">
 	<div class="header">
-		<h1>{tr}{/literal}{$render.class|capitalize}{literal} Records{/tr}</h1>
+		<h1>{tr}{/literal}{$type.name|capitalize}{literal} Records{/tr}</h1>
 	</div>
 
 	<div class="body">
@@ -15,58 +15,58 @@
 
 			<table class="data">
 				<tr>
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$render.class}_id{literal}' ) eq 'y'}
-						<th>{smartlink ititle="{/literal}{$render.class|capitalize}{literal} Id" isort={/literal}{$render.class}_id{literal} offset=$control.offset iorder=desc idefault=1}</th>
+					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' ) eq 'y'}
+						<th>{smartlink ititle="{/literal}{$type.name|capitalize}{literal} Id" isort={/literal}{$type.name}_id{literal} offset=$control.offset iorder=desc idefault=1}</th>
 					{/if}
 
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_title{literal}' ) eq 'y'}
+					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 					{/if}
 
 {/literal}
-{foreach from=$render.fields key=fieldName item=field name=fields}
-	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$render.class}_list_{$fieldName}' ) eq 'y'{rdelim}
+{foreach from=$type.fields key=fieldName item=field name=fields}
+	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
 						<th>{ldelim}smartlink ititle="{$field.name|capitalize}" isort={$fieldName} offset=$control.offset{rdelim}</th>
 					{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_summary{literal}' ) eq 'y'}
+					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
 					{/if}
 
 					<th>{tr}Actions{/tr}</th>
 				</tr>
 
-				{foreach item=dataItem from=${/literal}{$render.class}{literal}List}
+				{foreach item=dataItem from=${/literal}{$type.name}{literal}List}
 					<tr class="{cycle values="even,odd"}">
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$render.class}_id{literal}' )}
-							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$render.class}_id{literal}={$dataItem.{/literal}{$render.class}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$render.class}{literal}_id}">{$dataItem.{/literal}{$render.class}{literal}_id}</a></td>
+						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' )}
+							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$type.name}_id{literal}={$dataItem.{/literal}{$type.name}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$type.name}{literal}_id}">{$dataItem.{/literal}{$type.name}{literal}_id}</a></td>
 						{/if}
 
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_title{literal}' )}
+						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' )}
 							<td>{$dataItem.title|escape}</td>
 						{/if}
 
 {/literal}
-{foreach from=$render.fields key=fieldName item=field name=fields}
-	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$render.class}_list_{$fieldName}' ) eq 'y'{rdelim}
+{foreach from=$type.fields key=fieldName item=field name=fields}
+	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$pacakge}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
 							   <td>{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}</td>
 						{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$render.class}_list_summary{literal}' )}
+						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' )}
 							<td>{$dataItem.summary|escape}</td>
 						{/if}
 
 
 						<td class="actionicon">
-						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$render.class}_update{literal}' )}
-							{smartlink ititle="Edit" ifile="{/literal}edit_{$render.class}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$render.class}_id=${$render.class}.{$render.class}_id{literal}}
+						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_update{literal}' )}
+							{smartlink ititle="Edit" ifile="{/literal}edit_{$type.name}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$type.name}_id=${$type.name}.{$type.name}_id{literal}}
 						{/if}
-						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$render.class}_expunge{literal}' )}
-							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{${/literal}{$render.class}.{$render.class}_id{literal}}" />
+						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
+							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{${/literal}{$type.name}.{$type.name}_id{literal}}" />
 						{/if}
 						</td>
 					</tr>
@@ -77,7 +77,7 @@
 				{/foreach}
 			</table>
 
-			{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$render.class}_expunge{literal}' )}
+			{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
 				<div style="text-align:right;">
 					<script type="text/javascript">/* <![CDATA[ check / uncheck all */
 						document.write("<label for=\"switcher\">{tr}Select All{/tr}</label> ");
@@ -86,7 +86,7 @@
 
 					<select name="submit_mult" onchange="this.form.submit();">
 						<option value="" selected="selected">{tr}with checked{/tr}:</option>
-						<option value="remove_{/literal}{$render.class}{literal}_data">{tr}remove{/tr}</option>
+						<option value="remove_{/literal}{$type.name}{literal}_data">{tr}remove{/tr}</option>
 					</select>
 
 					<noscript><div><input type="submit" value="{tr}Submit{/tr}" /></div></noscript>

@@ -1,26 +1,26 @@
 ---
 package: 
-  generate: 
+  package: 
     - .htaccess
     - index.php
     - bit_setup_inc.php
-  render:
+  type:
     - edit_type.php
     - list_type.php
     - remove_type.php
     - lookup_type_inc.php
-    - BitType.php
+    - TypeClass.php
 package/templates: 
-  generate: 
+  package: 
     - menu_package.tpl
     - admin_package.tpl
     - menu_package_admin.tpl
-  render:
+  type:
     - display_type.tpl
     - edit_type.tpl
     - list_type.tpl
 package/admin: 
-  generate: 
+  package: 
     - admin_package_inc.php
     - schema_inc.php
 package/icons: 

@@ -8,7 +8,6 @@ homeable: true
 types:
   sample:
     description: A sample class which shows the power of the pkgmkr package.
-    class_name: BitSample
     base_class: LibertyMime
     base_package: liberty
     maintainer_url: http://www.bitweaver.org

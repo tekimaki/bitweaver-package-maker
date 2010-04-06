@@ -19,9 +19,9 @@ function usage($argv) {
   die;
 }
 
-function convert_typename($file, $type) {
+function convert_typename($file, $type, $className) {
   $tmp_file = preg_replace("/type/", strtolower($type), $file);
-  return preg_replace("/Type/", ucfirst(strtolower($type)), $tmp_file);
+  return preg_replace("/TypeClass/", $className, $tmp_file);
 }
 
 function convert_packagename($file, $config) {
@@ -45,30 +45,30 @@ function copy_files($config, $dir, $files) {
   }
 }
 
-function render_files($config, $dir, $files) {
+function render_type_files($config, $dir, $files) {
   foreach($config['types'] as $type => $params) {    
     global $gBitSmarty;
-    $params['class'] = $type;
-    $gBitSmarty->assign('render', $params);
+    $params['name'] = $type;
+    $gBitSmarty->assign('type', $params);
     foreach ($files as $file) {
-      $pkg_file = convert_packagename(convert_typename($file, $type), $config);
+      $pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
       $template = $file.".tpl";
       // Render the file
-      render_file($dir, $pkg_file, $template, $config);
+      render_type_file($dir, $pkg_file, $template, $config);
     }
   }
 }
 
-function generate_files($config, $dir, $files) {
+function generate_package_files($config, $dir, $files) {
   foreach ($files as $file) {
     $pkg_file = convert_packagename($file, $config);
     $template = $file.".tpl";
     // Render the file
-    render_file($dir, $pkg_file, $template, $config);
+    render_type_file($dir, $pkg_file, $template, $config);
   }
 }
 
-function render_file($dir, $file, $template, $config) {
+function render_type_file($dir, $file, $template, $config) {
   global $gBitSmarty, $gVerbose;
   
   $filename = $dir."/".$file;
@@ -131,7 +131,7 @@ function render_file($dir, $file, $template, $config) {
   }
 }
 
-function validate_config($config) {
+function validate_config(&$config) {
   // TODO: Would be nice to genericize these checks
   // so that you would just modify a file in resources
   // to modify what is validated instead of writing code
@@ -153,12 +153,11 @@ function validate_config($config) {
   }
   
   foreach ($config['types'] as $typeName => $type) {
+    if (empty($type['class_name'])) {
+       $config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
+    }
     if (empty($type['description'])) {
       echo "A description is required for $typeName\n";
-      exit;
-    }
-    if (empty($type['class_name'])) {
-      echo "A class name is required for $typeName\n";
       exit;
     }
     if (empty($type['base_class'])) {
@@ -262,10 +261,10 @@ function generate_package($config) {
     }
     
     foreach ($actions as $action => $files) {
-      if ($action == "generate") {
-	generate_files($config, $dir, $files);	
-      } elseif ($action == "render") {
-	render_files($config, $dir, $files);
+      if ($action == "package") {
+	generate_package_files($config, $dir, $files);	
+      } elseif ($action == "type") {
+	render_type_files($config, $dir, $files);
       } elseif ($action == "copy") {
 	copy_files($config, $dir, $files);
       } else {
