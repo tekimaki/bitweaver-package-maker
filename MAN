@@ -31,8 +31,8 @@ features:
 	  package: The lower case package name
 	  Pacakge: The initcap case package name, generally for display purposes
 	  PACKAGE: The upper case package name, generally for constant definitions
-	  render: A hash of "type" data as defined under 'types"' in the pkg_foo.yaml definition file
-	  class: Currently this is auto generated from each types: key: value, it is lowercase
-	  class_name: This is defined in the yaml definition file, but in the future should be auto generated if not set from the types: key: value 
+	  type: A hash of "type" data as defined under 'types"' in a pkg_foo.yaml definition file
+	  name: A lowercase string of the content type name, Currently this is auto generated from each types: key: value, it is lowercase
+	  class_name: The class name for the type, this can  be defined in the yaml definition file for each types:, if none is provided it is dynamically generated from type.name value as Bit<TypeName> 
 
 
