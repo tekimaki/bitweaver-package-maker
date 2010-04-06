@@ -71,8 +71,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}{literal}			'handler_class'       => '{/literal}{$type.class_name}{literal}',
 			'handler_package'     => '{/literal}{$package}{literal}',
 			'handler_file'        => '{/literal}{$type.class_name}{literal}.php',
-{/literal}{if !empty($type.maintainer_url)}
-			'maintainer_url'      => '{$type.maintainer_url}'
+{/literal}{if !empty($config.maintainer_url)}
+			'maintainer_url'      => '{$config.maintainer_url}'
 {else}
 			'maintainer_url'      => 'http://www.bitweaver.org'
 {/if}{literal}		));
