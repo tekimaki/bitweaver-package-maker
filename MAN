@@ -1,0 +1,21 @@
+---
+features: Render Modes 
+  render: >
+    Render generates package wide files and resources such as the
+	bit_setup_inc.php file which sets up the pkg in bitweaver
+
+    In render mode all instance of type are replaced with one of the 
+	types: in the yaml and the data for the type is put in context 
+	as $render
+  generate: >
+  	Generate generates all files necessary for a content type class
+	such as the Class file and CRUD helper files.
+
+    In generate mode all instances of package are replaced by the 
+	package name from the yaml in the file name and then the yaml 
+	is put in context as $config
+  copy: >
+    Copy mode all instance of package are replaced by the package 
+	name from the yaml but the file is simply copied not run 
+	through smarty.
+
