@@ -132,6 +132,11 @@ function render_file($dir, $file, $template, $config) {
 }
 
 function validate_config($config) {
+  // TODO: Would be nice to genericize these checks
+  // so that you would just modify a file in resources
+  // to modify what is validated instead of writing code
+  // here. Would make the generator a more flexible code
+  // generator.
   if (empty($config['package'])) {
     echo "A package is required.\n";
     exit;
