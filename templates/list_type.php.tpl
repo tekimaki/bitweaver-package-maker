@@ -1,17 +1,5 @@
 {literal}<?php
-/**
- * $Header: $
- *
- * Copyright (c) 2010 bitweaver.org
- * Copyright (c) 2010 nick palmer@overtsolutions.com
- *
- * All Rights Reserved. See below for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
- *
- * $Id: $
- * @package {/literal}{$package}{literal}
- * @subpackage functions
- */
+{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
 
 require_once( '../kernel/setup_inc.php' );
 

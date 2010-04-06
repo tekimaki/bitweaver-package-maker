@@ -1,21 +1,9 @@
 {literal}<?php
-/**
- * $Header: $
- *
- * Copyright (c) 2010 bitweaver.org
- * Copyright (c) 2010 nick palmer@overtsolutions.com
- *
- * All Rights Reserved. See below for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
- *
- * $Id: $
- * @package {/literal}{$package}{literal}
- * @subpackage functions
- */
+{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
 
 global $gContent;
 require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'{/literal}{$type.class_name}{literal}.php');
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
+//require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
 
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.
 if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {

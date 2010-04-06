@@ -1,17 +1,6 @@
 {literal}<?php
-/**
- * $Header: $
- *
- * Copyright (c) 2010 bitweaver.org
- * Copyright (c) 2010 nick palmer@overtsolutions.com
- *
- * All Rights Reserved. See below for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
- *
- * $Id: $
- * @package {/literal}{$package}{literal}
- * @subpackage functions
- */
+{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
+
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
 require_once( {$PACKAGE}_PKG_PATH.'{$type.class_name}.php' );
 
