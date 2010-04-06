@@ -1,38 +1,54 @@
 ---
 features:
-  render_modes:
-    label: Render Modes 
-	description: How the package maker builds various files from a pkg description yaml file
-	sections:
-	  generate: >
-		Generate generates all files necessary for a content type class
-		such as the Class file and CRUD helper files.
+  rendering_process:
+    label: Rendering process
+    description: How the package maker builds various files from a pkg description yaml file based on the resources/files.yaml
+    structure: >
 
-		In generate mode all instances of $package are replaced by the 
-		package name from the yaml in the file name and then the yaml 
-		is put in context as $config
-	  render: >
-		Render generates package wide files and resources such as the
-		bit_setup_inc.php file which sets up the pkg in bitweaver
+      The resources/files.yaml files defines what templates will be
+      rendered and how. At the root level are the directories that
+      will be created. For each directory there is a list of
+      actions. Within each action there are a list of target files to
+      be generated.  For each action type some substitutions will be
+      done to the filename before the file is generated.
 
-		In render mode all instance of type are replaced with one of the 
-		types: in the yaml and the data for the type is put in context 
-		as $render
-	  copy: >
-		Copy mode all instance of package are replaced by the package 
-		name from the yaml but the file is simply copied not run 
-		through smarty.
+    actions:
+      type: >
+
+        Package generates all files necessary for a content type class
+        such as the Class file and CRUD helper files.
+
+        In generate mode all instances of $package are replaced by the
+        package name from the yaml in the file name and then the yaml
+        is put in context as $config
+
+        In package mode all instance of type are replaced with one of
+        the types: in the yaml and the data for the type is put in
+        context as $render
+
+      package: >
+
+        Type generates package wide files and resources such as the
+        bit_setup_inc.php file which sets up the pkg in bitweaver
+
+      copy: >
+
+        Copy mode all instance of package are replaced by the package
+        name from the yaml but the file is simply copied not run
+        through smarty.
+
   templates:
     label: Templates
-	description: How use and build templates
-	sections:
-    common_vars: >
-      config: Contains the entire hash generated from a pkg_foo.yaml definition file		
-	  package: The lower case package name
-	  Pacakge: The initcap case package name, generally for display purposes
-	  PACKAGE: The upper case package name, generally for constant definitions
-	  render: A hash of "type" data as defined under 'types"' in the pkg_foo.yaml definition file
-	  class: Currently this is auto generated from each types: key: value, it is lowercase
-	  class_name: This is defined in the yaml definition file, but in the future should be auto generated if not set from the types: key: value 
+    description: How to use and build templates
+    sections:
+    common_vars:
+      config: Contains the entire hash generated from a pkg_foo.yaml definition file including the types array
+      package: The lower case package name
+      Pacakge: The initcap case package name, generally for display purposes
+      PACKAGE: The upper case package name, generally for constant definitions
+    type_vars:
+      type: A hash of "type" data as defined under 'types"' in the pkg_foo.yaml definition file
+      name: Currently this is auto generated from each types: key: value, it is lowercase
+      class_name: This is optional in the yaml definition file, and if not set will be auto generated as 'Bit'.ucfirst($type.name)
 
 
