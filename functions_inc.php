@@ -19,6 +19,21 @@ function usage($argv) {
   die;
 }
 
+function error($message, $fatal=TRUE) {
+  echo $message;
+  echo "\n";
+  if ($fatal)
+    die;
+}
+
+function message($message) {
+  global $gVerbose;
+  if ($gVerbose) {
+    echo $message;
+    echo "\n";
+  }
+}
+
 function convert_typename($file, $type, $className) {
   $tmp_file = preg_replace("/type/", strtolower($type), $file);
   return preg_replace("/TypeClass/", $className, $tmp_file);
@@ -30,17 +45,14 @@ function convert_packagename($file, $config) {
 }  
 
 function copy_files($config, $dir, $files) {
-  global $gVerbose;
-
   foreach ($files as $file) {
     $pkg_file = convert_packagename($file, $config);
     $filename = $dir."/".$pkg_file;
 
-    if ($gVerbose) echo " ".$filename."\n";
+    message(" ".$filename);
 
     if (!copy(RESOURCE_DIR.$file, $filename)) {
-      echo "Error copying file: $file";
-      exit;
+      error("Error copying file: $file");
     }
   }
 }
@@ -69,10 +81,10 @@ function generate_package_files($config, $dir, $files) {
 }
 
 function render_type_file($dir, $file, $template, $config) {
-  global $gBitSmarty, $gVerbose;
+  global $gBitSmarty;
   
   $filename = $dir."/".$file;
-  if ($gVerbose) echo " ".$filename."\n";
+  message(" ".$filename);
 
   if (file_exists($filename)) {
      if (is_file($filename)) {
@@ -96,13 +108,11 @@ function render_type_file($dir, $file, $template, $config) {
 		  $gBitSmarty->assign('customBlock', $customBlock);
 	      }
 	   } else {
-	     echo "Unable to read old file: $filename";
-	     exit;
+	     error("Unable to read old file: $filename");
 	   }
 	}
      } else {
-       echo "$filename exists but is not a file!";
-       exit;
+       error("$filename exists but is not a file!");
      }
   }
 
@@ -110,14 +120,12 @@ function render_type_file($dir, $file, $template, $config) {
   $content = $gBitSmarty->fetch('bitpackage:pkgmkr/'.$template);
   if (!empty($content)) {
     if (!$handle = fopen($filename, 'w+')) {
-      echo "Cannot open file ($filename)";
-      exit;
+      error("Cannot open file ($filename)");
     }
 
     // Write $content to our opened file.
     if (fwrite($handle, $content) === FALSE) {
-      echo "Cannot write to file ($filename)";
-      exit;
+      error("Cannot write to file ($filename)");
     }
   
     fclose($handle);
@@ -126,8 +134,7 @@ function render_type_file($dir, $file, $template, $config) {
       lint_file($filename);
     }
   } else {
-    echo "Error generating file: $filename\n";
-    exit;
+    error("Error generating file: $filename");
   }
 }
 
@@ -138,18 +145,15 @@ function validate_config(&$config) {
   // here. Would make the generator a more flexible code
   // generator.
   if (empty($config['package'])) {
-    echo "A package is required.\n";
-    exit;
+    error("A package is required.");
   }
 
   if (empty($config['description'])) {
-    echo "A description is required.\n";
-    exit;
+    error("A description is required.");
   }
 
   if (empty($config['version'])) {
-    echo "A version number is required.\n";
-    exit;
+    error("A version number is required.");
   }
   
   foreach ($config['types'] as $typeName => $type) {
@@ -157,29 +161,23 @@ function validate_config(&$config) {
        $config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
     }
     if (empty($type['description'])) {
-      echo "A description is required for $typeName\n";
-      exit;
+      error("A description is required for $typeName");
     }
     if (empty($type['base_class'])) {
-      echo "A base class is required for $typeName\n";
-      exit;
+      error("A base class is required for $typeName");
     }
     if (empty($type['base_package'])) {
-      echo "A base package is required for $typeName\n";
-      exit;
+      error("A base package is required for $typeName");
     }
     if (empty($type['content_description'])) {
-      echo "A content description is required for $typeName\n";
-      exit;
+      error("A content description is required for $typeName");
     }
     foreach ($type['fields'] as $fieldName => $field) {
       if (empty($field['schema'])) {
-        echo "A schema is required for field $fieldName in type $typeName\n";
-	exit;
+        error("A schema is required for field $fieldName in type $typeName");
       }
       if (empty($field['schema']['type'])) {
-        echo "A type is required in the schema for field $fieldName in type $typeName\n";
-	exit;
+        error("A type is required in the schema for field $fieldName in type $typeName");
       }
     }
   }
@@ -203,8 +201,7 @@ function check_args($argv) {
   if (is_file($argv[1])) {
     return validate_config(Spyc::YAMLLoad($argv[1]));
   }
-  echo "Not a readable file: " .$argv[1];
-  exit;
+  error("Not a readable file: " .$argv[1]);
 }
 
 function init_smarty($config) {
@@ -240,9 +237,8 @@ function inactivate_pkgmkr($off) {
 }
 
 function generate_package($config) {
-  global $gVerbose;
 
-  if ($gVerbose) echo "Generating package: ".$config['package']."\n";
+  message("Generating package: ".$config['package']);
 
   // Load the files we are to generate
   $gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'files.yaml');
@@ -255,8 +251,7 @@ function generate_package($config) {
     if (!is_dir($dir)) {
       echo " ".$dir."\n";
       if (!mkdir($dir)) {
-	echo "Could not create directory!";
-	exit;
+	error("Could not create directory!");
       }
     }
     
@@ -268,21 +263,18 @@ function generate_package($config) {
       } elseif ($action == "copy") {
 	copy_files($config, $dir, $files);
       } else {
-	echo "Unknown action: " . $action;
-	exit;
+	error("Unknown action: " . $action);
       }
     }
   }
 }
 
 function lint_file($filename) {
-  global $gVerbose;
-  if ($gVerbose) echo " ... verifying ...\n";
+  message(" ... verifying ...");
 
   exec("php -l $filename", $output, $ret);
   if ($ret != 0) {
-    echo "ERROR: The generated file: $filename is invalid.";
-    echo $output;
-    exit;
+    error("ERROR: The generated file: $filename is invalid.", FALSE);
+    error($output);
   }
 }
