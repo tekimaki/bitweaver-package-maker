@@ -1,12 +1,11 @@
 {literal}<?php
 /**
  * $Header: $
- *
- * Copyright (c) 2010 bitweaver.org
- * Copyright (c) 2010 nick palmer@overtsolutions.com
- *
+ *{/literal}
+{foreach from=$config.copyright item=copyright} * Copyright (c) {$copyright.year} {$copyright.name} {$copyright.contact}
+{/foreach}{literal} *
  * All Rights Reserved. See below for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
+ * {/literal}{if $config.license}Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details{/if}{literal}
  *
  * $Id: $
  * @package {/literal}{$package}{literal}
@@ -45,7 +44,7 @@ foreach( array_keys( $tables ) AS $tableName ) {
 
 $gBitInstaller->registerPackageInfo( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 	'description' => "{/literal}{$config.description}{literal}",
-	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
+	{/literal}{if $config.license}'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',{/if}{literal}
 ));
 
 // $indices = array();
