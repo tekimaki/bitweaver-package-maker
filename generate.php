@@ -38,7 +38,7 @@ $config = check_args($argv);
 init_smarty($config);
 
 // Generate the package
-generate_package($config);
+generate_package($config, BIT_ROOT_PATH );
 
 // Inactivate if we need to
 inactivate_pkgmkr($active);
