@@ -1,5 +1,5 @@
 {literal}{strip}
-{/literal}{include file="smarty_file_header.tpl}{literal}
+{/literal}{include file="bitpackage:pkgmkr/smarty_file_header.tpl}{literal}
 {form}
 	{jstabs}
 {* Are there homeable settings? *}

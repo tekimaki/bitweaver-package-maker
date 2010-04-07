@@ -1,4 +1,4 @@
-<?php /* -*- mode: foobar; nick: t; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+<?php /* -*- mode: foobar; nick: t; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2; -*- */
 /* vim:set ft=php ts=8 sw=4 sts=4 cindent: */
 /**
  * $Header: $
@@ -52,7 +52,7 @@ function copy_files($config, $dir, $files) {
 
     message(" ".$filename);
 
-    if (!copy(RESOURCE_DIR.$file, $filename)) {
+    if (!copy(PKGMKR_PKG_DIR.'/'.RESOURCE_DIR.$file, $filename)) {
       error("Error copying file: $file");
     }
   }
@@ -243,6 +243,10 @@ function generate_package($config) {
 
   // Load the files we are to generate
   $gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'files.yaml');
+
+  // Now change directory to BIT_ROOT_PATH to generate the package in
+  // the root of this install.
+  chdir(BIT_ROOT_PATH);
 
   // Now figure out the real directory and file names
   foreach ($gFiles as $file_dir => $actions) {

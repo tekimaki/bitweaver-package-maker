@@ -1,5 +1,5 @@
 {literal}{strip}
-{/literal}{include file="smarty_file_header.tpl}{literal}
+{/literal}{include file="bitpackage:pkgmkr/smarty_file_header.tpl}{literal}
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 <div class="display {/literal}{$package} {$type.name}{literal}">
 	<div class="floaticon">
