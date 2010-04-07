@@ -64,10 +64,10 @@
 
 						<td class="actionicon">
 						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_update{literal}' )}
-							{smartlink ititle="Edit" ifile="{/literal}edit_{$type.name}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$type.name}_id=${$type.name}.{$type.name}_id{literal}}
+							{smartlink ititle="Edit" ifile="{/literal}edit_{$type.name}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$type.name}_id=$dataItem.{$type.name}_id{literal}}
 						{/if}
 						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
-							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{${/literal}{$type.name}.{$type.name}_id{literal}}" />
+							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$data_item.{/literal}{$type.name}_id{literal}}" />
 						{/if}
 						</td>
 					</tr>
