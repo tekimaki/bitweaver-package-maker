@@ -5,7 +5,7 @@
 	<div class="floaticon">
 		{if $print_page ne 'y'}
 			{if $gContent->hasUpdatePermission()}
-				<a title="{tr}Edit this {/literal}{$type.name}{literal}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit {/literal}{$type.name|capitalize}{literal}"}</a>
+				<a title="{tr}Edit this {/literal}{$type.name}{literal}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit {/literal}{$type.name|capitalize}{literal}"}</a>
 			{/if}
 			{if $gContent->hasExpungePermission()}
 				<a title="{tr}Remove this {/literal}{$type.name}{literal}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}remove_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove {/literal}{$type.name|capitalize}{literal}"}</a>
