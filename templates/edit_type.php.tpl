@@ -16,46 +16,30 @@ if( $gContent->isValid() ){
 	$gContent->verifyCreatePermission();
 }
 
-// TODO: Move these! They should not be here
-if( isset( $_REQUEST['{/literal}{$type.name}{literal}']["title"] ) ) {
-	$gContent->mInfo["title"] = $_REQUEST['{/literal}{$type.name}{literal}']["title"];
-}
+// Check if the page has changed
+if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
+	// Editing requires general ticket verification
+	$gBitUser->verifyTicket();
 
-if( isset( $_REQUEST['{/literal}{$package}{literal}']["description"] ) ) {
-	$gContent->mInfo["description"] = $_REQUEST['{/literal}{$type.name}{literal}']["description"];
-}
-
-if( isset( $_REQUEST["format_guid"] ) ) {
-	$gContent->mInfo['format_guid'] = $_REQUEST["format_guid"];
-}
-
-if( isset( $_REQUEST['{/literal}{$type.name}{literal}']["edit"] ) ) {
-	$gContent->mInfo["data"] = $_REQUEST['{/literal}{$type.name}{literal}']["edit"];
-	$gContent->mInfo['parsed_data'] = $gContent->parseData();
+	if( $gContent->store( $_REQUEST ) ) {
+		header( "Location: ".$gContent->getDisplayUrl() );
+		die;
+	} else {
+		// if store fails set preview 
+		$_REQUEST['preview'] = TRUE;
+		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
+	}
 }
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
-	// TODO: prepare preview here?
+	$gContent->preparePreview( $_REQUEST );
 	$gContent->invokeServices( 'content_preview_function' );
+	$gBitSmarty->assign( 'preview', TRUE );
 } else {
 	$gContent->invokeServices( 'content_edit_function' );
 }
 
-// Pro
-// Check if the page has changed
-if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
-
-	// Check if all Request values are delivered, and if not, set them
-	// to avoid error messages. This can happen if some features are
-	// disabled
-	if( $gContent->store( $_REQUEST['{/literal}{$type.name}{literal}'] ) ) {
-		header( "Location: ".$gContent->getDisplayUrl() );
-		die;
-	} else {
-		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
-	}
-}
 
 // Display the template
 $gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));

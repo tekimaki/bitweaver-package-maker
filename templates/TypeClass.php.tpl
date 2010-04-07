@@ -116,6 +116,49 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		return( count( $this->mInfo ) );
 	}
 
+    /**
+    * Deal with text and images, modify them apprpriately that they can be returned to the form.
+    * @param $pParamHash data submitted by form - generally $_REQUEST
+    * @return array of data compatible with edit form
+    * @access public
+    **/
+	function preparePreview( &$pParamHash ){
+        global $gBitSystem, $gBitUser;
+
+        if( empty( $this->mInfo['user_id'] ) ) {
+            $this->mInfo['user_id'] = $gBitUser->mUserId;
+            $this->mInfo['creator_user'] = $gBitUser->getField( 'login' );
+            $this->mInfo['creator_real_name'] = $gBitUser->getField( 'real_name' );
+        }
+
+        $this->mInfo['creator_user_id'] = $this->mInfo['user_id'];
+
+        if( empty( $this->mInfo['created'] ) ){
+            $this->mInfo['created'] = $gBitSystem->getUTCTime();
+        }
+
+		$this->previewFields($pParamHash);
+
+		/* @TODO not sure if this should be in here or will be handled by previewFields
+        if( isset( $pParamHash['{/literal}{$type.name}{literal}']]["title"] ) ) {
+            $this->mInfo["title"] = $pParamHash['{/literal}{$type.name}{literal}']["title"];
+        }
+
+        if( isset( $pParamHash['{/literal}{$type.name}{literal}']]["summary"] ) ) {
+            $this->mInfo["summary"] = $pParamHash['{/literal}{$type.name}{literal}']["summary"];
+        }
+
+        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["format_guid"] ) ) {
+            $this->mInfo['format_guid'] = $pParamHash['{/literal}{$type.name}{literal}']["format_guid"];
+        }
+
+        if( isset( $pParamHash["group"]["edit"] ) ) {
+            $this->mInfo["data"] = $pParamHash["group"]["edit"];
+            $this->mInfo['parsed_data'] = $this->parseData();
+        }
+		*/
+	}
+
 	/**
 	 * store Any method named Store inherently implies data will be written to the database
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
