@@ -1,4 +1,5 @@
-<?php
+<?php /* -*- mode: foobar; nick: t; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=8 sw=4 sts=4 cindent: */
 /**
  * $Header: $
  *
@@ -278,3 +279,5 @@ function lint_file($filename) {
     error($output);
   }
 }
+
+/* Local Variables: mode: foobar; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */

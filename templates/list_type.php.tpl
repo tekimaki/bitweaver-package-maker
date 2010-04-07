@@ -1,4 +1,5 @@
-{literal}<?php
+{literal}<?php /* -*- Mode: php; tab-width: 2; indent-tabs-mode: t; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=2 sw=2 sts=2 cindent: */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 require_once( '../kernel/setup_inc.php' );
@@ -32,7 +33,7 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 			}
 			$formHash['input'][] = '<input type="hidden" name="checked[]" value="'.$del.'"/>'.$info;
 		}
-		$gBitSystem->confirmDialog( $formHash, 
+		$gBitSystem->confirmDialog( $formHash,
 			array(
 				'warning' => tra('Are you sure you want to delete ').count( $_REQUEST["checked"] ).' {/literal}{$package}{literal} records?',
 				'error' => tra('This cannot be undone!')

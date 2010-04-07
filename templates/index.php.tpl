@@ -1,4 +1,5 @@
-{literal}<?php
+{literal}<?php /* -*- Mode: php; tab-width: 2; indent-tabs-mode: t; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=2 sw=2 sts=2 cindent: */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 // Initialization
@@ -41,7 +42,7 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 		$gBitSystem->fatalError( tra( "The requested ".$typeName." (id=".$_REQUEST[$requestType.'_id'].") could not be found." ) );
 	}
 
-	// Now check permissions to access this content 
+	// Now check permissions to access this content
 	$gContent->verifyViewPermission();
 
 	// Add a hit to the counter

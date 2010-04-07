@@ -1,4 +1,5 @@
-{literal}<?php
+{literal}<?php /* -*- Mode: php; tab-width: 2; indent-tabs-mode: t; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=2 sw=2 sts=2 cindent: */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 // Initialization
@@ -25,7 +26,7 @@ if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	} else {
-		// if store fails set preview 
+		// if store fails set preview
 		$_REQUEST['preview'] = TRUE;
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}

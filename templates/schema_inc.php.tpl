@@ -1,4 +1,5 @@
-{literal}<?php
+{literal}<?php /* -*- Mode: php; tab-width: 2; indent-tabs-mode: t; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=2 sw=2 sts=2 cindent: */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 $tables = array(

@@ -1,6 +1,7 @@
-{literal}<?php
+{literal}<?php /* -*- Mode: php; tab-width: 2; indent-tabs-mode: t; c-basic-offset: 2 -*- */
+/* vim:set ft=php ts=2 sw=2 sts=2 cindent: */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
-/* 
+/*
    -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    Portions of this file are modifiable
 
@@ -30,7 +31,7 @@ define( 'BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID', 'bit{/lite
 class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}{literal} {
 	/**
 	 * m{/literal}{$type.name|capitalize}{literal}Id Primary key for our mythical {/literal}{$type.name|capitalize}{literal} class object & table
-	 * 
+	 *
 	 * @var array
 	 * @access public
 	 */
@@ -38,9 +39,9 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 	/**
 	 * {/literal}{$type.class_name}{literal} During initialisation, be sure to call our base constructors
-	 * 
-	 * @param numeric $p{/literal}{$type.name|capitalize}{literal}Id 
-	 * @param numeric $pContentId 
+	 *
+	 * @param numeric $p{/literal}{$type.name|capitalize}{literal}Id
+	 * @param numeric $pContentId
 	 * @access public
 	 * @return void
 	 */
@@ -164,7 +165,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	 * This is the ONLY method that should be called in order to store( create or update )an {/literal}{$type.name|lower}{literal}!
 	 * It is very smart and will figure out what to do for you. It should be considered a black box.
-	 * 
+	 *
 	 * @param array $pParamHash hash of values that will be used to store the page
 	 * @access public
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
@@ -203,7 +204,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	 * This function is responsible for data integrity and validation before any operations are performed with the $pParamHash
 	 * NOTE: This is a PRIVATE METHOD!!!! do not call outside this class, under penalty of death!
-	 * 
+	 *
 	 * @param array $pParamHash reference to hash of values that will be used to store the page, they will be modified where necessary
 	 * @access private
 	 * @return boolean TRUE on success, FALSE on failure - $this->mErrors will contain reason for failure
@@ -254,8 +255,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	}
 
 	/**
-	 * expunge 
-	 * 
+	 * expunge
+	 *
 	 * @access public
 	 * @return boolean TRUE on success, FALSE on failure
 	 */
@@ -302,8 +303,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 	/**
 	 * getList This function generates a list of records from the liberty_content database for use in a list page
-	 * 
-	 * @param array $pParamHash 
+	 *
+	 * @param array $pParamHash
 	 * @access public
 	 * @return array List of {/literal}{$type.name|lower}{literal} data
 	 */
