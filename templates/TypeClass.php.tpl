@@ -170,17 +170,17 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function store( &$pParamHash ) {
-		if( $this->verify( $pParamHash )&& LibertyMime::store( $pParamHash ) ) {
+		if( $this->verify( $pParamHash ) && LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
 			$this->mDb->StartTrans();
 			$table = BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data";
 			if( $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
-				$locId = array( "{/literal}{$type.name|lower}{literal}_id" => $pParamHash['{/literal}{$type.name|lower}{literal}_id'] );
+				$locId = array( "{/literal}{$type.name|lower}{literal}_id" => $pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'] );
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'], $locId );
 			} else {
-				$pParamHash['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['content_id'];
+				$pParamHash['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['{/literal}{$type.name}{literal}']['content_id'];
 				if( @$this->verifyId( $pParamHash['{/literal}{$type.name|lower}{literal}_id'] ) ) {
-					// if pParamHash['{/literal}{$type.name|lower}{literal}_id'] is set, some is requesting a particular {/literal}{$type.name|lower}{literal}_id. Use with caution!
-					$pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'] = $pParamHash['{/literal}{$type.name|lower}{literal}_id'];
+					// if pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'] is set, some is requesting a particular {/literal}{$type.name|lower}{literal}_id. Use with caution!
+					$pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'] = $pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'];
 				} else {
 					$pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'] = $this->mDb->GenID( '{/literal}{$type.name|lower}{literal}_data_id_seq' );
 				}
@@ -215,28 +215,30 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 
 		if( @$this->verifyId( $this->mInfo['content_id'] ) ) {
-			$pParamHash['content_id'] = $this->mInfo['content_id'];
+			$pParamHash['{/literal}{$type.name}{literal}']['content_id'] = $this->mInfo['content_id'];
 		}
 
 		// It is possible a derived class set this to something different
-		if( @$this->verifyId( $pParamHash['content_type_guid'] ) ) {
-			$pParamHash['content_type_guid'] = $this->mContentTypeGuid;
+		if( @$this->verifyId( $pParamHash['{/literal}{$type.name}{literal}']['content_type_guid'] ) ) {
+			$pParamHash['{/literal}{$type.name}{literal}']['content_type_guid'] = $this->mContentTypeGuid;
 		}
 
-		if( @$this->verifyId( $pParamHash['content_id'] ) ) {
-			$pParamHash['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['content_id'];
+		if( @$this->verifyId( $pParamHash['{/literal}{$type.name}{literal}']['content_id'] ) ) {
+			$pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['{/literal}{$type.name}{literal}']['content_id'];
 		}
 
+		// Use $pParamHash here since it handles validation right
 		$this->validateFields($pParamHash);
 
-		if( !empty( $pParamHash['data'] ) ) {
-			$pParamHash['edit'] = $pParamHash['data'];
+		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['data'] ) ) {
+			$pParamHash['{/literal}{$type.name}{literal}']['edit'] = $pParamHash['{/literal}{$type.name}{literal}']['data'];
 		}
 
 		// If title specified truncate to make sure not too long
-		if( !empty( $pParamHash['title'] ) ) {
-			$pParamHash['content_store']['title'] = substr( $pParamHash['title'], 0, 160 );
-		} else if( empty( $pParamHash['title'] ) ) { // else is error as must have title
+		// TODO: This shouldn't be required. LC should validate this.
+		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) {
+			$pParamHash['{/literal}{$type.name}{literal}']['content_store']['title'] = substr( $pParamHash['{/literal}{$type.name}{literal}']['title'], 0, 160 );
+		} else if( empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) { // else is error as must have title
 			$this->mErrors['title'] = 'You must enter a title for this {/literal}{$type.name|lower}{literal}.';
 		}
 
@@ -249,6 +251,12 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 		/* =-=- CUSTOM END: verify -=-= */
 {literal}
+
+		// if we have an error we get them all by checking parent classes for additional errors
+		if( count( $this->mErrors ) > 0 ){
+			// check errors of base class so we get them all in one go
+			{/literal}{$type.base_class}{literal}::verify( $pParamHash['{/literal}{$type.name}{literal}'] );
+		}
 
 		return( count( $this->mErrors )== 0 );
 	}
