@@ -50,22 +50,22 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID;
 		$this->registerContentType( BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID, array(
-			'content_type_guid'   => BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID,
+			'content_type_guid'	  => BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID,
 {/literal}{if !empty($type.content_description)}
 			'content_description' => '{$type.content_description}',
 {else}
 			'content_description' => '{$type.name|capitalize} data',
-{/if}{literal}			'handler_class'       => '{/literal}{$type.class_name}{literal}',
-			'handler_package'     => '{/literal}{$package}{literal}',
-			'handler_file'        => '{/literal}{$type.class_name}{literal}.php',
+{/if}{literal}			'handler_class'		  => '{/literal}{$type.class_name}{literal}',
+			'handler_package'	  => '{/literal}{$package}{literal}',
+			'handler_file'		  => '{/literal}{$type.class_name}{literal}.php',
 {/literal}{if !empty($config.maintainer_url)}
-			'maintainer_url'      => '{$config.maintainer_url}'
+			'maintainer_url'	  => '{$config.maintainer_url}'
 {else}
-			'maintainer_url'      => 'http://www.bitweaver.org'
+			'maintainer_url'	  => 'http://www.bitweaver.org'
 {/if}{literal}		));
 		// Permission setup
 		$this->mAdminContentPerm   = 'p_{/literal}{$package}{literal}_admin';
-		$this->mViewContentPerm    = 'p_{/literal}{$type.name|lower}{literal}_view';
+		$this->mViewContentPerm	   = 'p_{/literal}{$type.name|lower}{literal}_view';
 		$this->mCreateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_create';
 		$this->mUpdateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_update';
 		$this->mExpungeContentPerm = 'p_{/literal}{$type.name|lower}{literal}_expunge';
@@ -116,47 +116,47 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		return( count( $this->mInfo ) );
 	}
 
-    /**
-    * Deal with text and images, modify them apprpriately that they can be returned to the form.
-    * @param $pParamHash data submitted by form - generally $_REQUEST
-    * @return array of data compatible with edit form
-    * @access public
-    **/
+	/**
+	* Deal with text and images, modify them apprpriately that they can be returned to the form.
+	* @param $pParamHash data submitted by form - generally $_REQUEST
+	* @return array of data compatible with edit form
+	* @access public
+	**/
 	function preparePreview( &$pParamHash ){
-        global $gBitSystem, $gBitUser;
+		global $gBitSystem, $gBitUser;
 
-        if( empty( $this->mInfo['user_id'] ) ) {
-            $this->mInfo['user_id'] = $gBitUser->mUserId;
-            $this->mInfo['creator_user'] = $gBitUser->getField( 'login' );
-            $this->mInfo['creator_real_name'] = $gBitUser->getField( 'real_name' );
-        }
+		if( empty( $this->mInfo['user_id'] ) ) {
+			$this->mInfo['user_id'] = $gBitUser->mUserId;
+			$this->mInfo['creator_user'] = $gBitUser->getField( 'login' );
+			$this->mInfo['creator_real_name'] = $gBitUser->getField( 'real_name' );
+		}
 
-        $this->mInfo['creator_user_id'] = $this->mInfo['user_id'];
+		$this->mInfo['creator_user_id'] = $this->mInfo['user_id'];
 
-        if( empty( $this->mInfo['created'] ) ){
-            $this->mInfo['created'] = $gBitSystem->getUTCTime();
-        }
+		if( empty( $this->mInfo['created'] ) ){
+			$this->mInfo['created'] = $gBitSystem->getUTCTime();
+		}
 
-        $this->previewFields($pParamHash);
+		$this->previewFields($pParamHash);
 
-        // Liberty should really have a preview function that handles these
-        // But it doesn't so we handle them here.
-        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["title"] ) ) {
-            $this->mInfo["title"] = $pParamHash['{/literal}{$type.name}{literal}']["title"];
-        }
+		// Liberty should really have a preview function that handles these
+		// But it doesn't so we handle them here.
+		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["title"] ) ) {
+			$this->mInfo["title"] = $pParamHash['{/literal}{$type.name}{literal}']["title"];
+		}
 
-        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["summary"] ) ) {
-            $this->mInfo["summary"] = $pParamHash['{/literal}{$type.name}{literal}']["summary"];
-        }
+		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["summary"] ) ) {
+			$this->mInfo["summary"] = $pParamHash['{/literal}{$type.name}{literal}']["summary"];
+		}
 
-        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["format_guid"] ) ) {
-            $this->mInfo['format_guid'] = $pParamHash['{/literal}{$type.name}{literal}']["format_guid"];
-        }
+		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["format_guid"] ) ) {
+			$this->mInfo['format_guid'] = $pParamHash['{/literal}{$type.name}{literal}']["format_guid"];
+		}
 
-        if( isset( $pParamHash["group"]["edit"] ) ) {
-            $this->mInfo["data"] = $pParamHash["group"]["edit"];
-            $this->mInfo['parsed_data'] = $this->parseData();
-        }
+		if( isset( $pParamHash["group"]["edit"] ) ) {
+			$this->mInfo["data"] = $pParamHash["group"]["edit"];
+			$this->mInfo['parsed_data'] = $this->parseData();
+		}
 	}
 
 	/**
@@ -266,7 +266,6 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$this->mDb->StartTrans();
 
 {/literal}
-
 			/* =-=- CUSTOM BEGIN: expunge -=-= */
 {if !empty($customBlock.expunge)}
 {$customBlock.expunge}
@@ -405,7 +404,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 	/**
 	 * prepVerify prepares the object for input verification
-	 */
+`<	 */
 	function prepVerify() {
 		if (empty($this->mVerification)) {
 {/literal}
