@@ -28,12 +28,17 @@ if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
 	} else {
 		// if store fails set preview
 		$_REQUEST['preview'] = TRUE;
+		// And put all the variables into the object
+		$gContent->preparePreview( $_REQUEST );
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
 }
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
+	// Run verify so they see any errors with their preview
+	$gContent->verify( $_REQUEST );
+	// Put all the variables into the object
 	$gContent->preparePreview( $_REQUEST );
 	$gContent->invokeServices( 'content_preview_function' );
 	$gBitSmarty->assign( 'preview', TRUE );

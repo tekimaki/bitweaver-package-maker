@@ -138,14 +138,15 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
             $this->mInfo['created'] = $gBitSystem->getUTCTime();
         }
 
-		$this->previewFields($pParamHash);
+        $this->previewFields($pParamHash);
 
-		/* @TODO not sure if this should be in here or will be handled by previewFields
-        if( isset( $pParamHash['{/literal}{$type.name}{literal}']]["title"] ) ) {
+        // Liberty should really have a preview function that handles these
+        // But it doesn't so we handle them here.
+        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["title"] ) ) {
             $this->mInfo["title"] = $pParamHash['{/literal}{$type.name}{literal}']["title"];
         }
 
-        if( isset( $pParamHash['{/literal}{$type.name}{literal}']]["summary"] ) ) {
+        if( isset( $pParamHash['{/literal}{$type.name}{literal}']["summary"] ) ) {
             $this->mInfo["summary"] = $pParamHash['{/literal}{$type.name}{literal}']["summary"];
         }
 
@@ -157,7 +158,6 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
             $this->mInfo["data"] = $pParamHash["group"]["edit"];
             $this->mInfo['parsed_data'] = $this->parseData();
         }
-		*/
 	}
 
 	/**
