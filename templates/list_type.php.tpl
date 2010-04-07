@@ -1,5 +1,5 @@
 {literal}<?php
-{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
+{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 require_once( '../kernel/setup_inc.php' );
 

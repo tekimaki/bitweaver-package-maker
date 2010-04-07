@@ -1,4 +1,5 @@
 {literal}{strip}
+{/literal}{include file="smarty_file_header.tpl}{literal}
 <div class="floaticon">{bithelp}</div>
 
 <div class="listing {/literal}{$package} {$type.name}{literal}">

@@ -1,4 +1,6 @@
-{literal}{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
+{literal}{strip}
+{/literal}{include file="smarty_file_header.tpl}{literal}
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 <div class="display {/literal}{$package} {$type.name}{literal}">
 	<div class="floaticon">
 		{if $print_page ne 'y'}
@@ -37,4 +39,4 @@
 	</div><!-- end .body -->
 </div><!-- end .{/literal}{$type.name}{literal} -->
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
-{/literal}
+{/strip}{/literal}

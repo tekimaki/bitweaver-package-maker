@@ -1,3 +1,4 @@
+{include file="htaccess_file_header.tpl"}
 <IfModule mod_rewrite.c>
     RewriteEngine  on
     # Uncomment this if mod_rewrites are not working for you. some hosting services have cranky mod_rewrite

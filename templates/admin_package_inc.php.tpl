@@ -1,5 +1,5 @@
 {literal}<?php
-{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
+{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
 require_once( {$PACKAGE}_PKG_PATH.'{$type.class_name}.php' );

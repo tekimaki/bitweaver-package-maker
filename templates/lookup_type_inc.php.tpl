@@ -1,5 +1,5 @@
 {literal}<?php
-{/literal}{include file="bitpackage:pkgmkr/file_header.tpl"}{literal}
+{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 
 global $gContent;
 require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'{/literal}{$type.class_name}{literal}.php');

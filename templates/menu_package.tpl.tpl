@@ -1,4 +1,5 @@
 {literal}{strip}
+{/literal}{include file="smarty_file_header.tpl}{literal}
 	<ul>
 		{if $gBitUser->hasPermission( 'p_{/literal}{$package}{literal}_view')}
 			<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php">{tr}{/literal}{$Package}{literal} Home{/tr}</a></li>
