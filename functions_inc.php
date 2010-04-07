@@ -204,7 +204,16 @@ function prep_config(&$config){
 				$validator = &$field['validator'];
 				switch( $validator['input'] ){
 				case 'select':
-					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashName'] = $fieldName.'_options';
+					$optionsHashName = $fieldName.'_options';
+
+					$tableBPrefix = !empty( $validator['desc_column'] )?'b':'a';
+					$joinColumn = !empty( $validator['join_column'] )?$validator['join_column']:'content_id'; //default to liberty_content as is most common
+
+					$optionsHashQuery = "SELECT a.".$field['validator']['column'].", ".$tableBPrefix.".".$field['validator']['desc_column']." FROM ".$field['validator']['table']." a"; 
+					$optionsHashQuery .= !empty( $validator['desc_table'] )?" INNER JOIN ".$validator['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
+
+					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashName'] = $optionsHashName;
+					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashQuery'] = $optionsHashQuery; 
 					break;
 				}
 			}
