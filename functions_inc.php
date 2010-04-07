@@ -186,11 +186,30 @@ function validate_config(&$config) {
 	// TODO: LOTS MORE VALIDATION HERE!!!!
 
 	//  print_r($config);
+	
+	return $config;
+}
 
+// Prepare any additional data based config data
+function prep_config(&$config){
 	// Generate a few capitalization variations
 	$config['package'] = strtolower($config['package']);
 	$config['PACKAGE'] = strtoupper($config['package']);
 	$config['Package'] = ucfirst(strtolower($config['package']));
+
+	// prep form fields
+	foreach ($config['types'] as $typeName => $type) {
+		foreach ($type['fields'] as $fieldName => $field) {
+			if (!empty($field['validator']['input'])) {
+				$validator = &$field['validator'];
+				switch( $validator['input'] ){
+				case 'select':
+					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashName'] = $fieldName.'_options';
+					break;
+				}
+			}
+		}
+	}
 
 	return $config;
 }
@@ -247,6 +266,12 @@ function generate_package($config) {
 	// Now change directory to BIT_ROOT_PATH to generate the package in
 	// the root of this install.
 	chdir(BIT_ROOT_PATH);
+
+	// Prepare any additional data based config data
+	prep_config($config);
+
+	// Initialize smarty
+	init_smarty($config);
 
 	// Now figure out the real directory and file names
 	foreach ($gFiles as $file_dir => $actions) {

@@ -34,11 +34,8 @@ $active = activate_pkgmkr();
 // What package are we building today boys and girls?
 $config = check_args($argv);
 
-// Initialize smarty
-init_smarty($config);
-
 // Generate the package
-generate_package($config, BIT_ROOT_PATH );
+generate_package($config);
 
 // Inactivate if we need to
 inactivate_pkgmkr($active);

@@ -45,6 +45,15 @@ if( isset( $_REQUEST["preview"] ) ) {
 	$gContent->invokeServices( 'content_edit_function' );
 }
 
+{/literal}
+// Prep any data we may need for the form
+{foreach from=$type.fields key=fieldName item=field}
+{if $field.validator.input == 'select'}
+${$field.validator.optionsHashName} = $gBitSystem->mDb->getAssoc( "SELECT {$field.validator.column}, {$field.validator.desc_column} FROM {$field.validator.table}" );
+$gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.validator.optionsHashName} );
+{/if}
+{/foreach}
+{literal}
 
 // Display the template
 $gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));

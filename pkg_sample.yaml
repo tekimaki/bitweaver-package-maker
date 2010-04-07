@@ -85,6 +85,10 @@ types:
         name: Double Field
         schema: {type: N(6.2) }
         validator: {type: double}
+      input_select: 
+        name: Input Select 
+        schema: {type: C(128), notnull: true, default: varchar, unique: true}
+        validator: {type: reference, required: true, table: liberty_content_types, column: content_type_guid, input: select, desc_column: content_description}
     constraints:
       - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample_data (sample_id)
       - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
