@@ -23,8 +23,8 @@
 	<div class="body">
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
 			{jstabs}
-				{jstab title="Record"}
-					{legend legend="{/literal}{$type.name|capitalize}{literal} Record"}
+				{jstab title="Edit"}
+					{legend legend="{/literal}{$type.name|capitalize}{literal}"}
 						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
 						{formfeedback warning=$errors.store}
 
@@ -41,8 +41,9 @@
 							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
 							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
 							{ldelim}forminput{rdelim}
-							{include file="bitpackage:pkgmkr/edit_field.tpl"}
-
+								{include file="bitpackage:pkgmkr/edit_field.tpl"}
+								{if $field.validator.required}{ldelim}required{rdelim}{/if}
+								{ldelim}formhelp note="{$field.help}"{rdelim}
 							{ldelim}/forminput{rdelim}
 						</div>
 {/foreach}
