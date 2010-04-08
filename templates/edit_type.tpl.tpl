@@ -3,13 +3,6 @@
 <div class="floaticon">{bithelp}</div>
 
 <div class="edit {/literal}{$package} {$type.name}{literal}">
-	{if $smarty.request.preview}
-		<h2>Preview {$gContent->mInfo.title|escape}</h2>
-		<div class="preview">
-			{include file="bitpackage:{/literal}{$package}{literal}/display_{/literal}{$type.name}{literal}.tpl" page=`$gContent->mInfo.{/literal}{$type.name}{literal}_id`}
-		</div>
-	{/if}
-
 	<div class="header">
 		<h1>
 			{if $gContent->mInfo.{/literal}{$type.name}{literal}_id}
@@ -22,9 +15,25 @@
 
 	<div class="body">
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
+			<div class="servicetabs">
+			{jstabs id="servicetabs"}
+				{* any service edit template tabs *}
+				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" display_help_tab=1}
+			{/jstabs}
+			</div>
+			<div class="editcontainer">
 			{jstabs}
-				{jstab title="{/literal}{$type.name|capitalize}{literal}"}
-					{legend legend="{/literal}{$type.name|capitalize}{literal} Record"}
+				{if $preview eq 'y'}
+					{jstab title="Preview"}
+						{legend legend="Preview"}
+						<div class="preview">
+							{include file="bitpackage:{/literal}{$package}{literal}/display_{/literal}{$type.name}{literal}.tpl" page=`$gContent->mInfo.{/literal}{$type.name}{literal}_id`}
+						</div>
+						{/legend}
+					{/jstab}
+				{/if}
+				{jstab title="Edit"}
+					{legend legend="{/literal}{$type.name|capitalize}{literal}"}
 						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
 						{formfeedback warning=$errors.store}
 
@@ -42,7 +51,9 @@
 							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
 							{ldelim}forminput{rdelim}
 								{include file="bitpackage:pkgmkr/edit_field.tpl"}
-								{if $field.validator.required}{ldelim}required{rdelim}{/if}
+								{if $field.validator.required}
+								{ldelim}required{rdelim}
+								{/if}
 								{ldelim}formhelp note="{$field.help}"{rdelim}
 							{ldelim}/forminput{rdelim}
 						</div>
@@ -73,9 +84,8 @@
 {literal}
 					{/legend}
 				{/jstab}
-				{* any service edit template tabs *}
-				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl"}
 			{/jstabs}
+			</div>
 		{/form}
 	</div><!-- end .body -->
 </div><!-- end .{/literal}{$sample.class}{literal} -->
