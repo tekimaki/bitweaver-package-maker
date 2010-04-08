@@ -391,7 +391,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	/**
 	 * previewFields prepares the fields in this type for preview
 	 */
-	function previewFields($pParamHash) {
+	function previewFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::preview(
 			$this->mVerification,
@@ -402,7 +402,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	/**
 	 * validateFields validates the fields in this type
 	 */
-	function validateFields($pParamHash) {
+	function validateFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::validate(
 			$this->mVerification,
@@ -412,7 +412,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 	/**
 	 * prepVerify prepares the object for input verification
-`<	 */
+	 */
 	function prepVerify() {
 		if (empty($this->mVerification)) {
 {/literal}
