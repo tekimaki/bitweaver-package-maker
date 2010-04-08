@@ -396,7 +396,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		LibertyValidator::preview(
 			$this->mVerification,
 			$pParamHash['{/literal}{$type.name}{literal}'],
-			$pParamHash['{/literal}{$type.name}{literal}_store']);
+			$this->mInfo);
 	}
 
 	/**
