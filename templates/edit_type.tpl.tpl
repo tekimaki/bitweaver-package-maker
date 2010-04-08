@@ -23,8 +23,8 @@
 	<div class="body">
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
 			{jstabs}
-				{jstab title="Edit"}
-					{legend legend="{/literal}{$type.name|capitalize}{literal}"}
+				{jstab title="{/literal}{$type.name|capitalize}{literal}"}
+					{legend legend="{/literal}{$type.name|capitalize}{literal} Record"}
 						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
 						{formfeedback warning=$errors.store}
 

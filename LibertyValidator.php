@@ -8,33 +8,35 @@ class LibertyValidator {
 
 	function preview(&$pVars, &$pParamHash, &$store) {
 		foreach($pVars as $type => $vars) {
-			switch($type) {
+		    switch($type) {
+			// TODO: for the moment validate urls as strings
 			case 'string':
-				preview_strings($vars, $pParamHash, $store);
+			case 'url':
+			    LibertyValidator::preview_strings($vars, $pParamHash, $store);
 				break;
 			case 'int':
 			case 'long':
-				preview_integers($vars, $pParamHash, $store);
+				LibertyValidator::preview_integers($vars, $pParamHash, $store);
 				break;
 			case 'real':
 			case 'float':
 			case 'double':
-				preview_reals($vars, $pParamHash, $store);
+				LibertyValidator::preview_reals($vars, $pParamHash, $store);
 				break;
 			case 'boolean':
-				preview_booleans($vars, $pParamHash, $store);
+				LibertyValidator::preview_booleans($vars, $pParamHash, $store);
 				break;
 			case 'phone':
-				preview_phones($vars, $pParamHash, $store);
+				LibertyValidator::preview_phones($vars, $pParamHash, $store);
 				break;
 			case 'date':
-				preview_dates($vars, $pParamHash, $store);
+				LibertyValidator::preview_dates($vars, $pParamHash, $store);
 				break;
 			case 'time':
-				preview_times($vars, $pParamHash, $store);
+				LibertyValidator::preview_times($vars, $pParamHash, $store);
 				break;
 			case 'null':
-				preview_null($vars, $pParamHash, $store);
+				LibertyValidator::preview_null($vars, $pParamHash, $store);
 			default:
 				global $gBitSystem;
 				$gBitSystem->fatalError("Unsupported validation type: ".$type);
@@ -46,7 +48,9 @@ class LibertyValidator {
 	function validate(&$pVars, &$pParamHash, &$pObject, &$store) {
 		foreach($pVars as $type => $vars) {
 			switch($type) {
+			// TODO: for the moment validate urls as strings
 			case 'string':
+			case 'url':
 				LibertyValidator::validate_strings($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'int':
