@@ -58,24 +58,21 @@
 							<input type="submit" name="preview" value="{tr}Preview{/tr}" />
 							<input type="submit" name="save_{/literal}{$type.name}{literal}" value="{tr}Save{/tr}" />
 						</div>
-					{/legend}
-				{/jstab}
 {/literal}
 {if $type.attachments}
 {literal}
-				{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
-					{jstab title="Attachments"}
-						<div class=row>
-						{legend legend="Attachments"}
-							{include file="bitpackage:liberty/edit_storage.tpl"}
-
-						{/legend}
-						</div>
-					{/jstab}
-				{/if}
+						{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
+							<div class=row>
+							{legend legend="Attachments"}
+								{include file="bitpackage:liberty/edit_storage.tpl"}
+							{/legend}
+							</div>
+						{/if}
 {/literal}
 {/if}
 {literal}
+					{/legend}
+				{/jstab}
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl"}
 			{/jstabs}
