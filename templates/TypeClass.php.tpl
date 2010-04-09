@@ -189,6 +189,16 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'] );
 			}
 
+{/literal}
+				/* =-=- CUSTOM BEGIN: store -=-= */
+{if !empty($customBlock.store)}
+{$customBlock.store}
+{else}
+
+{/if}
+				/* =-=- CUSTOM END: store -=-= */
+{literal}
+
 			$this->mDb->CompleteTrans();
 			$this->load();
 		} else {
@@ -380,7 +390,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$ret = NULL;
 		if( @$this->isValid() ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
-				$ret = {/literal}{$PACKAGE}_PKG_URL.{if empty($type.rewrite_path)}{$type.name}{else}{$type.rewrite_path}{/if}/$this->m{$type.name|capitalize}{literal}Id;
+				$ret = {/literal}{$PACKAGE}_PKG_URL.'{if empty($type.rewrite_path)}{$type.name}{else}{$type.rewrite_path}{/if}/'.$this->m{$type.name|capitalize}{literal}Id;
 			} else {
 				$ret = {/literal}{$PACKAGE}{literal}_PKG_URL."index.php?{/literal}{$type.name|lower}{literal}_id=".$this->m{/literal}{$type.name|capitalize}{literal}Id;
 			}
