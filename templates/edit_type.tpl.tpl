@@ -15,6 +15,7 @@
 
 	<div class="body">
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
+			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<div class="servicetabs">
 			{jstabs id="servicetabs"}
 				{* any service edit template tabs *}

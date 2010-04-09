@@ -190,19 +190,19 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			}
 
 {/literal}
-				/* =-=- CUSTOM BEGIN: store -=-= */
+			/* =-=- CUSTOM BEGIN: store -=-= */
 {if !empty($customBlock.store)}
 {$customBlock.store}
 {else}
 
 {/if}
-				/* =-=- CUSTOM END: store -=-= */
+			/* =-=- CUSTOM END: store -=-= */
 {literal}
 
 			$this->mDb->CompleteTrans();
 			$this->load();
 		} else {
-			$this->mErrors['store'] = 'Failed to save this {/literal}{$type.name|lower}{literal}.';
+			$this->mErrors['store'] = tra('Failed to save this').' {/literal}{$type.name|lower}{literal}.';
 		}
 
 		return( count( $this->mErrors )== 0 );
@@ -249,7 +249,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) {
 			$pParamHash['{/literal}{$type.name}{literal}']['content_store']['title'] = substr( $pParamHash['{/literal}{$type.name}{literal}']['title'], 0, 160 );
 		} else if( empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) { // else is error as must have title
-			$this->mErrors['title'] = 'You must enter a title for this {/literal}{$type.name|lower}{literal}.';
+			$this->mErrors['title'] = tra('You must enter a title for this').' {/literal}{$type.name|lower}{literal}.';
 		}
 
 {/literal}
@@ -428,7 +428,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
 	 		/* Validation for {$fieldName} */
-{if !empty($field.validator.type)}
+{if !empty($field.validator.type) && $field.validator.type != "no-input"}
 			$this->mVerification['{$field.validator.type}']['{$fieldName}'] = array(
                                'name' => '{$fieldName}',
 {foreach from=$field.validator key=k item=v name=keys}
@@ -443,7 +443,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 {/foreach}
 			);
-{else}
+{elseif empty($field.validator.type)}
 			$this->mVerification['null']['{$fieldName}'] = TRUE;
 {/if}
 {/foreach}

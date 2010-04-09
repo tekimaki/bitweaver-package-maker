@@ -5,6 +5,7 @@
 		<option>{$choice}</option>
 		{/foreach}
 	    </select>
+    {elseif $field.validator.type=="no-input"}
     {elseif $field.validator.type=="date"}
     	    {ldelim}html_select_date field_array="{$type.name}[{$fieldName}]" prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}" {/foreach} {rdelim}
     {elseif $field.validator.type=="time"}
