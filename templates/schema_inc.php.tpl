@@ -22,6 +22,9 @@ $tables = array(
 		'
 {/if}
 	",
+{foreach from=$type.typemaps key=typemapName item=typemap}
+    {include file="bitpackage:pkgmkr/typemap_schema_inc.php.tpl"}
+{/foreach}
 {/foreach}{literal}
 );
 
