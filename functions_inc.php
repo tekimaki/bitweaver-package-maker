@@ -104,7 +104,7 @@ function render_type_file($dir, $file, $template, $config) {
 					if ($count > 0) {
 						$customBlock = array();
 						foreach($matches[1] as $id => $field) {
-							$customBlock[$field] = substr($matches[2][$id], 1, -3);
+							$customBlock[$field] = preg_replace('|^\n(.*)\n\t*$|ms', '\1', $matches[2][$id]);
 						}
 						$gBitSmarty->assign('customBlock', $customBlock);
 					}
