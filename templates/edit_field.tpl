@@ -1,4 +1,3 @@
-{strip}
 {if !empty($field.validator.type)}
     {if $field.validator.type=="choice"}
 	    <select name="{$type.name}[{$fieldName}]" id="{$fieldName}" {if $field.validator.muliple}multiple="multiple" {/if}>
@@ -27,11 +26,10 @@
     {elseif $field.validator.type=="string"}
     	    <input type="text" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
     {elseif $field.validator.type=="reference"}
-			{literal}{html_options id="{/literal}{$fieldName}{literal}" options=${/literal}{$field.validator.optionsHashName}{literal} name="{$type.name}[{/literal}{$fieldName}{literal}]" selected=$gContent->getField('{/literal}{$fieldName}{literal}')}{/literal}
+			{literal}{html_options id="{/literal}{$fieldName}{literal}" options=${/literal}{$field.validator.optionsHashName}{literal} name="{/literal}{$type.name}[{$fieldName}{literal}]" selected=$gContent->getField('{/literal}{$fieldName}{literal}')}{/literal}
     {else}
     	    <input type="text" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
     {/if}
 {else}
 	<input type="text" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField('{$fieldName}'){rdelim}" id="{$fieldName}" />
 {/if}
-{/strip}

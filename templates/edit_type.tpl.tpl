@@ -46,15 +46,13 @@
 						</div>
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-						<div class="row {$sample.class}_{$fieldName}">
+						<div class="row {$type.name}_{$fieldName}">
 							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
 							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
 							{ldelim}forminput{rdelim}
-								{include file="bitpackage:pkgmkr/edit_field.tpl"}
-								{if $field.validator.required}
-								{ldelim}required{rdelim}
-								{/if}
-								{ldelim}formhelp note="{$field.help}"{rdelim}
+							{include file="bitpackage:pkgmkr/edit_field.tpl"}
+							{if $field.validator.required}{ldelim}required{rdelim}
+							{/if}{ldelim}formhelp note="{$field.help}"{rdelim}
 							{ldelim}/forminput{rdelim}
 						</div>
 {/foreach}
