@@ -1,4 +1,5 @@
 {literal}<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+/* vim: :set fdm=marker : */
 {/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
 /*
    -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -450,6 +451,12 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {literal}
 		}
 	}
+
+{/literal}
+{foreach from=$type.typemaps key=typemapName item=typemap}
+{include file="bitpackage:pkgmkr/typemap_methods_inc.php.tpl"}
+{/foreach}
+{literal}
 
 {/literal}
 	/* This section is for any helper methods you wish to create */
