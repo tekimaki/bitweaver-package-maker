@@ -37,6 +37,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 */
 	var $m{/literal}{$type.name|capitalize}{literal}Id;
 
+	var $mVerification;
+
 	/**
 	 * {/literal}{$type.class_name}{literal} During initialisation, be sure to call our base constructors
 	 *
@@ -405,7 +407,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	function previewFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::preview(
-			$this->mVerification,
+		$this->mVerification['{/literal}{$type.name}_data{literal}'],
 			$pParamHash['{/literal}{$type.name}{literal}'],
 			$this->mInfo);
 	}
@@ -416,7 +418,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	function validateFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::validate(
-			$this->mVerification,
+			$this->mVerification['{/literal}{$type.name}_data{literal}'],
 			$pParamHash['{/literal}{$type.name}{literal}'],
 			$this, $pParamHash['{/literal}{$type.name}{literal}_store']);
 	}
@@ -425,12 +427,12 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * prepVerify prepares the object for input verification
 	 */
 	function prepVerify() {
-		if (empty($this->mVerification)) {
+		if (empty($this->mVerification['{/literal}{$type.name}{literal}_data'])) {
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
 	 		/* Validation for {$fieldName} */
 {if !empty($field.validator.type) && $field.validator.type != "no-input"}
-			$this->mVerification['{$field.validator.type}']['{$fieldName}'] = array(
+			$this->mVerification['{$type.name}_data']['{$field.validator.type}']['{$fieldName}'] = array(
                                'name' => '{$fieldName}',
 {foreach from=$field.validator key=k item=v name=keys}
 {if $k != 'type'}
@@ -445,7 +447,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/foreach}
 			);
 {elseif empty($field.validator.type)}
-			$this->mVerification['null']['{$fieldName}'] = TRUE;
+	$this->mVerification['{$type.name}_data']['null']['{$fieldName}'] = TRUE;
 {/if}
 {/foreach}
 {literal}
