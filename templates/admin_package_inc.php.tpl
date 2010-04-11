@@ -47,6 +47,24 @@ $form{$typeName}Lists = array(
 );
 $gBitSmarty->assign( 'form{$typeName}Lists', $form{$typeName}Lists );
 {* End List Settings *}
+
+{* Defined Type Settings *}
+{if $type.settings}
+{foreach from=$type.settings key=typeSettingsName item=typeSettingsGroup name=typeSettings}
+$form{$typeName|ucfirst}{$typeSettingsName|ucfirst} = array(
+{foreach from=$typeSettingsGroup key=settingName item=settings name=settingsGroup}
+	"{$package}_{$typeName}_{$settingName}" => array(
+		'label' => '{$settings.label}',
+		'note' => '{$settings.note}',
+		'type' => '{if $settings.type eq numeric}numeric{elseif $settings.type eq string}input{else}toggle{/if}',
+	),
+{/foreach}
+);
+$gBitSmarty->assign( 'form{$typeName|ucfirst}{$typeSettingsName|ucfirst}', $form{$typeName|ucfirst}{$typeSettingsName|ucfirst} );
+{/foreach}
+{/if}
+{* End Defined Type Settings *}
+
 {/foreach}
 {* End Type Settings *}
 {literal}
@@ -60,6 +78,14 @@ if( !empty( $_REQUEST['{/literal}{$package}{literal}_settings'] ) ){
 {literal}	simple_set_configs(  $form{/literal}{$pkgSettingsName|ucfirst}{literal}, {/literal}{$PACKAGE}{literal}_PKG_NAME );{/literal}
 {/foreach}
 {/if}
+
+{foreach from=$config.types key=typeName item=type name=types}
+{if $type.settings}
+{foreach from=$type.settings key=typeSettingsName item=typeSettingsGroup name=typeSettings}
+{literal}	simple_set_configs(  $form{/literal}{$typeName|ucfirst}{$typeSettingsName|ucfirst}{literal}, {/literal}{$PACKAGE}{literal}_PKG_NAME );{/literal}
+{/foreach}
+{/if}
+{/foreach}
 {literal}
 
 	${/literal}{$package}{literal}Toggles = array_merge( 
