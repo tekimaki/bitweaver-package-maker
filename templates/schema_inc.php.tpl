@@ -17,7 +17,7 @@ $tables = array(
                 , CONSTRAINT `{$typeName}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `liberty_content` (`content_id`)
 {/if}
 {foreach from=$type.constraints item=constraint}
-		, CONSTRAINT {$constraint}
+		, {$constraint}
 {/foreach}
 		'
 {/if}

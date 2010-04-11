@@ -14,7 +14,7 @@
                 , CONSTRAINT `{$typemapName}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `liberty_content` (`content_id`)
 {/if}
 {foreach from=$typemap.constraints item=constraint}
-		, CONSTRAINT {$constraint}
+		, {$constraint}
 {/foreach}
 		'
 {/if}
