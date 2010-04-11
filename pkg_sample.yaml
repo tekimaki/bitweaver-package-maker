@@ -15,6 +15,11 @@ requirements:
 	liberty: {min: 2.1.3}
 homeable: true
 maintainer_url: http://www.bitweaver.org
+settings:
+  group:
+    boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
+    string: {label: A String Value, type: string, note: Enter a value }
+    numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value default: 100 }
 types:
   sample:
     description: A sample class which shows the power of the pkgmkr package.
@@ -94,6 +99,11 @@ types:
       - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
     defaults:
       - "(field_long) VALUES ('1000')"
+    settings:
+      group:
+        boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
+        string: {label: A String Value, type: string, note: Enter a value }
+        numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value default: 100 }
 tables:
   sample_map:
     description: A map table for mapping samples to each other
