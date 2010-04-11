@@ -40,29 +40,64 @@
 			</div>
 		{/jstab}
 {* End homeable section *}
-{/literal}{/if}{literal}
+{/literal}{/if}
 
-{* For Each Type Offer Home Selection *}
-{/literal}{foreach from=$config.types key=typeName item=type name=types}{literal}
-		{jstab title="{/literal}{$typeName|capitalize}{literal} List Settings"}
-			{legend legend="{/literal}{$typeName|capitalize}{literal} List Settings"}
-				<input type="hidden" name="page" value="{$page}" />
-				{foreach from=$form{/literal}{$typeName}{literal}Lists key=item item=output}
-					<div class="row">
+{* Package Settings *}
+{if $config.settings}{literal}
+		{jstab title="{/literal}{$Package}{literal} Settings"}{/literal}
+{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}{literal}
+            {legend legend="{/literal}{$pkgSettingsName|ucfirst}{literal} Features"}
+                {foreach from=$form{/literal}{$pkgSettingsName|ucfirst}{literal} key=item item=output}
+                    <div class="row">
 						{formlabel label=`$output.label` for=$item}
-						{forminput}
-							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
-							{formhelp note=`$output.note` page=`$output.page`}
-						{/forminput}
-					</div>
-				{/foreach}
-			{/legend}
+                        {forminput}
+                            {if $output.type == 'numeric'}
+                                <input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
+                            {elseif $output.type == 'input'}
+                                <input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
+                            {else}
+                                {html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+                            {/if}
+                            {formhelp note=`$output.note` page=`$output.page`}
+                        {/forminput}
+                    </div>
+                {/foreach}
+            {/legend}{/literal}
+{/foreach}{literal}
 			<div class="row submit">
 				<input type="submit" name="{/literal}{$package}{literal}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
+		{/jstab}{/literal}
+{/if}
+
+{* For Each Type Settings *}
+{foreach from=$config.types key=typeName item=type name=types}{literal}
+		{jstab title="{/literal}{$typeName|capitalize}{literal} Settings"}
+			{jstabs}
+				{* List Settings *}
+				{jstab title="{/literal}{$typeName|capitalize}{literal} List Settings"}
+					{legend legend="{/literal}{$typeName|capitalize}{literal} List Settings"}
+						<input type="hidden" name="page" value="{$page}" />
+						{foreach from=$form{/literal}{$typeName}{literal}Lists key=item item=output}
+							<div class="row">
+								{formlabel label=`$output.label` for=$item}
+								{forminput}
+									{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+									{formhelp note=`$output.note` page=`$output.page`}
+								{/forminput}
+							</div>
+						{/foreach}
+					{/legend}
+					<div class="row submit">
+						<input type="submit" name="{/literal}{$package}{literal}_settings" value="{tr}Change preferences{/tr}" />
+					</div>
+				{/jstab}
+				{* End List Settings *}
+			{/jstabs}
 		{/jstab}
+{/literal}{/foreach}
 {* End Each Type *}
-{/literal}{/foreach}{literal}
+{literal}
 	{/jstabs}
 {/form}
 {/strip}{/literal}
