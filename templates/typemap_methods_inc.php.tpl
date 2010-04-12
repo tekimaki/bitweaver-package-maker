@@ -22,18 +22,20 @@
 	/**
 	 * stores a single record in the {/literal}{$type.name}_{$typemapName}{literal} table
 	 */
-	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
-		if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
-			$table = '{/literal}{$type.name}_{$typemapName}{literal}';
-			// {/literal}{$typemapName}{literal} id is set update the record
-			if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_id'] ) ){
-				$locId = array( '{/literal}{$typemapName}{literal}_id' => $pParamHash['{/literal}{$typemapName}{literal}_id'] );
-				// unset( $pParamHash['{/literal}{$typemapName}{literal}_id'] );
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'], $locId );
-			// {/literal}{$typemapName}{literal} id is not set create a new record
-			}else{
-				$pParamHash['{/literal}{$typemapName}{literal}_store']['{/literal}{$typemapName}{literal}_id'] = $this->mDb->GenID('{/literal}{$type.name}_{$typemapName}{literal}_id_seq');
-				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'] );
+	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash, $skipVerify = FALSE ){
+		if( $skipVerify || $this->verify{/literal}{$typemapName|ucfirst}{literal}( $pParamHash ) ) {
+			if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
+				$table = '{/literal}{$type.name}_{$typemapName}{literal}';
+				// {/literal}{$typemapName}{literal} id is set update the record
+				if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_id'] ) ){
+					$locId = array( '{/literal}{$typemapName}{literal}_id' => $pParamHash['{/literal}{$typemapName}{literal}_id'] );
+					// unset( $pParamHash['{/literal}{$typemapName}{literal}_id'] );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'], $locId );
+				// {/literal}{$typemapName}{literal} id is not set create a new record
+				}else{
+					$pParamHash['{/literal}{$typemapName}{literal}_store']['{/literal}{$typemapName}{literal}_id'] = $this->mDb->GenID('{/literal}{$type.name}_{$typemapName}{literal}_id_seq');
+					$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'] );
+				}
 			}
 		}
 	}
@@ -41,27 +43,37 @@
 	/**
 	 * stores a single record in the {/literal}{$type.name}_{$typemapName|ucfirst}{literal} table
 	 */
-	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
-		if( $this->verify{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ) && !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
-			$table = '{/literal}{$type.name}_{$typemapName}{literal}';
-			$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'] );
+	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash, $skipVerify = FALSE ){
+		if( $skipVerify || $this->verify{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ) ) {
+			if ( !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
+				$table = '{/literal}{$type.name}_{$typemapName}{literal}';
+				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'] );
+			}
 		}
 	}
 {/literal}{/if}{literal}
 
 	/**
-	 * stores multple records in the {/literal}{$type.name}_{$typemapName}{literal} table
+	 * stores multiple records in the {/literal}{$type.name}_{$typemapName}{literal} table
 {/literal}{if !$typemap.sequence}	 * uses bulk delete to avoid trying to store duplicate records{/if}{literal} 
 	 */
-	function store{/literal}{$typemapName|ucfirst}{literal}Mixed( &$pParamHash ){
-		foreach( $pParamHash as $data ){
-{/literal}{if !$typemap.sequence}
-			$query = "DELETE FROM `{$type.name}_{$typemapName}` WHERE `content_id` = ?";
-			$bindVars = $this->mContentId;
-			$this->mDb->query( $query, $bindVars );
-{/if}{literal}
-			$this->store{/literal}{$typemapName|ucfirst}{literal}( $data );
-		}
+	function store{/literal}{$typemapName|ucfirst}{literal}Mixed( &$pParamHash, $skipVerify = FALSE ){
+{/literal}
+		$query = "DELETE FROM `{$type.name}_{$typemapName}` WHERE `content_id` = ?";
+{literal}
+		$bindVars[] = $this->mContentId;
+		$this->mDb->query( $query, $bindVars );
+		$this->store{/literal}{$typemapName|ucfirst}{literal}( $pParamHash, $skipVerify );
+	}
+
+	/** 
+	 * verifies a data set for storage in the {$type.name}_{$typemapName|ucfirst} table
+	 * data is put into $pParamHash['{/literal}{$typemapName}{literal}_store'] for storage
+	 */
+	function verify{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
+		// Use $pParamHash here since it handles validation right
+		$this->validate{/literal}{$typemapName|ucfirst}{literal}Fields($pParamHash);
+		return( count( $this->mErrors )== 0 );
 	}
 
 	function expunge{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
@@ -75,13 +87,14 @@
 			$bindVars[] = $pParamHash['{/literal}{$typemapName}{literal}_id'];
 			$whereSql .= "`{/literal}{$typemapName}{literal}_id` = ?";
 		}
-{/literal}{else}{literal}
+{/literal}
+{/if}
+{literal}
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
 			$whereSql .= "`content_id` = ?";
 		}
-{/literal}{/if}{literal}
 
 		$query = "DELETE FROM `{/literal}{$type.name}_{$typemapName}{literal}` WHERE ".$whereSql;
 		$this->mDb->query( $query, $bindVars );

@@ -122,10 +122,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mContentId = $result->fields['content_id'];
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-				// load {$typemapName} list from sub map
-				$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
-{/foreach}{literal}
+{/literal}{if count($type.typemaps) > 0}
+				// Load any typemaps
+				$this->loadTypemaps();
+{/if}{literal}
 				$this->m{/literal}{$type.name|capitalize}{literal}Id = $result->fields['{/literal}{$type.name|lower}{literal}_id'];
 
 				$this->mInfo['creator'] = ( !empty( $result->fields['creator_real_name'] ) ? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
@@ -163,10 +163,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 		$this->previewFields($pParamHash);
 
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-		// preview {$typemapName} fieldset
-		$this->preview{$typemapName|ucfirst}Fields($pParamHash);
-{/foreach}{literal}
+{/literal}{if count($type.typemaps) > 0}
+		// Preview any typemaps
+		$this->previewTypemaps($pParamHash);
+{/if}{literal}
 
 		// Liberty should really have a preview function that handles these
 		// But it doesn't so we handle them here.
@@ -199,7 +199,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function store( &$pParamHash ) {
-		if( $this->verify( $pParamHash ) && LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
+		if( $this->verify( $pParamHash )
+{/literal}{if count($type.typemaps) > 0}
+			&& $this->verifyTypemaps( $pParamHash )
+{/if}{literal}
+			&& LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
 			$this->mDb->StartTrans();
 			$table = BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data";
 			if( $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
@@ -218,11 +222,9 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'] );
 			}
 
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// store {$typemapName} fieldset
-			$this->store{$typemapName|ucfirst}($pParamHash);
-{/foreach}{literal}
-
+{/literal}{if count($type.typemaps) > 0}
+			$this->storeTypemaps( $pParamHash );
+{/if}{literal}
 {/literal}
 			/* =-=- CUSTOM BEGIN: store -=-= */
 {if !empty($customBlock.store)}
@@ -274,11 +276,6 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		// Use $pParamHash here since it handles validation right
 		$this->validateFields($pParamHash);
 
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-		// verify {$typemapName} fieldset
-		$this->validate{$typemapName|ucfirst}Fields($pParamHash);
-{/foreach}{literal}
-
 		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['data'] ) ) {
 			$pParamHash['{/literal}{$type.name}{literal}']['edit'] = $pParamHash['{/literal}{$type.name}{literal}']['data'];
 		}
@@ -301,10 +298,14 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		/* =-=- CUSTOM END: verify -=-= */
 {literal}
 
-		// if we have an error we get them all by checking parent classes for additional errors
+		// if we have an error we get them all by checking parent classes for additional errors and the typeMaps if there are any
 		if( count( $this->mErrors ) > 0 ){
 			// check errors of base class so we get them all in one go
 			{/literal}{$type.base_class}{literal}::verify( $pParamHash['{/literal}{$type.name}{literal}'] );
+{/literal}{if count($type.typemaps) > 0}
+			// And now check the typemaps
+			$this->verifyTypemaps( $pParamHash );
+{/if}{literal}
 		}
 
 		return( count( $this->mErrors )== 0 );
@@ -331,11 +332,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 			/* =-=- CUSTOM END: expunge -=-= */
 {literal}
-
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// expunge {$typemapName} fieldset
-			$this->expunge{$typemapName|ucfirst}(array('content_id' => $this->mContentId));
-{/foreach}{literal}
+{/literal}{if count($type.typemaps) > 0}
+			// Expunge any typemaps
+			$this->expungeTypemaps();
+{/if}{literal}
 
 			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
@@ -350,6 +350,52 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 		return $ret;
 	}
+
+{/literal}{if count($type.typemaps) > 0}{literal}
+	// {{{ -- TypeMap functions for fieldsets
+
+	function verifyTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->verify{$typemapName|ucfirst}($pParamHash);
+{/foreach}{literal}
+
+			return ( count($this->mErrors) == 0);
+	}
+
+	function previewTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->preview{$typemapName|ucfirst}Fields($pParamHash);
+{/foreach}{literal}
+	}
+
+	function storeTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// store {$typemapName} fieldset
+			$this->store{$typemapName|ucfirst}Mixed($pParamHash, TRUE);
+{/foreach}{literal}
+	}
+
+	function expungeTypemaps() {
+		if ($this->isValid() ) {
+			$paramHash = array('content_id' => $this->mContent);
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// expunge {$typemapName} fieldset
+			$this->expunge{$typemapName|ucfirst}($paramHash);
+{/foreach}{literal}
+		}
+	}
+
+	function loadTypemaps() {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// load {$typemapName} list from sub map
+			$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
+{/foreach}{literal}
+	}
+
+	// }}} -- end of TypeMap function for fieldsets
+{/literal}{/if}{literal}
 
 	/**
 	 * isValid Make sure {/literal}{$type.name|lower}{literal} is loaded and valid
