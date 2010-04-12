@@ -11,6 +11,7 @@ $form{$pkgSettingsName|ucfirst} = array(
 		'label' => '{$settings.label}',
 		'note' => '{$settings.note}',
 		'type' => '{if $settings.type eq numeric}numeric{elseif $settings.type eq string}input{else}toggle{/if}',
+		{if $settings.default}'default' => '{if $settings.type eq boolean}y{else}{$settings.default}{/if}',{/if}
 	),
 {/foreach}
 );

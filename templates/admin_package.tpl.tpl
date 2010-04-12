@@ -56,7 +56,7 @@
                             {elseif $output.type == 'input'}
                                 <input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
                             {else}
-                                {html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+                                {html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item,$output.default) labels=false id=$item}
                             {/if}
                             {formhelp note=`$output.note` page=`$output.page`}
                         {/forminput}
@@ -90,7 +90,7 @@
 								{elseif $output.type == 'input'}
 									<input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
 								{else}
-									{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+									{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item,$output.default) labels=false id=$item}
 								{/if}
 								{formhelp note=`$output.note` page=`$output.page`}
 							{/forminput}
