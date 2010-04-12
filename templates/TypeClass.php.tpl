@@ -22,6 +22,15 @@
 
 require_once( {/literal}{$type.base_package|upper}{literal}_PKG_PATH.'{/literal}{$type.base_class}{literal}.php' );
 require_once( PKGMKR_PKG_PATH . 'LibertyValidator.php' );
+{/literal}
+/* =-=- CUSTOM BEGIN: require -=-= */
+{if !empty($customBlock.require)}
+{$customBlock.require}
+{else}
+
+{/if}
+/* =-=- CUSTOM END: require -=-= */
+{literal}
 
 /**
 * This is used to uniquely identify the object
@@ -46,7 +55,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @param numeric $pContentId
 	 * @access public
 	 * @return void
-	 */
+list(	 */
 	function {/literal}{$type.class_name}{literal}( $p{/literal}{$type.name|capitalize}{literal}Id=NULL, $pContentId=NULL ) {
 		{/literal}{$type.base_class}::{$type.base_class}();{literal}
 		$this->m{/literal}{$type.name|capitalize}{literal}Id = $p{/literal}{$type.name|capitalize}{literal}Id;
@@ -93,18 +102,30 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$query = "
 				SELECT {/literal}{$type.name|lower}{literal}.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name
+				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
+				lch.`hits`,
+				lf.`storage_path` as avatar,
+				lfp.storage_path AS `primary_attachment_path`
 				$selectSql
 				FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON( lch.`content_id` = lc.`content_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` a ON (uue.`user_id` = a.`user_id` AND uue.`avatar_attachment_id`=a.`attachment_id`)
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON (lf.`file_id` = a.`foreign_id`)
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
 				WHERE {/literal}{$type.name|lower}{literal}.`$lookupColumn`=? $whereSql";
 			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mContentId = $result->fields['content_id'];
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+				// load {$typemapName} list from sub map
+				$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
+{/foreach}{literal}
 				$this->m{/literal}{$type.name|capitalize}{literal}Id = $result->fields['{/literal}{$type.name|lower}{literal}_id'];
 
 				$this->mInfo['creator'] = ( !empty( $result->fields['creator_real_name'] ) ? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
@@ -141,6 +162,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 
 		$this->previewFields($pParamHash);
+
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+		// preview {$typemapName} fieldset
+		$this->preview{$typemapName|ucfirst}Fields($pParamHash);
+{/foreach}{literal}
 
 		// Liberty should really have a preview function that handles these
 		// But it doesn't so we handle them here.
@@ -192,6 +218,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'] );
 			}
 
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// store {$typemapName} fieldset
+			$this->store{$typemapName|ucfirst}($pParamHash);
+{/foreach}{literal}
+
 {/literal}
 			/* =-=- CUSTOM BEGIN: store -=-= */
 {if !empty($customBlock.store)}
@@ -242,6 +273,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 		// Use $pParamHash here since it handles validation right
 		$this->validateFields($pParamHash);
+
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+		// verify {$typemapName} fieldset
+		$this->validate{$typemapName|ucfirst}Fields($pParamHash);
+{/foreach}{literal}
 
 		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['data'] ) ) {
 			$pParamHash['{/literal}{$type.name}{literal}']['edit'] = $pParamHash['{/literal}{$type.name}{literal}']['data'];
@@ -295,6 +331,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 			/* =-=- CUSTOM END: expunge -=-= */
 {literal}
+
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// expunge {$typemapName} fieldset
+			$this->expunge{$typemapName|ucfirst}(array('content_id' => $this->mContentId));
+{/foreach}{literal}
 
 			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
@@ -451,6 +492,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 {/foreach}
 {literal}
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+		// prepVerify {$typemapName} fieldset
+		$this->prep{$typemapName|ucfirst}Verify();
+{/foreach}{literal}
 		}
 	}
 

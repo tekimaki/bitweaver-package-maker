@@ -20,10 +20,10 @@
 	}
 
 	/**
-	 * stores a single record in the {/literal}{$type.name}_{$typemapName|ucfirst}{literal} table
+	 * stores a single record in the {/literal}{$type.name}_{$typemapName}{literal} table
 	 */
 	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
-		if( $this->verify{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ) && !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
+		if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
 			$table = '{/literal}{$type.name}_{$typemapName}{literal}';
 			// {/literal}{$typemapName}{literal} id is set update the record
 			if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_id'] ) ){
@@ -50,7 +50,7 @@
 {/literal}{/if}{literal}
 
 	/**
-	 * stores multple records in the {$type.name}_{$typemapName|ucfirst} table
+	 * stores multple records in the {/literal}{$type.name}_{$typemapName}{literal} table
 {/literal}{if !$typemap.sequence}	 * uses bulk delete to avoid trying to store duplicate records{/if}{literal} 
 	 */
 	function store{/literal}{$typemapName|ucfirst}{literal}Mixed( &$pParamHash ){
@@ -62,17 +62,6 @@
 {/if}{literal}
 			$this->store{/literal}{$typemapName|ucfirst}{literal}( $data );
 		}
-	}
-
-	/** 
-	 * verifies a data set for storage in the {$type.name}_{$typemapName|ucfirst} table
-	 * data is put into $pParamHash['{/literal}{$typemapName}{literal}_store'] for storage
-	 */
-	function verify{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
-		// Use $pParamHash here since it handles validation right
-		$this->validate{/literal}{$typemapName|ucfirst}{literal}Fields($pParamHash);
-
-		return( count( $this->mErrors )== 0 );
 	}
 
 	function expunge{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
@@ -104,16 +93,18 @@
 		return $ret;
 	}
 
-	function list{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash ){
+	function list{/literal}{$typemapName|ucfirst}{literal}( $pParamHash = NULL ){
 		$ret = $bindVars = array();
 
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
 			$whereSql = " WHERE `{/literal}{$type.name}_{$typemapName}{literal}`.content_id = ?";
+		} else {
+			$bindVars[] = $this->mContentId;
+			$whereSql = " WHERE `{/literal}{$type.name}_{$typemapName}{literal}`.content_id = ?";
 		}
 
-		$bindVars = array( $contentId );
 		$query = "{/literal}SELECT {if $typemap.sequence}`{$typemapName}_id`,{/if}
 {foreach from=$typemap.fields key=fieldName item=field name=fields}
  `{$fieldName}`{if !$smarty.foreach.fields.last},{/if}
@@ -128,13 +119,15 @@
 	 * preview{/literal}{$typemapName|ucfirst}{literal}Fields prepares the fields in this type for preview
 	 */
 	 function preview{/literal}{$typemapName|ucfirst}{literal}Fields(&$pParamHash) {
-	 	/* @TODO change these references
 		$this->prep{/literal}{$typemapName|ucfirst}{literal}Verify();
-		LibertyValidator::preview(
-			$this->mVerification['{/literal}{$type.name}_{$typemapName}{literal}'],
-			$pParamHash['{/literal}{$type.name}{literal}'],
-			$this->mInfo);
-		*/
+		if (!empty($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal})) {
+			foreach($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal} as $key => $data) {
+				LibertyValidator::preview(
+					$this->mVerification['{/literal}{$type.name}_{$typemapName}{literal}'],
+					$pParamHash['{/literal}{$type.name}']['{$typemapName}'][$key]{literal},
+					$this, $pParamHash['{/literal}{$typemapName}{literal}_store'][$key]);
+			}
+		}
 	}
 
 	/**
@@ -142,10 +135,14 @@
 	 */
 	function validate{/literal}{$typemapName|ucfirst}{literal}Fields(&$pParamHash) {
 		$this->prep{/literal}{$typemapName|ucfirst}{literal}Verify();
-		LibertyValidator::validate(
-			$this->mVerification,
-			$pParamHash['{/literal}{$type.name}{literal}'],
-			$this, $pParamHash['{/literal}{$typemapName}{literal}_store']);
+		if (!empty($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal})) {
+			foreach($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal} as $key => $data) {
+				LibertyValidator::validate(
+					$this->mVerification['{/literal}{$type.name}_{$typemapName}{literal}'],
+					$pParamHash['{/literal}{$type.name}']['{$typemapName}'][$key]{literal},
+					$this, $pParamHash['{/literal}{$typemapName}{literal}_store'][$key]);
+			}
+		}
 	}
 
 	/**
