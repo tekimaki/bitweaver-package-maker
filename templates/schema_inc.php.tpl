@@ -17,7 +17,7 @@ $tables = array(
                 , CONSTRAINT `{$typeName}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `liberty_content` (`content_id`)
 {/if}
 {foreach from=$type.constraints item=constraint}
-		, CONSTRAINT {$constraint}
+		, {$constraint}
 {/foreach}
 		'
 {/if}
@@ -45,7 +45,12 @@ $gBitInstaller->registerPackageInfo( {/literal}{$PACKAGE}{literal}_PKG_NAME, arr
 // Sequences
 $gBitInstaller->registerSchemaSequences( {/literal}{$PACKAGE}{literal}_PKG_NAME, array (
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
-	'{$typeName}_data_id_seq' => array( 'start' => 1 ){if !$smarty.foreach.types.last},{/if}
+	'{$typeName}_data_id_seq' => array( 'start' => 1 ),
+{foreach from=$type.typemaps key=typemapName item=typemap}
+{if $typemap.sequence}
+	'{$typeName}_{$typemapName}_id_seq' => array( 'start' => 1 ),
+{/if}
+{/foreach}
 {/foreach}{literal}
 ));
 
@@ -91,9 +96,9 @@ $gBitInstaller->registerPreferences( {/literal}{$PACKAGE}{literal}_PKG_NAME, arr
 // Requirements
 $gBitInstaller->registerRequirements( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 {/literal}{if empty($config.requirements)}
-	'liberty' => array( 'min' => '2.1.0' )
+	'liberty' => array( 'min' => '2.1.0' ),
 {else}{foreach from=$config.requirements key=pkg item=reqs name=reqs}
-	'{$pkg}' => array( {foreach from=$reqs key=k item=v name=values}'{$k}' => '{$v}'{if !$smarty.foreach.values.last},{/if}{/foreach} ){if !$smarty.foreach.reqs.last},{/if}
+	'{$pkg}' => array( {foreach from=$reqs key=k item=v name=values}'{$k}' => '{$v}',{/foreach} ),
 {/foreach}
 {/if}
 {literal}

@@ -158,6 +158,9 @@ function validate_config(&$config) {
 	}
 
 	foreach ($config['types'] as $typeName => $type) {
+		if ( substr( $typeName,0,2 ) === 'pg' ){
+			error("Do not start type names with 'pg' as there is a bug in the ADODB library which causes it to not see tables with names start with 'pg'" );
+		}
 		if (empty($type['class_name'])) {
 			$config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
 		}
@@ -180,6 +183,18 @@ function validate_config(&$config) {
 			if (empty($field['schema']['type'])) {
 				error("A type is required in the schema for field $fieldName in type $typeName");
 			}
+			if( !validate_reserved_sql( $fieldName ) ){
+				error( "$fieldName is a reserved sql term please change the schema in type $typeName" );
+			}	
+		}
+		if( !empty( $type['typemaps'] ) ){
+			foreach ($type['typemaps'] as $typemapName => $typemap) {
+				foreach ($typemap['fields'] as $fieldName => $field) {
+					if( !validate_reserved_sql( $fieldName ) ){
+						error( "$fieldName is a reserved sql term please change the schema in typemap $typemapName" );
+					}	
+				}
+			}
 		}
 	}
 
@@ -188,6 +203,11 @@ function validate_config(&$config) {
 	//  print_r($config);
 	
 	return $config;
+}
+
+function validate_reserved_sql( $pParam ){
+	$words = array( 'column' );
+	return ( !in_array( $pParam, $words ) );
 }
 
 // Prepare any additional data based config data
