@@ -19,7 +19,7 @@ settings:
   group:
     boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
     string: {label: A String Value, type: string, note: Enter a value }
-    numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value default: 100 }
+    numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value, default: 100 }
 types:
   sample:
     description: A sample class which shows the power of the pkgmkr package.
