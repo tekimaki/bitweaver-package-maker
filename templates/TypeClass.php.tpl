@@ -55,7 +55,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @param numeric $pContentId
 	 * @access public
 	 * @return void
-list(	 */
+	 */
 	function {/literal}{$type.class_name}{literal}( $p{/literal}{$type.name|capitalize}{literal}Id=NULL, $pContentId=NULL ) {
 		{/literal}{$type.base_class}::{$type.base_class}();{literal}
 		$this->m{/literal}{$type.name|capitalize}{literal}Id = $p{/literal}{$type.name|capitalize}{literal}Id;
