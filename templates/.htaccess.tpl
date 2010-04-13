@@ -16,11 +16,10 @@
     RewriteRule    ^{if empty($type.rewrite_path)}{$typeName}{else}{$type.rewrite_path}{/if}/delete/([0-9]+)$  remove_{$typeName}.php?{$typeName}_id=$1  [L]
 {/foreach}
 
-    # =-=- CUSTOM BEGIN: htaccess -=-= #
-{if !empty($customBlock.htaccess)}
-    {$customBlock.htaccess}
-{/if}
-    # =-=- CUSTOM END: htaccess -=-= #
+    # =-=- CUSTOM BEGIN: htaccess -=-= #{if !empty($customBlock.htaccess)}{$customBlock.htaccess}{else}
+
+
+    {/if}# =-=- CUSTOM END: htaccess -=-= #
 
 {literal}
 </IfModule>
