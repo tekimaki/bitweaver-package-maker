@@ -70,10 +70,11 @@ if (count($defaults) > 0) {
 $gBitInstaller->registerUserPermissions( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 	array ( 'p_{/literal}{$package}{literal}_admin'  , 'Can admin the {/literal}{$package}{literal} package', 'admin'      , {/literal}{$PACKAGE}{literal}_PKG_NAME ),
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
-	array ( 'p_{$typeName}_update' , 'Can update any {$typeName} entry' , 'editors'    , {$PACKAGE}_PKG_NAME ),
-	array ( 'p_{$typeName}_create' , 'Can create a {$typeName} entry'   , 'registered' , {$PACKAGE}_PKG_NAME ),
-	array ( 'p_{$typeName}_view'   , 'Can view {$typeName} entries'     , 'basic'      , {$PACKAGE}_PKG_NAME ),
-	array ( 'p_{$typeName}_expunge', 'Can delete any {$typeName} entry' , 'admin'      , {$PACKAGE}_PKG_NAME ),
+	array ( 'p_{$typeName}_create' , 'Can create a {$typeName} entry'   , '{$type.permissions.default.create|default:registered}' , {$PACKAGE}_PKG_NAME ),
+	array ( 'p_{$typeName}_view'   , 'Can view {$typeName} entries'     , '{$type.permissions.default.view|default:basic}'      , {$PACKAGE}_PKG_NAME ),
+	array ( 'p_{$typeName}_update' , 'Can update any {$typeName} entry' , '{$type.permissions.default.update|default:editors}'    , {$PACKAGE}_PKG_NAME ),
+	array ( 'p_{$typeName}_expunge', 'Can delete any {$typeName} entry' , '{$type.permissions.default.expunge|default:admin}'      , {$PACKAGE}_PKG_NAME ),
+	array ( 'p_{$typeName}_admin'  , 'Can admin any {$typeName} entry'  , '{$type.permissions.default.admin|default:admin}'      , {$PACKAGE}_PKG_NAME ),
 {/foreach}{literal}
 ));
 

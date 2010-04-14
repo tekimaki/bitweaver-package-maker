@@ -67,11 +67,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			'maintainer_url'	  => 'http://www.bitweaver.org'
 {/if}{literal}		));
 		// Permission setup
-		$this->mAdminContentPerm   = 'p_{/literal}{$package}{literal}_admin';
-		$this->mViewContentPerm	   = 'p_{/literal}{$type.name|lower}{literal}_view';
 		$this->mCreateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_create';
+		$this->mViewContentPerm	   = 'p_{/literal}{$type.name|lower}{literal}_view';
 		$this->mUpdateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_update';
 		$this->mExpungeContentPerm = 'p_{/literal}{$type.name|lower}{literal}_expunge';
+		$this->mAdminContentPerm   = 'p_{/literal}{$package}{literal}_admin';
 	}
 
 	/**
