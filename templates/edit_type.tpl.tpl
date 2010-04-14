@@ -14,6 +14,7 @@
 	</div>
 
 	<div class="body">
+		{formfeedback warning=$errors}
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<div class="servicetabs">

@@ -14,6 +14,8 @@ class LibertyValidator {
 			case 'url':
 			    LibertyValidator::preview_strings($vars, $pParamHash, $store);
 				break;
+			// TODO: for the moment validat references as an int
+		    	case 'reference':
 			case 'int':
 			case 'long':
 				LibertyValidator::preview_integers($vars, $pParamHash, $store);
@@ -53,6 +55,8 @@ class LibertyValidator {
 			case 'url':
 				LibertyValidator::validate_strings($vars, $pParamHash, $pObject, $store);
 				break;
+			// TODO: for the moment validat references as an int
+		    	case 'reference':
 			case 'int':
 			case 'long':
 				LibertyValidator::validate_integers($vars, $pParamHash, $pObject, $store);
@@ -115,7 +119,7 @@ class LibertyValidator {
 					$pObject->mErrors[$var] = 'A value for ' . $constraints['name']
 						. ' is required.';
 				}
-				else {				
+				else {
 					// Somebody deleted the value, we need to null it out
 					$store[$var] = NULL;
 				}
@@ -140,7 +144,7 @@ class LibertyValidator {
 					$store[$var] = $pParamHash[$var];
 				}
 			}
-		}		
+		}
 
 		return (count($pObject->mErrors) == 0);
 	}
@@ -240,7 +244,7 @@ class LibertyValidator {
 							$pParamHash[$var]['Month'].
 							$pParamHash[$var]['Day'];
 						if (strlen($store[$var]) != 8) {
-							$pObject->mErrors[$var] = 'The value of ' . 
+							$pObject->mErrors[$var] = 'The value of ' .
 								$constraint['name'] . ' is invalid.';
 						}
 					}
@@ -253,7 +257,7 @@ class LibertyValidator {
 
 		return (count($pObject->mErrors) == 0);
 	}
-	
+
 	function preview_times(&$pVars, &$pParamHash, &$pStore) {
 		global $gBitSystem;
 		$offset = $gBitSystem->get_display_offset();
@@ -264,7 +268,7 @@ class LibertyValidator {
 				//				date_default_timezone_set('PST');
 				$pStore[$var] =
 					$bd->gmmktime(($pParamHash[$var]['Meridian'] == 'pm' ?
-							$pParamHash[$var]['Hour'] + 12 : 
+							$pParamHash[$var]['Hour'] + 12 :
 							$pParamHash[$var]['Hour']),
 								  $pParamHash[$var]['Minute'], 0,
 								  1, 2, 1970) - $offset;
@@ -280,16 +284,16 @@ class LibertyValidator {
 
 		foreach ($pVars as $var => $constraints) {
 			if (isset( $pParamHash[$var] ) ) {
-				if ((!isset($pParamHash[$var]['Meridian']) || 
+				if ((!isset($pParamHash[$var]['Meridian']) ||
 						($pParamHash[$var]['Meridian'] == 'am' ||
 							$pParamHash[$var]['Meridian'] == 'pm')) &&
 					(isset($pParamHash[$var]['Hour']) &&
-						is_numeric($pParamHash[$var]['Hour'])) && 				   
-					(!isset($pParamHash[$var]['Minute']) || 
-						is_numeric($pParamHash[$var]['Minute']) && 
-						(!isset($pParamHash[$var]['Second']) || 
+						is_numeric($pParamHash[$var]['Hour'])) &&
+					(!isset($pParamHash[$var]['Minute']) ||
+						is_numeric($pParamHash[$var]['Minute']) &&
+						(!isset($pParamHash[$var]['Second']) ||
 							is_numeric($pParamHash[$var]['Second'])))) {
-					
+
 					// We work from January 2nd to leave space for negative
 					// timezone offsets.
 					if (isset($pParamHash[$var]['Meridian'])) {
@@ -313,7 +317,7 @@ class LibertyValidator {
 					$store[$var] = $bd->getUTCFromDisplayDate($store[$var]);
 				}
 				else {
-					$pObject->mErrors[$var] = 'The value for '. 
+					$pObject->mErrors[$var] = 'The value for '.
 						$constraints['name']
 						. ' is invalid.';
 				}
@@ -348,7 +352,7 @@ class LibertyValidator {
 				$store[$var] =
 					($pParamHash[$var] == 'on' ||
 						$pParamHash[$var] == 1 ||
-						$pParamHash[$var] == 'yes') 
+						$pParamHash[$var] == 'yes')
 					? 1 : 0;
 			}
 			else {
@@ -369,7 +373,7 @@ class LibertyValidator {
 		foreach( $pVars as $var => $constraints) {
 			if (!empty( $pParamHash[$var] ) ) {
 				if (is_numeric($pParamHash[$var])) {
-					if (preg_match('/^([0-9]+\.?[0-9]*)$/', 
+					if (preg_match('/^([0-9]+\.?[0-9]*)$/',
 							$pParamHash[$var], $match)) {
 						if (empty($constraints['min']) ||
 							$pParamHash[$var] < $constraints['min']) {
@@ -393,13 +397,13 @@ class LibertyValidator {
 					}
 					else {
 						$pObject->mErrors[$var] = 'The value of '
-							. $constraints['name'] 
+							. $constraints['name']
 							. ' is not an integer.';
 					}
 				}
 				else {
-					$pObject->mErrors[$var] = 'The value of ' . 
-						$constraints['name'] 
+					$pObject->mErrors[$var] = 'The value of ' .
+						$constraints['name']
 						. ' is not an integer.';
 				}
 			}
@@ -421,7 +425,7 @@ class LibertyValidator {
 		foreach ($pVars as $var => $constrants) {
 			$pStore[$var] = isset($pParamHash[$var]) ? $pParamHash[$var] : NULL;
 		}
-	}	
+	}
 
 	function validate_phone($pVars, &$pParamHash, &$pObject, &$store) {
 		foreach( $pVars as $var => $constraints ) {

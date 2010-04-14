@@ -190,6 +190,12 @@ function validate_config(&$config) {
 		if( !empty( $type['typemaps'] ) ){
 			foreach ($type['typemaps'] as $typemapName => $typemap) {
 				foreach ($typemap['fields'] as $fieldName => $field) {
+					if (empty($field['schema'])) {
+						error("A schema is required for typemap $typemapName field $fieldName in type $typeName");
+					}
+					if (empty($field['schema']['type'])) {
+						error("A type is required in the schema for typemap $typemapName field $fieldName in type $typeName");
+					}
 					if( !validate_reserved_sql( $fieldName ) ){
 						error( "$fieldName is a reserved sql term please change the schema in typemap $typemapName" );
 					}	

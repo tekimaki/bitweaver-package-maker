@@ -22,6 +22,15 @@
 
 require_once( {/literal}{$type.base_package|upper}{literal}_PKG_PATH.'{/literal}{$type.base_class}{literal}.php' );
 require_once( PKGMKR_PKG_PATH . 'LibertyValidator.php' );
+{/literal}
+/* =-=- CUSTOM BEGIN: require -=-= */
+{if !empty($customBlock.require)}
+{$customBlock.require}
+{else}
+
+{/if}
+/* =-=- CUSTOM END: require -=-= */
+{literal}
 
 /**
 * This is used to uniquely identify the object
@@ -93,18 +102,30 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$query = "
 				SELECT {/literal}{$type.name|lower}{literal}.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name
+				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
+				lch.`hits`,
+				lf.`storage_path` as avatar,
+				lfp.storage_path AS `primary_attachment_path`
 				$selectSql
 				FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON( lch.`content_id` = lc.`content_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` a ON (uue.`user_id` = a.`user_id` AND uue.`avatar_attachment_id`=a.`attachment_id`)
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON (lf.`file_id` = a.`foreign_id`)
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
 				WHERE {/literal}{$type.name|lower}{literal}.`$lookupColumn`=? $whereSql";
 			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mContentId = $result->fields['content_id'];
+{/literal}{if count($type.typemaps) > 0}
+				// Load any typemaps
+				$this->loadTypemaps();
+{/if}{literal}
 				$this->m{/literal}{$type.name|capitalize}{literal}Id = $result->fields['{/literal}{$type.name|lower}{literal}_id'];
 
 				$this->mInfo['creator'] = ( !empty( $result->fields['creator_real_name'] ) ? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
@@ -142,6 +163,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 		$this->previewFields($pParamHash);
 
+{/literal}{if count($type.typemaps) > 0}
+		// Preview any typemaps
+		$this->previewTypemaps($pParamHash);
+{/if}{literal}
+
 		// Liberty should really have a preview function that handles these
 		// But it doesn't so we handle them here.
 		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["title"] ) ) {
@@ -173,7 +199,11 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function store( &$pParamHash ) {
-		if( $this->verify( $pParamHash ) && LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
+		if( $this->verify( $pParamHash )
+{/literal}{if count($type.typemaps) > 0}
+			&& $this->verifyTypemaps( $pParamHash )
+{/if}{literal}
+			&& LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
 			$this->mDb->StartTrans();
 			$table = BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data";
 			if( $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
@@ -192,6 +222,9 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'] );
 			}
 
+{/literal}{if count($type.typemaps) > 0}
+			$this->storeTypemaps( $pParamHash );
+{/if}{literal}
 {/literal}
 			/* =-=- CUSTOM BEGIN: store -=-= */
 {if !empty($customBlock.store)}
@@ -265,10 +298,14 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		/* =-=- CUSTOM END: verify -=-= */
 {literal}
 
-		// if we have an error we get them all by checking parent classes for additional errors
+		// if we have an error we get them all by checking parent classes for additional errors and the typeMaps if there are any
 		if( count( $this->mErrors ) > 0 ){
 			// check errors of base class so we get them all in one go
 			{/literal}{$type.base_class}{literal}::verify( $pParamHash['{/literal}{$type.name}{literal}'] );
+{/literal}{if count($type.typemaps) > 0}
+			// And now check the typemaps
+			$this->verifyTypemaps( $pParamHash );
+{/if}{literal}
 		}
 
 		return( count( $this->mErrors )== 0 );
@@ -295,6 +332,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 			/* =-=- CUSTOM END: expunge -=-= */
 {literal}
+{/literal}{if count($type.typemaps) > 0}
+			// Expunge any typemaps
+			$this->expungeTypemaps();
+{/if}{literal}
 
 			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
@@ -309,6 +350,52 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 		return $ret;
 	}
+
+{/literal}{if count($type.typemaps) > 0}{literal}
+	// {{{ -- TypeMap functions for fieldsets
+
+	function verifyTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->verify{$typemapName|ucfirst}($pParamHash);
+{/foreach}{literal}
+
+			return ( count($this->mErrors) == 0);
+	}
+
+	function previewTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->preview{$typemapName|ucfirst}Fields($pParamHash);
+{/foreach}{literal}
+	}
+
+	function storeTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// store {$typemapName} fieldset
+			$this->store{$typemapName|ucfirst}Mixed($pParamHash, TRUE);
+{/foreach}{literal}
+	}
+
+	function expungeTypemaps() {
+		if ($this->isValid() ) {
+			$paramHash = array('content_id' => $this->mContent);
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// expunge {$typemapName} fieldset
+			$this->expunge{$typemapName|ucfirst}($paramHash);
+{/foreach}{literal}
+		}
+	}
+
+	function loadTypemaps() {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// load {$typemapName} list from sub map
+			$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
+{/foreach}{literal}
+	}
+
+	// }}} -- end of TypeMap function for fieldsets
+{/literal}{/if}{literal}
 
 	/**
 	 * isValid Make sure {/literal}{$type.name|lower}{literal} is loaded and valid
@@ -451,6 +538,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 {/foreach}
 {literal}
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+		// prepVerify {$typemapName} fieldset
+		$this->prep{$typemapName|ucfirst}Verify();
+{/foreach}{literal}
 		}
 	}
 
