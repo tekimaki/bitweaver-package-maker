@@ -7,6 +7,15 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
 
+/* =-=- CUSTOM BEGIN: index -=-= */
+{/literal}{if !empty($customBlock.index)}
+{$customBlock.index}
+{else}
+
+{/if}{literal}
+/* =-=- CUSTOM END: index -=-= */
+{/literal}{if $config.homeable}{literal}
+
 $typeIds = array({/literal}
 {foreach from=$config.types key=typeName item=type name=types}
 		"{$typeName}_id"{if !$smarty.foreach.types.last},{/if}
@@ -59,4 +68,4 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 	$gBitSystem->fatalError( tra( "The default {/literal}{$package}{literal} page has not been configured." ) );
 }
 
-{/literal}
+{/literal}{/if}
