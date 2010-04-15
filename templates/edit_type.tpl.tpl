@@ -8,7 +8,7 @@
 			{if $gContent->mInfo.{/literal}{$type.name}{literal}_id}
 				{tr}Edit {$gContent->mInfo.title|escape}{/tr}
 			{else}
-				{tr}Create New {/literal}{$type.name|capitalize}{literal}{/tr}
+				{tr}Create New {$gContent->mType.display_name}{/tr}
 			{/if}
 		</h1>
 	</div>

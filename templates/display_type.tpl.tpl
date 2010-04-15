@@ -5,16 +5,16 @@
 	<div class="floaticon">
 		{if $print_page ne 'y'}
 			{if $gContent->hasUpdatePermission()}
-				<a title="{tr}Edit this {/literal}{$type.name}{literal}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit {/literal}{$type.name|capitalize}{literal}"}</a>
+				<a title="{tr}Edit this {$gContent->mType.display_name|strtolower}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit `$gContent->mType.display_name`"}</a>
 			{/if}
 			{if $gContent->hasExpungePermission()}
-				<a title="{tr}Remove this {/literal}{$type.name}{literal}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}remove_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove {/literal}{$type.name|capitalize}{literal}"}</a>
+				<a title="{tr}Remove this {$gContent->mType.display_name|strtolower}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}remove_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove {/literal}{$type.name|capitalize}{literal}"}</a>
 			{/if}
 		{/if}<!-- end print_page -->
 	</div><!-- end .floaticon -->
 
 	<div class="header">
-		<h1>{$gContent->mInfo.title|escape|default:"{/literal}{$type.name|capitalize}{literal}"}</h1>
+		<h1>{$gContent->mInfo.title|escape|default:"{/literal}{$type.display_name|capitalize}{literal}"}</h1>
 
 		<div class="date">
 			{tr}Created by{/tr}: {displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name}, {tr}Last modification by{/tr}: {displayname user=$gContent->mInfo.modifier_user user_id=$gContent->mInfo.modifier_user_id real_name=$gContent->mInfo.modifier_real_name}, {$gContent->mInfo.last_modified|bit_long_datetime}

@@ -7,7 +7,7 @@
 {foreach from=$config.types key=typeName item=type name=types}
 {literal}
 			{if $gBitUser->hasPermission( 'p_{/literal}{$typeName}{literal}_view')}
-					<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}list_{/literal}{$typeName}{literal}.php">{tr}List {/literal}{$typeName|capitalize}{literal} Data{/tr}</a></li>
+				<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}list_{/literal}{$typeName}{literal}.php">{tr}List {/literal}{if $type.display_name_plural}{$type.display_name_plural}{else}{$type.display_name} Data{/if}{literal}{/tr}</a></li>
 			{/if}
 {/literal}
 {/foreach}
@@ -17,7 +17,7 @@
 {foreach from=$config.types key=typeName item=type name=types}
 {literal}
 		{if $gBitUser->hasPermission( 'p_{/literal}{$typeName}{literal}_create')}
-			<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$typeName}{literal}.php">{tr}Create {/literal}{$typeName|capitalize}{literal}{/tr}</a></li>
+		<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$typeName}{literal}.php">{tr}Create {/literal}{$type.display_name}{literal}{/tr}</a></li>
 		{/if}
 {/literal}
 {/foreach}

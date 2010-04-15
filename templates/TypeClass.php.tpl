@@ -63,10 +63,15 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$this->mContentTypeGuid = BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID;
 		$this->registerContentType( BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID, array(
 			'content_type_guid'	  => BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID,
-{/literal}{if !empty($type.content_description)}
-			'content_description' => '{$type.content_description}',
+{/literal}{if $type.display_name}
+			'content_description' => '{$type.display_name}', // legacy name registration param, deprecated in pkgmkr classes
+			'display_name' => '{$type.display_name}',
 {else}
-			'content_description' => '{$type.name|capitalize} data',
+			'content_description' => '{$type.name|capitalize} data', // legacy name registration param, deprecated in pkgmkr classes
+			'display_name' => '{$type.name|capitalize} data',
+{/if}
+{if $type.display_name_plural}
+			'display_name_plural' => '{$type.display_name_plural}',
 {/if}{literal}			'handler_class'		  => '{/literal}{$type.class_name}{literal}',
 			'handler_package'	  => '{/literal}{$package}{literal}',
 			'handler_file'		  => '{/literal}{$type.class_name}{literal}.php',

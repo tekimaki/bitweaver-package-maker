@@ -164,6 +164,9 @@ function validate_config(&$config) {
 		if (empty($type['class_name'])) {
 			$config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
 		}
+		if (empty($type['display_name'])) {
+			error("A display name is required for $typeName");
+		}
 		if (empty($type['description'])) {
 			error("A description is required for $typeName");
 		}
@@ -172,9 +175,6 @@ function validate_config(&$config) {
 		}
 		if (empty($type['base_package'])) {
 			error("A base package is required for $typeName");
-		}
-		if (empty($type['content_description'])) {
-			error("A content description is required for $typeName");
 		}
 		foreach ($type['fields'] as $fieldName => $field) {
 			if (empty($field['schema'])) {
