@@ -22,7 +22,8 @@ settings:
     numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value, default: 100 }
 types:
   sample:
-    display_name: Sample Data Type
+    content_name: Sample Data Type
+    content_name_plural: Samples
     description: A sample class which shows the power of the pkgmkr package.
     base_class: LibertyMime
     base_package: liberty

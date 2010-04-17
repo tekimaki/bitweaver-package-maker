@@ -164,8 +164,8 @@ function validate_config(&$config) {
 		if (empty($type['class_name'])) {
 			$config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
 		}
-		if (empty($type['display_name'])) {
-			error("A display name is required for $typeName");
+		if (empty($type['content_name'])) {
+			error("A content name is required for $typeName");
 		}
 		if (empty($type['description'])) {
 			error("A description is required for $typeName");

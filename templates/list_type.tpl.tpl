@@ -4,7 +4,7 @@
 
 <div class="listing {/literal}{$package} {$type.name}{literal}">
 	<div class="header">
-		<h1>{tr}{if $gContent->mType.display_name_plural}{$gContent->mType.display_name_plural}{else}{$gContent->mType.display_name} Records{/if}{/tr}</h1>
+		<h1>{tr}{$gContent->getContentTypeName( TRUE )}{/tr}</h1>
 	</div>
 
 	<div class="body">

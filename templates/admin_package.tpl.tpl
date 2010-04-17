@@ -73,7 +73,7 @@
 
 {* For Each Type Settings *}
 {foreach from=$config.types key=typeName item=type name=types}{literal}
-	{jstab title="{/literal}{$type.display_name|capitalize}{literal} Settings"}
+	{jstab title="{/literal}{$type.content_name|capitalize}{literal} Settings"}
 	{jstabs}{/literal}
 
 {* Defined Type Settings *}
@@ -104,8 +104,8 @@
 
 {* List Settings *}
 {literal}
-			{jstab title="{/literal}{$type.display_name|capitalize}{literal} List Settings"}
-				{legend legend="{/literal}{$type.display_name|capitalize}{literal} List Settings"}
+			{jstab title="{/literal}{$type.content_name|capitalize}{literal} List Settings"}
+				{legend legend="{/literal}{$type.content_name|capitalize}{literal} List Settings"}
 					<input type="hidden" name="page" value="{$page}" />
 					{foreach from=$form{/literal}{$typeName}{literal}Lists key=item item=output}
 						<div class="row">
