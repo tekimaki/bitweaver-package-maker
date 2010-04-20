@@ -64,15 +64,17 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 }
 {/literal}{else}{literal}
 }else{
+{/literal}
 	/* =-=- CUSTOM BEGIN: index -=-= */
-	{/literal}{if !empty($customBlock.index)}
-	{$customBlock.index}
-	{else}
+{if !empty($customBlock.index)}
+{$customBlock.index}
+{else}
 		$indexTitle = tra('{$Package}');
 		$gBitSmarty->assign( 'indexTitle', $indexTitle );
 		$gBitSystem->display( 'bitpackage:{$config.package}/display_index.tpl', $indexTitle, array( 'display_mode' => 'display' ));
-	{/if}{literal}
+{/if}
 	/* =-=- CUSTOM END: index -=-= */
+{literal}
 }
 {/literal}{/if}
 
