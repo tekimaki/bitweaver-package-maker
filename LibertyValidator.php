@@ -14,6 +14,9 @@ class LibertyValidator {
 			case 'url':
 			    LibertyValidator::preview_strings($vars, $pParamHash, $store);
 				break;
+			case 'choice':
+				LibertyValidator::preview_choice($vars, $pParamHash, $store);
+				break;
 			// TODO: for the moment validat references as an int
 		    	case 'reference':
 			case 'int':
@@ -24,6 +27,9 @@ class LibertyValidator {
 			case 'float':
 			case 'double':
 				LibertyValidator::preview_reals($vars, $pParamHash, $store);
+				break;
+			case 'hexcolor':
+				LibertyValidator::preview_hexcolor($vars, $pParamHash, $store);
 				break;
 			case 'boolean':
 				LibertyValidator::preview_booleans($vars, $pParamHash, $store);
@@ -55,6 +61,9 @@ class LibertyValidator {
 			case 'url':
 				LibertyValidator::validate_strings($vars, $pParamHash, $pObject, $store);
 				break;
+			case 'choice':
+				LibertyValidator::validate_choice($vars, $pParamHash, $pObject, $store);
+				break;
 			// TODO: for the moment validat references as an int
 		    	case 'reference':
 			case 'int':
@@ -65,6 +74,9 @@ class LibertyValidator {
 			case 'float':
 			case 'double':
 				LibertyValidator::validate_reals($vars, $pParamHash, $pObject, $store);
+				break;
+			case 'hexcolor':
+				LibertyValidator::validate_hexcolor($vars, $pParamHash, $pObject, $store);
 				break;
 			case 'boolean':
 				LibertyValidator::validate_booleans($vars, $pParamHash, $pObject, $store);
@@ -147,6 +159,28 @@ class LibertyValidator {
 		}
 
 		return (count($pObject->mErrors) == 0);
+	}
+
+	function preview_choice(&$pVars, &$pParamHash, &$pStore) {
+		foreach( $pVars as $var => $constraints) {
+			$pStore[$var] = isset($pParamHash[$var]) ? $pParamHash[$var] : NULL;
+		}
+	}
+
+	function validate_choice(&$pVars, &$pParamHash, &$pObject, &$store) {
+		foreach( $pVars as $var => $constraints) {
+			if (isset( $pParamHash[$var] ) ) {
+				if( in_array( $pParamHash[$var], $constraints['choices'] ) ){
+					$store[$var] = $pParamHash[$var];
+				}
+			}
+			else if (isset($contraints['required']) && $constraints['required']) {
+				$pObject->mErrors[$var] = 'A value for ' . $constraint['name'] . ' is required.';
+			}
+			else{
+				$store[$var] = NULL;
+			}
+		}
 	}
 
 	function preview_integers(&$pVars, &$pParamHash, &$pStore) {
@@ -418,6 +452,36 @@ class LibertyValidator {
 			}
 		}
 
+		return (count($pObject->mErrors) == 0);
+	}
+
+	function preview_hexcolor(&$pVars, &$pParamHash, &$pStore) {
+		foreach( $pVars as $var => $constraints) {
+			$pStore[$var] = isset($pParamHash[$var]) ? $pParamHash[$var] : NULL;
+		}
+	}
+
+	function validate_hexcolor($pVars, &$pParamHash, &$pObject, &$store) {
+		foreach( $pVars as $var => $constraints) {
+			if (isset( $pParamHash[$var] ) ) {
+				$hexcolor = $pParamHash[$var];
+				// If user accidentally passed along the # sign, strip it off
+				// TODO: Not sure if we should trim this is or not as storage could be inconsitent
+				// $hexcolor = ltrim( $hexcolor, '#' );
+		        if ( ctype_xdigit($hexcolor) && (strlen($hexcolor) == 6 || strlen($hexcolor) == 3))
+					$store[$var] = $hexcolor;
+				else {
+					$pObject->mErrors[$var] = tra('The hex color code you entered is not valid');
+				}
+			}
+			else if (isset($constraints['required']) && $constraints['required']) {
+				$pObject->mErrors[$var] = 'A value for ' . $constraints['name'] . ' is required.';
+			}
+			else {
+				$store[$var] = NULL;
+			}
+		}
+		
 		return (count($pObject->mErrors) == 0);
 	}
 
