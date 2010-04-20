@@ -4,7 +4,7 @@
 
 <div class="listing {/literal}{$package} {$type.name}{literal}">
 	<div class="header">
-		<h1>{tr}{$gContent->getContentTypeName( TRUE )}{/tr}</h1>
+		<h1>{tr}{$gContent->getContentTypeName(TRUE)}{/tr}</h1>
 	</div>
 
 	<div class="body">

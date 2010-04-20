@@ -60,6 +60,6 @@ $gBitSmarty->assign_by_ref( '{/literal}{$type.name}{literal}List', $list );
 $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( 'List {/literal}{$type.name|capitalize}{literal}' ) , array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( 'List '.$gContent->getContentTypeName( TRUE ) ) , array( 'display_mode' => 'list' ));
 
 {/literal}
