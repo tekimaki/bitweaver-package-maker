@@ -53,7 +53,7 @@ function copy_files($config, $dir, $files) {
 		message(" ".$filename);
 
 		if (!copy(PKGMKR_PKG_DIR.'/'.RESOURCE_DIR.$file, $filename)) {
-      error("Error copying file: $file");
+			error("Error copying file: $file");
 		}
 	}
 }
@@ -93,7 +93,7 @@ function render_type_file($dir, $file, $template, $config) {
 				if ($contents = file_get_contents($filename)) {
 					$count = preg_match_all(
 						'@\s*'
-						.'(?:/\*|#|\{\*) =-=- CUSTOM BEGIN: ([^\s]*) -=-= (?:\*/|#|\{\*)'
+						.'(?:/\*|#|\{\*) =-=- CUSTOM BEGIN: ([^\s]*) -=-= (?:\*/|#|\*\})'
 						.'(.*)'
 						.'(?:/\*|#|\{\*) =-=- CUSTOM END: \1 -=-= (?:\*/|#|\*\})'
 						.'@ms'
