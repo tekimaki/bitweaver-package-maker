@@ -64,10 +64,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$this->registerContentType( BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID, array(
 			'content_type_guid'	  => BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID,
 {/literal}{if $type.content_name}
-			'content_description' => '{$type.content_name}', // legacy name registration param, deprecated in pkgmkr classes
 			'content_name' => '{$type.content_name}',
 {else}
-			'content_description' => '{$type.name|capitalize} data', // legacy name registration param, deprecated in pkgmkr classes
 			'content_name' => '{$type.name|capitalize} data',
 {/if}
 {if $type.content_name_plural}
@@ -139,7 +137,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 
-				LibertyMime::load();
+				{/literal}{$type.base_class}{literal}::load();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -208,7 +206,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/literal}{if count($type.typemaps) > 0}
 			&& $this->verifyTypemaps( $pParamHash )
 {/if}{literal}
-			&& LibertyMime::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
+			&& {/literal}{$type.base_class}{literal}::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
 			$this->mDb->StartTrans();
 			$table = BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data";
 			if( $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
@@ -344,7 +342,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( LibertyMime::expunge() ) {
+			if( {/literal}{$type.base_class}{literal}::expunge() ) {
 				$ret = TRUE;
 			}
 			$this->mDb->CompleteTrans();
