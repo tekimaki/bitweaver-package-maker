@@ -22,8 +22,7 @@ if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
 	$gBitUser->verifyTicket();
 
 	if( $gContent->store( $_REQUEST ) ) {
-		header( "Location: ".$gContent->getDisplayUrl() );
-		die;
+		bit_redirect( $gContent->getDisplayUrl() );
 	} else {
 		// if store fails set preview
 		$_REQUEST['preview'] = TRUE;

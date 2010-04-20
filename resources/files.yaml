@@ -15,6 +15,7 @@ package/templates:
     - menu_package.tpl
     - admin_package.tpl
     - menu_package_admin.tpl
+    - display_index.tpl
   type:
     - display_type.tpl
     - edit_type.tpl
