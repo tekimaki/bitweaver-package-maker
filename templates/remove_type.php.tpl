@@ -26,7 +26,7 @@ if( isset( $_REQUEST["confirm"] ) ) {
 
 $gBitSystem->setBrowserTitle( tra( 'Confirm delete of: ' ).$gContent->getTitle() );
 $formHash['remove'] = TRUE;
-$formHash['sample_id'] = $_REQUEST['sample_id'];
+$formHash['{/literal}{$type.name}{literal}_id'] = $_REQUEST['{/literal}{$type.name}{literal}_id'];
 $msgHash = array(
 	'label' => tra( 'Delete {/literal}{$type.name|capitalize}{literal}' ),
 	'confirm_item' => $gContent->getTitle(),
