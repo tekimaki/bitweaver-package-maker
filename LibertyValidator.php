@@ -1,4 +1,4 @@
-<?php
+<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 /**
  * Utility class for validating various kinds of input.
  *
@@ -463,7 +463,7 @@ class LibertyValidator {
 
 	function validate_hexcolor($pVars, &$pParamHash, &$pObject, &$store) {
 		foreach( $pVars as $var => $constraints) {
-			if (isset( $pParamHash[$var] ) ) {
+			if (!empty( $pParamHash[$var] ) ) {
 				$hexcolor = $pParamHash[$var];
 				// If user accidentally passed along the # sign, strip it off
 				// TODO: Not sure if we should trim this is or not as storage could be inconsitent
