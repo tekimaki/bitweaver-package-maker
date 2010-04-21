@@ -10,11 +10,11 @@
 	 function load{/literal}{$typemapName|ucfirst}{literal}( $p{/literal}{$typemapName|ucfirst}{literal}Id = NULL ){
 		$ret = array();
 		if( $this->verifyId( $p{/literal}{$typemapName|ucfirst}{literal}Id ) ){
-			$query = "{/literal}SELECT `{$typemapName}_id`,{foreach from=$typemap.fields key=fieldName item=field name=fields}
+			$query = "{/literal}SELECT `{$typemapName}_id` as hash_key, `{$typemapName}_id`,{foreach from=$typemap.fields key=fieldName item=field name=fields}
  `{$fieldName}`{if !$smarty.foreach.fields.last},{/if}
 {/foreach}
  FROM `{$type.name}_{$typemapName}` WHERE `{$type.name}_{$typemapName}`.{$typemapName}_id = ?{literal}";
-			$ret = $this->mDb->getArray( $query, $bindVars );
+			$ret = $this->mDb->getAssoc( $query, $bindVars );
 		}
 		return $ret;
 	}
@@ -127,13 +127,16 @@
 			$whereSql = " WHERE `{/literal}{$type.name}_{$typemapName}{literal}`.content_id = ?";
 		}
 
-		$query = "{/literal}SELECT {if $typemap.sequence}`{$typemapName}_id`,{/if}
+		$query = "{/literal}SELECT {if $typemap.sequence}`{$typemapName}_id` as hash_key, `{$typemapName}_id`,{/if}
 {foreach from=$typemap.fields key=fieldName item=field name=fields}
  `{$fieldName}`{if !$smarty.foreach.fields.last},{/if}
 {/foreach}
  FROM `{$type.name}_{$typemapName}`"{literal}.$whereSql;
+{/literal}{if $typemap.sequence}
+		$ret = $this->mDb->getAssoc( $query, $bindVars );
+{else}
 		$ret = $this->mDb->getArray( $query, $bindVars );
-
+{/if}{literal}
 		return $ret;
 	}
 
