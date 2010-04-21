@@ -15,7 +15,6 @@
 * {/literal}{$type.class_name}{literal} class
 * {/literal}{$type.description}{literal}
 *
-* Generated On: {/literal}{$smarty.now|date_format}{literal}
 * @version $Revision: $
 * @class {/literal}{$type.class_name}{literal}
 */
