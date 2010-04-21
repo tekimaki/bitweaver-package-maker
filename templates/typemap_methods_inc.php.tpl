@@ -20,21 +20,30 @@
 	}
 
 	/**
-	 * stores a single record in the {/literal}{$type.name}_{$typemapName}{literal} table
+	 * stores one or more records in the {/literal}{$type.name}_{$typemapName}{literal} table
 	 */
 	function store{/literal}{$typemapName|ucfirst}{literal}( &$pParamHash, $skipVerify = FALSE ){
 		if( $skipVerify || $this->verify{/literal}{$typemapName|ucfirst}{literal}( $pParamHash ) ) {
+			$table = '{/literal}{$type.name}_{$typemapName}{literal}';
 			if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_store'] )){
-				$table = '{/literal}{$type.name}_{$typemapName}{literal}';
-				// {/literal}{$typemapName}{literal} id is set update the record
-				if( !empty( $pParamHash['{/literal}{$typemapName}{literal}_id'] ) ){
-					$locId = array( '{/literal}{$typemapName}{literal}_id' => $pParamHash['{/literal}{$typemapName}{literal}_id'] );
-					// unset( $pParamHash['{/literal}{$typemapName}{literal}_id'] );
-					$result = $this->mDb->associateUpdate( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'], $locId );
-				// {/literal}{$typemapName}{literal} id is not set create a new record
-				}else{
-					$pParamHash['{/literal}{$typemapName}{literal}_store']['{/literal}{$typemapName}{literal}_id'] = $this->mDb->GenID('{/literal}{$type.name}_{$typemapName}{literal}_id_seq');
-					$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$typemapName}{literal}_store'] );
+				foreach ($pParamHash['{/literal}{$typemapName}{literal}_store'] as $key => &$data) {
+{/literal}{if $type.base_package == "liberty"}{literal}
+					if (!empty($pParamHash['{/literal}{$type.name}{literal}']['content_id'])) {
+						$data['content_id'] = $pParamHash['{/literal}{$type.name}{literal}']['content_id'];
+					} else {
+						$data['content_id'] = $this->mContentId;
+					}
+{/literal}{/if}{literal}
+					// {/literal}{$typemapName}{literal} id is set update the record
+					if( !empty( $data['{/literal}{$typemapName}{literal}_id'] ) ){
+						$locId = array( '{/literal}{$typemapName}{literal}_id' => $data['{/literal}{$typemapName}{literal}_id'] );
+						// unset( $data['{/literal}{$typemapName}{literal}_id'] );
+						$result = $this->mDb->associateUpdate( $table, $data, $locId );
+					// {/literal}{$typemapName}{literal} id is not set create a new record
+					}else{
+						$data['{/literal}{$typemapName}{literal}_id'] = $this->mDb->GenID('{/literal}{$type.name}_{$typemapName}{literal}_id_seq');
+						$result = $this->mDb->associateInsert( $table, $data );
+					}
 				}
 			}
 		}
@@ -149,7 +158,7 @@
 	function validate{/literal}{$typemapName|ucfirst}{literal}Fields(&$pParamHash) {
 		$this->prep{/literal}{$typemapName|ucfirst}{literal}Verify();
 		if (!empty($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal})) {
-			foreach($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal} as $key => $data) {
+			foreach($pParamHash['{/literal}{$type.name}']['{$typemapName}']{literal} as $key => &$data) {
 				LibertyValidator::validate(
 					$this->mVerification['{/literal}{$type.name}_{$typemapName}{literal}'],
 					$pParamHash['{/literal}{$type.name}']['{$typemapName}'][$key]{literal},
