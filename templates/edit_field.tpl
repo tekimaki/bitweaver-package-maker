@@ -6,7 +6,7 @@
 		{/foreach}
 	    </select>
     {elseif $field.validator.type=="hexcolor"}
-    	    <input type="text" class="color" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
+    	    <input type="text" class="color {literal}{ldelim}{/literal}required:{if $field.validator.required}true{else}false{/if}{literal}{rdelim}{/literal}" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
     {elseif $field.validator.type=="no-input"}
     {elseif $field.validator.type=="date"}
     	    {ldelim}html_select_date field_array="{$type.name}[{$fieldName}]" prefix="" time=$gContent->getField("{$fieldName}") {foreach from=$field.smarty key=sk item=sv}{$sk}="{$sv}" {/foreach} {rdelim}
