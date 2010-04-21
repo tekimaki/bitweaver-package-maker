@@ -381,7 +381,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 	function expungeTypemaps() {
 		if ($this->isValid() ) {
-			$paramHash = array('content_id' => $this->mContent);
+			$paramHash = array('content_id' => $this->mContentId);
 {/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
 			// expunge {$typemapName} fieldset
 			$this->expunge{$typemapName|ucfirst}($paramHash);
