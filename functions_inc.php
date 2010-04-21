@@ -91,22 +91,28 @@ function render_type_file($dir, $file, $template, $config) {
 		if (is_file($filename)) {
 			if (is_readable($filename)) {
 				if ($contents = file_get_contents($filename)) {
-					$count = preg_match_all(
-						'@\s*'
-						.'(?:/\*|#|\{\*) =-=- CUSTOM BEGIN: ([^\s]*) -=-= (?:\*/|#|\*\})'
-						.'(.*)'
-						.'(?:/\*|#|\{\*) =-=- CUSTOM END: \1 -=-= (?:\*/|#|\*\})'
-						.'@ms'
-						,
-						$contents,
-						$matches);
-					// print_r($matches);
-					if ($count > 0) {
-						$customBlock = array();
-						foreach($matches[1] as $id => $field) {
-							$customBlock[$field] = preg_replace('|^\n(.*)\n\t*$|ms', '\1', $matches[2][$id]);
+					$start_count = preg_match_all(
+						'@([^a-zA-Z0-9\s]{1,2}) =-=- CUSTOM (BEGIN|END): ([^\s]*?) -=-= ([^a-zA-Z0-9\s]{1,2})@ms', $contents, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+					if ($start_count > 0) {
+						for ($i = 0; $i < count($matches); $i += 2) {
+							// TODO: Sanity balance check.
+							$start_point = $matches[$i][4][1] + 1;
+							$end_point = $matches[$i+1][0][1];
+							$substring = substr($contents, $start_point, $end_point - $start_point);
+							$start_point = strpos($substring, "\n");
+							$end_point = strrpos($substring, "\n");
+							$length = $end_point - $start_point;
+							$customBlock[$matches[$i][3][0]] =
+								substr($substring, $start_point + 1, $length -1);
+
 						}
-						$gBitSmarty->assign('customBlock', $customBlock);
+						$count = count($customBlock);
+						if ($start_count != $count * 2) {
+							error("Start count does not match preserved count.");
+						} else {
+							$gBitSmarty->assign('customBlock', $customBlock);
+						}
 					}
 				} else {
 					error("Unable to read old file: $filename");
@@ -115,6 +121,8 @@ function render_type_file($dir, $file, $template, $config) {
 		} else {
 			error("$filename exists but is not a file!");
 		}
+	} else {
+		echo "$filename is new.\n";
 	}
 
 	// Get the contents of the file from smarty
