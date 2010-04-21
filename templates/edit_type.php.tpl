@@ -54,6 +54,19 @@ $gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.valid
 {/foreach}
 {literal}
 
+{/literal}
+// Include any javascript files we need for editing
+{strip}
+{assign var=jsColorIncluded value=false}
+{foreach from=$type.fields item=data key=field name=fields}
+	{if !empty($data.validator.type) && $data.validator.type == 'hexcolor' && !$jsColorIncluded}
+		{assign var=jsColorIncluded value=true}
+		{literal}$gBitThemes->loadJavascript( PKGMKR_PKG_PATH.'javaacript/jscolor/jscolor.js', FALSE );{/literal}
+	{/if}
+{/foreach}
+{/strip}
+{literal}
+
 // Display the template
 $gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));
 
