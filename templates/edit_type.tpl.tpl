@@ -48,6 +48,7 @@
 						</div>
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
+{if $field.validator.type != 'no-input'}
 						<div class="row {$type.name}_{$fieldName}">
 							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
 							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
@@ -57,11 +58,11 @@
 							{/if}{ldelim}formhelp note="{$field.help}"{rdelim}
 							{ldelim}/forminput{rdelim}
 						</div>
+{/if}
 {/foreach}
-{literal}
-
+{if $type.data}{literal}
 						{textarea name="{/literal}{$type.name}{literal}[edit]"}{$gContent->mInfo.data}{/textarea}
-
+{/literal}{/if}{literal}
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
