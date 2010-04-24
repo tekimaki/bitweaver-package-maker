@@ -353,51 +353,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		return $ret;
 	}
 
-{/literal}{if count($type.typemaps) > 0}{literal}
-	// {{{ -- TypeMap functions for fieldsets
-
-	function verifyTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// verify {$typemapName} fieldset
-			$this->verify{$typemapName|ucfirst}($pParamHash);
-{/foreach}{literal}
-
-			return ( count($this->mErrors) == 0);
-	}
-
-	function previewTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// verify {$typemapName} fieldset
-			$this->preview{$typemapName|ucfirst}Fields($pParamHash);
-{/foreach}{literal}
-	}
-
-	function storeTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// store {$typemapName} fieldset
-			$this->store{$typemapName|ucfirst}Mixed($pParamHash, TRUE);
-{/foreach}{literal}
-	}
-
-	function expungeTypemaps() {
-		if ($this->isValid() ) {
-			$paramHash = array('content_id' => $this->mContentId);
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// expunge {$typemapName} fieldset
-			$this->expunge{$typemapName|ucfirst}($paramHash);
-{/foreach}{literal}
-		}
-	}
-
-	function loadTypemaps() {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// load {$typemapName} list from sub map
-			$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
-{/foreach}{literal}
-	}
-
-	// }}} -- end of TypeMap function for fieldsets
-{/literal}{/if}{literal}
+{/literal}
+{literal}
 
 	/**
 	 * isValid Make sure {/literal}{$type.name|lower}{literal} is loaded and valid
@@ -546,13 +503,59 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/foreach}{literal}
 		}
 	}
+{/literal}
 
+{if count($type.typemaps) > 0}{literal}
+	// {{{ =================== TypeMap Functions for FieldSets ====================
+
+	function verifyTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->verify{$typemapName|ucfirst}($pParamHash);
+{/foreach}{literal}
+
+			return ( count($this->mErrors) == 0);
+	}
+
+	function previewTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// verify {$typemapName} fieldset
+			$this->preview{$typemapName|ucfirst}Fields($pParamHash);
+{/foreach}{literal}
+	}
+
+	function storeTypemaps( &$pParamHash ) {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// store {$typemapName} fieldset
+			$this->store{$typemapName|ucfirst}Mixed($pParamHash, TRUE);
+{/foreach}{literal}
+	}
+
+	function expungeTypemaps() {
+		if ($this->isValid() ) {
+			$paramHash = array('content_id' => $this->mContentId);
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// expunge {$typemapName} fieldset
+			$this->expunge{$typemapName|ucfirst}($paramHash);
+{/foreach}{literal}
+		}
+	}
+
+	function loadTypemaps() {
+{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
+			// load {$typemapName} list from sub map
+			$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
+{/foreach}{literal}
+	}
+
+	// }}} -- end of TypeMap function for fieldsets
 {/literal}
 {foreach from=$type.typemaps key=typemapName item=typemap}
 {include file="bitpackage:pkgmkr/typemap_methods_inc.php.tpl"}
 {/foreach}
-{literal}
+{/if}{literal}
 
+	// {{{ =================== Custom Helper Mthods  ====================
 {/literal}
 	/* This section is for any helper methods you wish to create */
 	/* =-=- CUSTOM BEGIN: methods -=-= */
@@ -563,5 +566,6 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/if}
 	/* =-=- CUSTOM END: methods -=-= */
 {literal}
+	// }}} -- end of Custom Helper Methods
 }
 {/literal}
