@@ -503,6 +503,17 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/foreach}{literal}
 		}
 	}
+
+{/literal}
+	// Getters for reference column options - return associative arrays formatted for generating html select inputs
+{foreach from=$type.fields key=fieldName item=field}
+{if $field.validator.input == 'select'}
+	function get{$field.name|replace:" ":""}Options(){ldelim}
+		return $this->mDb->getAssoc("{$field.validator.optionsHashQuery}");
+	{rdelim}
+
+{/if}{/foreach}
+{literal}
 {/literal}
 
 {if count($type.typemaps) > 0}{literal}

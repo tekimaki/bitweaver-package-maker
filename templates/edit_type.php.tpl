@@ -48,8 +48,12 @@ if( isset( $_REQUEST["preview"] ) ) {
 // Prep any data we may need for the form
 {foreach from=$type.fields key=fieldName item=field}
 {if $field.validator.input == 'select'}
-${$field.validator.optionsHashName} = $gBitSystem->mDb->getAssoc("{$field.validator.optionsHashQuery}");
-$gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.validator.optionsHashName} );
+${$field.validator.optionsHashName} = $gContent->get{$field.name|replace:" ":""}Options();
+${$field.validator.optionsHashName}_list = array( ''=>tra('Select one...') );
+foreach( ${$field.validator.optionsHashName} as $key=>$value ){ldelim}
+	${$field.validator.optionsHashName}_list[$key] = $value;
+{rdelim}
+$gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.validator.optionsHashName}_list );
 {/if}
 {/foreach}
 {literal}
