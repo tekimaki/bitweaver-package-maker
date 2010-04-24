@@ -1,5 +1,5 @@
 {literal}
-	// {{{ =================== {/literal}{$typemapName|ucfirst}{literal} Handlers  ====================
+	// {{{ =================== TypeMap Fieldset {/literal}{$typemapName|ucfirst}{literal} Handlers  ====================
 
 {/literal}
 {* @TODO This only really works if the table has a sequnenced column, need some other way of getting a unique value if desired *}
