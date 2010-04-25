@@ -513,8 +513,19 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
 {foreach from=$type.fields key=fieldName item=field}
 {if $field.validator.type == 'reference' && $field.input.type == 'select'}
-	function get{$field.name|replace:" ":""}Options(){ldelim}
-		return $this->mDb->getAssoc("{$field.input.optionsHashQuery}");
+	function get{$field.name|replace:" ":""}Options( &$pParamHash=array() ){ldelim}
+		$bindVars = array();
+		$joinSql = $whereSql = "";
+{assign var=customlabel value="`$fieldName`_options"}
+		/* =-=- CUSTOM BEGIN: {$customlabel} -=-= */
+{if !empty($customBlock.customlabel)}
+{$customBlock.customlabel}
+{else}
+
+{/if}
+		/* =-=- CUSTOM END: {$customlabel} -=-= */
+		$query = "{$field.input.optionsHashQuery} $joinSql $whereSql";
+		return $this->mDb->getAssoc( $query, $bindVars );
 	{rdelim}
 
 {/if}{/foreach}
