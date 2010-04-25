@@ -14,69 +14,69 @@
 			<input type="hidden" name="offset" value="{$control.offset|escape}" />
 			<input type="hidden" name="sort_mode" value="{$control.sort_mode|escape}" />
 
-			<div class="navbar">
-				<ul>
-					<li><strong>{tr}Sort list by:{/tr} </strong></li>
-
+			<table class="data">
+				<tr>
 					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' ) eq 'y'}
-						<li>{smartlink ititle="{/literal}{$type.name|capitalize}{literal} Id" isort={/literal}{$type.name}_id{literal} offset=$control.offset iorder=desc idefault=1}</li>
+						<th>{smartlink ititle="{/literal}{$type.name|capitalize}{literal} Id" isort={/literal}{$type.name}_id{literal} offset=$control.offset iorder=desc idefault=1}</th>
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' ) eq 'y'}
-						<li>{smartlink ititle="Title" isort=title offset=$control.offset}</li>
+						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 					{/if}
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
 	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
-						<li>{ldelim}smartlink ititle="{$field.name|capitalize}" isort={$fieldName} offset=$control.offset{rdelim}</li>
+						<th>{ldelim}smartlink ititle="{$field.name|capitalize}" isort={$fieldName} offset=$control.offset{rdelim}</th>
 					{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
 					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' ) eq 'y'}
-						<li>{smartlink ititle="Text" isort=data offset=$control.offset}</li>
+						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
 					{/if}
-				</ul>
-			</div>
 
-			<ul class="data clear">
-				{foreach item=dataItem from=${/literal}{$type.name}{literal}List name={/literal}{$type.name}{literal}list}
-					<li class="{if $smarty.foreach.{/literal}{$type.name}{literal}list.last}last {/if}{cycle values="even,odd"}">
-						<div class="floaticon">
-							{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_update{literal}' )}
-								{smartlink ititle="Edit" ifile="{/literal}edit_{$type.name}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$type.name}_id=$dataItem.{$type.name}_id{literal}}
-							{/if}
-							{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
-								<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$data_item.{/literal}{$type.name}_id{literal}}" />
-							{/if}
-						</div>
+					<th>{tr}Actions{/tr}</th>
+				</tr>
+
+				{foreach item=dataItem from=${/literal}{$type.name}{literal}List}
+					<tr class="{cycle values="even,odd"}">
+						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' )}
+							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$type.name}_id{literal}={$dataItem.{/literal}{$type.name}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$type.name}{literal}_id}">{$dataItem.{/literal}{$type.name}{literal}_id}</a></td>
+						{/if}
 
 						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' )}
-							<h2><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$type.name}_id{literal}={$dataItem.{/literal}{$type.name}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$type.name}{literal}_id}">{$dataItem.title|escape}</a></h2>
-						{/if}
-
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' )}
-							<div>{$dataItem.summary|escape}</div>
-						{/if}
-
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' )}
-							<label>{/literal}{$type.name|ucfirst}_id{literal}:</label>&nbsp;<a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$type.name}_id{literal}={$dataItem.{/literal}{$type.name}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$type.name}{literal}_id}">{$dataItem.{/literal}{$type.name}{literal}_id}</a><br />
+							<td>{$dataItem.title|escape}</td>
 						{/if}
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-	 		     	    {ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
-							<label>{$field.name}:</label>&nbsp;{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}{rdelim}<br />
+	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
+								<td>{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}{rdelim}</td>
 						{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
-					</li>
+						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' )}
+							<td>{$dataItem.summary|escape}</td>
+						{/if}
+
+
+						<td class="actionicon">
+						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_update{literal}' )}
+							{smartlink ititle="Edit" ifile="{/literal}edit_{$type.name}.php{literal}" ibiticon="icons/accessories-text-editor" {/literal}{$type.name}_id=$dataItem.{$type.name}_id{literal}}
+						{/if}
+						{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
+							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$data_item.{/literal}{$type.name}_id{literal}}" />
+						{/if}
+						</td>
+					</tr>
 				{foreachelse}
-					<li class="norecords">{tr}No records found{/tr}</li>
+					<tr class="norecords"><td colspan="16">
+						{tr}No records found{/tr}
+					</td></tr>
 				{/foreach}
-			</ul>
+			</table>
 
 			{if $gBitUser->hasPermission( 'p_{/literal}{$package}_{$type.name}_expunge{literal}' )}
 				<div style="text-align:right;">
