@@ -83,6 +83,6 @@ $gBitSmarty->assign_by_ref( '{$field.input.optionsHashName}', ${$field.input.opt
 {literal}
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));
+$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.content_name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));
 
 {/literal}
