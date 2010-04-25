@@ -41,7 +41,7 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 
 		// They are allowed to see that this does not exist.
 		$gBitSystem->setHttpStatus( 404 );
-		$gBitSystem->fatalError( tra( "The requested ".$typeName." (id=".$_REQUEST[$requestType.'_id'].") could not be found." ) );
+		$gBitSystem->fatalError( tra( "The requested ".$gContent->getContentTypeName()." (id=".$_REQUEST[$requestType.'_id'].") could not be found." ) );
 	}
 
 	// Now check permissions to access this content
