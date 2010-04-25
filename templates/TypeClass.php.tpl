@@ -518,8 +518,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$joinSql = $whereSql = "";
 {assign var=customlabel value="`$fieldName`_options"}
 		/* =-=- CUSTOM BEGIN: {$customlabel} -=-= */
-{if !empty($customBlock.customlabel)}
-{$customBlock.customlabel}
+{if !empty($customBlock.$customlabel)}
+{$customBlock.$customlabel}
 {else}
 
 {/if}
