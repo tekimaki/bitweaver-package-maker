@@ -4,6 +4,13 @@
 <div class="display {/literal}{$package} {$type.name}{literal}">
 	<div class="floaticon">
 		{if $print_page ne 'y'}
+			{* =-=- CUSTOM BEGIN: icons -=-= *}
+{/literal}{if !empty($customBlock.icons)}
+{$customBlock.icons}
+{else}
+
+{/if}{literal}
+			{* =-=- CUSTOM END: icons -=-= *}
 			{if $gContent->hasUpdatePermission()}
 				<a title="{tr}Edit this {$gContent->getContentTypeName()|strtolower}{/tr}" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$type.name}{literal}.php?{/literal}{$type.name}{literal}_id={$gContent->mInfo.{/literal}{$type.name}{literal}_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit `$gContent->mType.content_name`"}</a>
 			{/if}
@@ -19,11 +26,25 @@
 		<div class="date">
 			{tr}Created by{/tr}: {displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name}, {tr}Last modification by{/tr}: {displayname user=$gContent->mInfo.modifier_user user_id=$gContent->mInfo.modifier_user_id real_name=$gContent->mInfo.modifier_real_name}, {$gContent->mInfo.last_modified|bit_long_datetime}
 		</div>
+		{* =-=- CUSTOM BEGIN: header -=-= *}
+{/literal}{if !empty($customBlock.header)}
+{$customBlock.header}
+{else}
+
+{/if}{literal}
+		{* =-=- CUSTOM END: header -=-= *}
 	</div><!-- end .header -->
 
 	<div class="body">
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
+			{* =-=- CUSTOM BEGIN: body -=-= *}
+{/literal}{if !empty($customBlock.body)}
+{$customBlock.body}
+{else}
+
+{/if}{literal}
+			{* =-=- CUSTOM END: body -=-= *}
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}

@@ -16,6 +16,13 @@
 	<div class="body">
 		{formfeedback warning=$errors}
 		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
+			{* =-=- CUSTOM BEGIN: input -=-= *}
+{/literal}{if !empty($customBlock.input)}
+{$customBlock.input}
+{else}
+
+{/if}{literal}
+			{* =-=- CUSTOM END: input -=-= *}
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<div class="servicetabs">
 			{jstabs id="servicetabs"}
