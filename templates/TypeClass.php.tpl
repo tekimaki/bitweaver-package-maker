@@ -201,6 +201,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function store( &$pParamHash ) {
+		// Don't allow uses to cut off an abort in the middle.
+		// This is particularly important for classes which will
+		// touch the filesystem in some way.
+		$abort = ignore_user_abort(FALSE);
 		if( $this->verify( $pParamHash )
 {/literal}{if count($type.typemaps) > 0}
 			&& $this->verifyTypemaps( $pParamHash )
@@ -242,7 +246,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		} else {
 			$this->mErrors['store'] = tra('Failed to save this').' {/literal}{$type.name|lower}{literal}.';
 		}
-
+		// Restore previous state for user abort
+		ignore_user_abort($abort);
 		return( count( $this->mErrors )== 0 );
 	}
 
