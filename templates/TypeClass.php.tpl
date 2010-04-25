@@ -512,9 +512,9 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 {/literal}
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
 {foreach from=$type.fields key=fieldName item=field}
-{if $field.validator.input == 'select'}
+{if $field.validator.type == 'reference' && $field.input.type == 'select'}
 	function get{$field.name|replace:" ":""}Options(){ldelim}
-		return $this->mDb->getAssoc("{$field.validator.optionsHashQuery}");
+		return $this->mDb->getAssoc("{$field.input.optionsHashQuery}");
 	{rdelim}
 
 {/if}{/foreach}

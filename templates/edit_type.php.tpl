@@ -47,18 +47,26 @@ if( isset( $_REQUEST["preview"] ) ) {
 {/literal}
 // Prep any data we may need for the form
 {foreach from=$type.fields key=fieldName item=field}
-{if $field.validator.input == 'select'}
-${$field.validator.optionsHashName} = $gContent->get{$field.name|replace:" ":""}Options();
-${$field.validator.optionsHashName}_list = array( ''=>tra('Select one...') );
-foreach( ${$field.validator.optionsHashName} as $key=>$value ){ldelim}
-	${$field.validator.optionsHashName}_list[$key] = $value;
+{if $field.validator.type == 'reference' && $field.input.type == 'select'}
+${$field.input.optionsHashName} = $gContent->get{$field.name|replace:" ":""}Options();
+${$field.input.optionsHashName}_list = array( ''=>tra('Select one...') );
+foreach( ${$field.input.optionsHashName} as $key=>$value ){ldelim}
+	${$field.input.optionsHashName}_list[$key] = $value;
 {rdelim}
-$gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.validator.optionsHashName}_list );
+$gBitSmarty->assign_by_ref( '{$field.input.optionsHashName}', ${$field.input.optionsHashName}_list );
 {/if}
 {/foreach}
 {literal}
 
 {/literal}
+/* =-=- CUSTOM BEGIN: edit -=-= */
+{if !empty($customBlock.edit)}
+{$customBlock.edit}
+{else}
+
+{/if}
+/* =-=- CUSTOM END: edit -=-= */
+
 // Include any javascript files we need for editing
 {strip}
 {assign var=jsColorIncluded value=false}
@@ -72,13 +80,6 @@ $gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.valid
 	$gBitThemes->loadJavascript( {$PACKAGE}_PKG_PATH.'scripts/{$type.class_name}.js', TRUE );
 {/if}
 {/strip}
-/* =-=- CUSTOM BEGIN: edit -=-= */
-{if !empty($customBlock.edit)}
-{$customBlock.edit}
-{else}
-
-{/if}
-/* =-=- CUSTOM END: edit -=-= */
 {literal}
 
 // Display the template
