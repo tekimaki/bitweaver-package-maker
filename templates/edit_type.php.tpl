@@ -72,6 +72,13 @@ $gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.valid
 	$gBitThemes->loadJavascript( {$PACKAGE}_PKG_PATH.'scripts/{$type.class_name}.js', TRUE );
 {/if}
 {/strip}
+/* =-=- CUSTOM BEGIN: edit -=-= */
+{if !empty($customBlock.edit)}
+{$customBlock.edit}
+{else}
+
+{/if}
+/* =-=- CUSTOM END: edit -=-= */
 {literal}
 
 // Display the template

@@ -49,7 +49,7 @@
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
 {if $field.validator.type != 'no-input'}
-						<div class="row {$type.name}_{$fieldName}">
+						<div class="row" id="row_{$type.name}_{$fieldName}" style="{foreach from=$field.validator.styles.row key=param item=value}{$param}:{$value};{/foreach}">
 							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
 							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
 							{ldelim}forminput{rdelim}
