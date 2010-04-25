@@ -68,6 +68,9 @@ $gBitSmarty->assign_by_ref( '{$field.validator.optionsHashName}', ${$field.valid
 		{literal}$gBitThemes->loadJavascript( PKGMKR_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );{/literal}
 	{/if}
 {/foreach}
+{if $type.js}
+	$gBitThemes->loadJavascript( {$PACKAGE}_PKG_PATH.'scripts/{$type.class_name}.js', TRUE );
+{/if}
 {/strip}
 {literal}
 

@@ -234,21 +234,45 @@ function prep_config(&$config){
 	// prep form fields
 	foreach ($config['types'] as $typeName => $type) {
 		foreach ($type['fields'] as $fieldName => $field) {
+			// prep inputs
 			if (!empty($field['validator']['input'])) {
+				// convenience
 				$validator = &$field['validator'];
 				switch( $validator['input'] ){
+				// prep selection options 
 				case 'select':
 					$optionsHashName = $fieldName.'_options';
 
 					$tableBPrefix = !empty( $validator['desc_column'] )?'b':'a';
 					$joinColumn = !empty( $validator['join_column'] )?$validator['join_column']:'content_id'; //default to liberty_content as is most common
 
+					// create sql for loading up a select list of options
 					$optionsHashQuery = "SELECT a.".$field['validator']['column'].", ".$tableBPrefix.".".$field['validator']['desc_column']." FROM ".$field['validator']['table']." a"; 
 					$optionsHashQuery .= !empty( $validator['desc_table'] )?" INNER JOIN ".$validator['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
 
+					// set references to the hash name and the query
 					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashName'] = $optionsHashName;
 					$config['types'][$typeName]['fields'][$fieldName]['validator']['optionsHashQuery'] = $optionsHashQuery; 
 					break;
+				}
+			}
+
+			// prep js
+			if(!empty($field['validator']['js'])) {
+				// make mixedCase js handler function names
+				// assembled from two parts: the js handler name e.g. onclick etc, and the field name e.g. myfield_id => onClickMyfieldId
+				foreach( $field['validator']['js'] as $handler ){
+					preg_match( '/(^on)(.*)/', $handler, $hmatches ); 
+					$fmatches = explode( '_', $fieldName );
+					$suffix = "";
+					while (list($key, $val) = each($fmatches)) {
+						$suffix .= ucfirst($val);
+					}
+					$funcName = $hmatches[1].ucfirst($hmatches[2]).$suffix;
+
+					// set references to the handler name for tpls to use
+					$config['types'][$typeName]['js']['funcs'][] = $funcName;
+					$config['types'][$typeName]['fields'][$fieldName]['validator']['jshandlers'][$handler] = $type['class_name'].'.'.$funcName;
 				}
 			}
 		}

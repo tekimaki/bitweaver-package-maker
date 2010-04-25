@@ -28,7 +28,7 @@
     {elseif $field.validator.type=="string"}
     	    <input type="text" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
     {elseif $field.validator.type=="reference"}
-			{literal}{html_options id="{/literal}{$fieldName}{literal}" options=${/literal}{$field.validator.optionsHashName}{literal} name="{/literal}{$type.name}[{$fieldName}{literal}]" selected=$gContent->getField('{/literal}{$fieldName}{literal}')}{/literal}
+	{literal}{html_options id="{/literal}{$fieldName}{literal}" options=${/literal}{$field.validator.optionsHashName}{literal} name="{/literal}{$type.name}[{$fieldName}{literal}]" selected=$gContent->getField('{/literal}{$fieldName}{literal}') {/literal}{foreach from=$field.validator.jshandlers key=event item=handlerName}{$event}="{$handlerName}(this);" {/foreach}{literal} }{/literal}
     {else}
     	    <input type="text" id="{$fieldName}" name="{$type.name}[{$fieldName}]" value="{ldelim}$gContent->getField("{$fieldName}"){rdelim}" />
     {/if}

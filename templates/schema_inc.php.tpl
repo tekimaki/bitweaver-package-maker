@@ -82,7 +82,7 @@ $gBitInstaller->registerUserPermissions( {/literal}{$PACKAGE}{literal}_PKG_NAME,
 $gBitInstaller->registerPreferences( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_default_ordering'      , '{$typeName}_id_desc' ),
-	array ( {$PACKAGE}_PKG_NAME , '{$package}_list_{$typeName}_id'               , 'y'              ),
+{*	array ( {$PACKAGE}_PKG_NAME , '{$package}_list_{$typeName}_id'               , 'y'              ), *}
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_title'            , 'y'              ),
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_summary'          , 'y'              ),
 {if $config.homeable}

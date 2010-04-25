@@ -35,7 +35,7 @@
 					{/jstab}
 				{/if}
 				{jstab title="Edit"}
-					{legend legend="{/literal}{$type.name|capitalize}{literal}"}
+				{legend legend=$gContent->getContentTypeName()}
 						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
 						{formfeedback warning=$errors.store}
 
