@@ -26,6 +26,13 @@
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<div class="servicetabs">
 			{jstabs id="servicetabs"}
+				{* =-=- CUSTOM BEGIN: servicetabs -=-= *}
+{/literal}{if !empty($customBlock.servicetabs}
+{$customBlock.servicetabs}
+{else}
+
+{/if}{literal}
+				{* =-=- CUSTOM END: servicetabs -=-= *}
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" display_help_tab=1}
 			{/jstabs}
