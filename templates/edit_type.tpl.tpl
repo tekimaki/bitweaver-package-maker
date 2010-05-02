@@ -27,7 +27,7 @@
 			<div class="servicetabs">
 			{jstabs id="servicetabs"}
 				{* =-=- CUSTOM BEGIN: servicetabs -=-= *}
-{/literal}{if !empty($customBlock.servicetabs}
+{/literal}{if !empty($customBlock.servicetabs)}
 {$customBlock.servicetabs}
 {else}
 
