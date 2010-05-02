@@ -16,7 +16,7 @@ $gContent->verifyViewPermission();
 if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{/literal}{$type.name}{literal}_data" ) {
 
 	// Now check permissions to remove the selected {/literal}{$package}{literal} data
-	$gContent->verifyPermission( 'p_{/literal}{$type.name}{literal}_expunge' );
+	$gContent->verifyUserPermission( 'p_{/literal}{$type.name}{literal}_expunge' );
 
 	if( !empty( $_REQUEST['cancel'] ) ) {
 		// user cancelled - just continue on, doing nothing
