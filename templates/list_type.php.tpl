@@ -22,11 +22,11 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		// user cancelled - just continue on, doing nothing
 	} elseif( empty( $_REQUEST['confirm'] ) ) {
 		$formHash['delete'] = TRUE;
-		$formHash['submit_mult'] = 'remove_{/literal}{$package}{literal}_data';
+		$formHash['submit_mult'] = 'remove_{/literal}{$type.name}{literal}_data';
 		foreach( $_REQUEST["checked"] as $del ) {
-			$tmpPage = new {/literal}{$type.class_name}{literal}($del);
-			if ( $tmpPage->load() && !empty( $tmpPage->mInfo['title'] )) {
-				$info = $tmpPage->mInfo['title'];
+			$tmpInst = new {/literal}{$type.class_name}{literal}($del);
+			if ( $tmpInst->load() && !empty( $tmpInst->mInfo['title'] )) {
+				$info = $tmpInst->mInfo['title'];
 			} else {
 				$info = $del;
 			}
@@ -41,9 +41,9 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		);
 	} else {
 		foreach( $_REQUEST["checked"] as $deleteId ) {
-			$tmpPage = new {/literal}{$type.class_name}{literal}( $deleteId );
-			if( !$tmpPage->load() || !$tmpPage->expunge() ) {
-				array_merge( $errors, array_values( $tmpPage->mErrors ) );
+			$tmpInst = new {/literal}{$type.class_name}{literal}( $deleteId );
+			if( !$tmpInst->load() || !$tmpInst->expunge() ) {
+				array_merge( $errors, array_values( $tmpInst->mErrors ) );
 			}
 		}
 		if( !empty( $errors ) ) {
