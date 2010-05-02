@@ -34,7 +34,8 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		}
 		$gBitSystem->confirmDialog( $formHash,
 			array(
-				'warning' => tra('Are you sure you want to delete ').count( $_REQUEST["checked"] ).' {/literal}{$package}{literal} records?',
+				'label' => 'Remove '.$gContent->getContentTypeName( count( $_REQUEST["checked"] )>1 ),
+				'warning' => tra('Are you sure you want to delete '.count( $_REQUEST["checked"] ).' '.$gContent->getContentTypeName( count( $_REQUEST["checked"] )>1  ).' records?'),
 				'error' => tra('This cannot be undone!')
 			)
 		);
