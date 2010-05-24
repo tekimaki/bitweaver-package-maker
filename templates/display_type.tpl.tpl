@@ -47,14 +47,16 @@
 			{* =-=- CUSTOM END: body -=-= *}
 
 {/literal}
-{foreach from=$type.fields key=fieldName item=field name=fields}
+{foreach from=$type.fields key=fieldName item=field name=fields}{if $fieldName != 'data'}
 			<div class="row {$fieldName}">
-			     {$field.name|capitalize}:&nbsp;{ldelim}$gContent->getField('{$fieldName}')|escape{rdelim}
+				<label>{$field.name|capitalize}:</label>&nbsp;{ldelim}$gContent->getField('{$fieldName}')|escape{rdelim}
 			</div>
-{/foreach}
-{literal}
+{/if}{/foreach}
 
+{if $type.data}{literal}
 			{$gContent->mInfo.parsed_data}
+{/literal}{/if}
+{literal}
 
 		</div><!-- end .content -->
 	</div><!-- end .body -->

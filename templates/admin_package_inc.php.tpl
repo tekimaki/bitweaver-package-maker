@@ -35,16 +35,24 @@ $form{$typeName}Lists = array(
 		'label' => 'Title',
 		'note' => 'Display the title.',
 	),
-{foreach from=$type.fields key=fieldName item=field name=fields}
-        "{$package}_{$typeName}_list_{$fieldName}" => array(
-                'label' => '{$fieldName|capitalize}',
-		'note' => 'Display the {$fieldName}',
-	),
-{/foreach}
+{if $type.summary}
 	"{$package}_{$typeName}_list_summary" => array(
-		'label' => 'Text',
+		'label' => '{$type.fields.summary.name|default:'Summary'|capitalize}',
 		'note' => 'Display the summary.',
 	),
+{/if}
+{if $type.data}
+	"{$package}_{$typeName}_list_data" => array(
+		'label' => '{$type.fields.data.name|default:'Body Text'|capitalize}',
+		'note' => 'Display the body text.',
+	),
+{/if}
+{foreach from=$type.fields key=fieldName item=field name=fields}{if $fieldName != 'data' && $fieldName != 'summary'}
+        "{$package}_{$typeName}_list_{$fieldName}" => array(
+		'label' => '{$field.name|default:$fieldName|capitalize}',
+		'note' => 'Display the {$fieldName}',
+	),
+{/if}{/foreach}
 );
 $gBitSmarty->assign( 'form{$typeName}Lists', $form{$typeName}Lists );
 {* End List Settings *}

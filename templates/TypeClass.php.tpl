@@ -295,6 +295,10 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$this->mErrors['title'] = tra('You must enter a title for this').' {/literal}{$type.name|lower}{literal}.';
 		}
 
+		// collapse the hash that is passed to parent class so that service data is passed through properly - need to do so before verify service call below
+		$hashCopy = $pParamHash;
+		$pParamHash['{/literal}{$type.name}{literal}'] = array_merge( $hashCopy, $pParamHash['{/literal}{$type.name}{literal}'] );
+
 {/literal}
 		/* =-=- CUSTOM BEGIN: verify -=-= */
 {if !empty($customBlock.verify)}
@@ -379,6 +383,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return array List of {/literal}{$type.name|lower}{literal} data
 	 */
 	function getList( &$pParamHash ) {
+		global $gBitSystem;
 		// this makes sure parameters used later on are set
 		LibertyContent::prepGetList( $pParamHash );
 
@@ -411,19 +416,34 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 
 		$query = "
-			SELECT {/literal}{$type.name|lower}{literal}.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql
+			SELECT {/literal}{$type.name|lower}{literal}.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql, lc.`format_guid`, lc.`user_id`, lc.`modifier_user_id`,
+				uu.`email`, uu.`login`, uu.`real_name`
 			FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
+				INNER JOIN `".BIT_DB_PREFIX."users_users`     uu ON uu.`user_id`     = lc.`user_id`
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "
 			SELECT COUNT(*)
 			FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
+				INNER JOIN `".BIT_DB_PREFIX."users_users`     uu ON uu.`user_id`     = lc.`user_id`
 			WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
+{/literal}{if $type.data}
+{literal}
+			if ( $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_data{literal}' ) ){
+				// parse data if to be displayed in lists 
+				$parseHash['format_guid']	= $res['format_guid'];
+				$parseHash['content_id']	= $res['content_id'];
+				$parseHash['user_id']		= $res['user_id'];
+				$parseHash['data']			= $res['data'];
+				$res['parsed_data'] = $this->parseData( $parseHash ); 
+			}
+{/literal}{/if}
+{literal}
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
