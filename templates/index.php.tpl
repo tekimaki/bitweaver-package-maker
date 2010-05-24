@@ -37,7 +37,7 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 
 	if( !$gContent->isValid() ) {
 		// Check permissions to access this content in general
-		$gContent->verifyUserPermission( 'p_'.$requestType.'_view' );
+		$gContent->verifyViewPermission();
 
 		// They are allowed to see that this does not exist.
 		$gBitSystem->setHttpStatus( 404 );
