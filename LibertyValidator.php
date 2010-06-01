@@ -318,42 +318,48 @@ class LibertyValidator {
 
 		foreach ($pVars as $var => $constraints) {
 			if (isset( $pParamHash[$var] ) ) {
-				if ((!isset($pParamHash[$var]['Meridian']) ||
-						($pParamHash[$var]['Meridian'] == 'am' ||
-							$pParamHash[$var]['Meridian'] == 'pm')) &&
-					(isset($pParamHash[$var]['Hour']) &&
-						is_numeric($pParamHash[$var]['Hour'])) &&
-					(!isset($pParamHash[$var]['Minute']) ||
-						is_numeric($pParamHash[$var]['Minute']) &&
-						(!isset($pParamHash[$var]['Second']) ||
-							is_numeric($pParamHash[$var]['Second'])))) {
+				// if value is an array assumed to be a set of html_options_time values
+				if( is_array( $pParamHash[$var] ) ){
+					if ((!isset($pParamHash[$var]['Meridian']) ||
+							($pParamHash[$var]['Meridian'] == 'am' ||
+								$pParamHash[$var]['Meridian'] == 'pm')) &&
+						(isset($pParamHash[$var]['Hour']) &&
+							is_numeric($pParamHash[$var]['Hour'])) &&
+						(!isset($pParamHash[$var]['Minute']) ||
+							is_numeric($pParamHash[$var]['Minute']) &&
+							(!isset($pParamHash[$var]['Second']) ||
+								is_numeric($pParamHash[$var]['Second'])))) {
 
-					// We work from January 2nd to leave space for negative
-					// timezone offsets.
-					if (isset($pParamHash[$var]['Meridian'])) {
-						$store[$var] = 
-							$bd->gmmktime(($pParamHash[$var]['Meridian'] == 'pm' && $pParamHash[$var]['Hour'] < 12 ?
-									$pParamHash[$var]['Hour'] + 12 :
-									$pParamHash[$var]['Hour']),
+						// We work from January 2nd to leave space for negative
+						// timezone offsets.
+						if (isset($pParamHash[$var]['Meridian'])) {
+							$store[$var] = 
+								$bd->gmmktime(($pParamHash[$var]['Meridian'] == 'pm' && $pParamHash[$var]['Hour'] < 12 ?
+										$pParamHash[$var]['Hour'] + 12 :
+										$pParamHash[$var]['Hour']),
+									$pParamHash[$var]['Minute'],
+									isset($pParamHash[$var]['Second']) ?
+									$pParamHash[$var]['Second'] : 0,
+									1, 2, 1970);
+						}
+						else {
+							$store[$var] = $bd->gmmktime($pParamHash[$var]['Hour'],
 								$pParamHash[$var]['Minute'],
 								isset($pParamHash[$var]['Second']) ?
 								$pParamHash[$var]['Second'] : 0,
 								1, 2, 1970);
+						}										
+						//				date_default_timezone_set($tz);
+						$store[$var] = $bd->getUTCFromDisplayDate($store[$var]);
 					}
 					else {
-						$store[$var] = $bd->gmmktime($pParamHash[$var]['Hour'],
-							$pParamHash[$var]['Minute'],
-							isset($pParamHash[$var]['Second']) ?
-							$pParamHash[$var]['Second'] : 0,
-							1, 2, 1970);
-					}										
-					//				date_default_timezone_set($tz);
-					$store[$var] = $bd->getUTCFromDisplayDate($store[$var]);
-				}
-				else {
-					$pObject->mErrors[$var] = 'The value for '.
-						$constraints['name']
-						. ' is invalid.';
+						$pObject->mErrors[$var] = 'The value for '.
+							$constraints['name']
+							. ' is invalid.';
+					}
+				// otherwise validate it as an integer
+				}else{
+					LibertyValidator::validate_integers($pVars, $pParamHash, $pObject, $store);
 				}
 			}
 			else if (isset($constraints['required']) && $constraints['required']) {
