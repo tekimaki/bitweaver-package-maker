@@ -12,7 +12,7 @@ license:
   url: http://www.gnu.org/copyleft/lesser.html 
 version: 0.1
 requirements:
-	liberty: {min: 2.1.3}
+	liberty: {min: 2.1.4}
 homeable: true
 maintainer_url: http://www.bitweaver.org
 settings:
@@ -94,7 +94,7 @@ types:
       input_select: 
         name: Input Select 
         schema: {type: C(128), notnull: true, default: varchar, unique: true}
-        validator: {type: reference, required: true, table: liberty_content_types, column: content_type_guid, input: select, desc_column: content_description}
+        validator: {type: reference, required: true, table: liberty_content_types, column: content_type_guid, input: select, desc_column: content_name}
     constraints:
       - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample_data (sample_id)
       - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
