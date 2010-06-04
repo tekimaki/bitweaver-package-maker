@@ -47,9 +47,19 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 	// Now check permissions to access this content
 	$gContent->verifyViewPermission();
 
+    // Call display services
+    $displayHash = array( 'perm_name' => $gContent->mViewContentPerm );
+    $gContent->invokeServices( 'content_display_function', $displayHash );
+
 	// Add a hit to the counter
 	$gContent->addHit();
-
+{/literal}
+	/* =-=- CUSTOM BEGIN: indexload -=-= */
+{if !empty($customBlock.indexload)}
+{$customBlock.indexload}
+{/if}
+	/* =-=- CUSTOM END: indexload -=-= */
+{literal}
 	// Display the template
 	$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/display_'.$requestType.'.tpl', htmlentities($gContent->getField('title', '{/literal}{$Package}{literal} '.ucfirst($requestType))) , array( 'display_mode' => 'display' ));
 
