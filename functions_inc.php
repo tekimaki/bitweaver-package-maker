@@ -185,7 +185,7 @@ function validate_config(&$config) {
 			error("A base package is required for $typeName");
 		}
 
-		$excludeFields = array( 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
+		$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
 		foreach ($type['fields'] as $fieldName => $field) {
 			if( !in_array( $fieldName, $excludeFields ) ){
 				if (empty($field['schema'])) {
@@ -237,12 +237,15 @@ function prep_config(&$config){
 
 	foreach ($config['types'] as $typeName => &$type) {
 		// defaults
+		if( !isset( $type['title'] ) ){
+			$type['title'] = TRUE;
+		}
 		if( !isset( $type['data'] ) ){
 			$type['data'] = TRUE;
 		}
 
 		// prep form fields
-		$excludeFields = array( 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
+		$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
 		foreach ($type['fields'] as $fieldName => &$field) {
 			if( !in_array( $fieldName, $excludeFields ) ){
 				// prep input hash

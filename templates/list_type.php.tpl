@@ -60,7 +60,15 @@ $gBitSmarty->assign_by_ref( '{/literal}{$type.name}{literal}List', $list );
 // getList() has now placed all the pagination information in $_REQUEST['listInfo']
 $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
+{/literal}
+/* =-=- CUSTOM BEGIN: list -=-= */
+{if !empty($customBlock.list)}
+{$customBlock.list}
+{else}{/if}
+/* =-=- CUSTOM END: list -=-= */
+{literal}
+
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( 'List '.$gContent->getContentTypeName( TRUE ) ) , array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( $gContent->getContentTypeName( TRUE ) ) , array( 'display_mode' => 'list' ));
 
 {/literal}

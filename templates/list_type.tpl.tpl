@@ -20,19 +20,19 @@
 						<th>{smartlink ititle="{/literal}{$type.name|capitalize}{literal} Id" isort={/literal}{$type.name}_id{literal} offset=$control.offset iorder=desc idefault=1}</th>
 					{/if}
 
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' ) eq 'y'}
+					{if $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_title{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 					{/if}
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
+	 		     		{ldelim}if $gBitSystem->isFeatureActive('{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
 						<th>{ldelim}smartlink ititle="{$field.name|capitalize}" isort={$fieldName} offset=$control.offset{rdelim}</th>
 					{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
-					{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' ) eq 'y'}
+					{if $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_summary{literal}' ) eq 'y'}
 						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
 					{/if}
 
@@ -41,23 +41,23 @@
 
 				{foreach item=dataItem from=${/literal}{$type.name}{literal}List}
 					<tr class="{cycle values="even,odd"}">
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_list_{$type.name}_id{literal}' )}
+						{if $gBitSystem->isFeatureActive( '{/literal}list_{$type.name}_id{literal}' )}
 							<td><a href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php?{/literal}{$type.name}_id{literal}={$dataItem.{/literal}{$type.name}{literal}_id|escape:"url"}" title="{$dataItem.{/literal}{$type.name}{literal}_id}">{$dataItem.{/literal}{$type.name}{literal}_id}</a></td>
 						{/if}
 
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_title{literal}' )}
+						{if $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_title{literal}' )}
 							<td>{$dataItem.title|escape}</td>
 						{/if}
 
 {/literal}
 {foreach from=$type.fields key=fieldName item=field name=fields}
-	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$package}_{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
+	 		     	     		{ldelim}if $gBitSystem->isFeatureActive('{$type.name}_list_{$fieldName}' ) eq 'y'{rdelim}
 								<td>{ldelim}$dataItem.{$fieldName}|{if empty($field.validator.type)}escape{else}{if $field.validator.type == 'date'}bit_short_date{elseif $field.validator.type == 'time'}bit_short_time{elseif $field.validator.type == 'timestamp'}bit_short_datetime{else}escape{/if}{/if}{rdelim}</td>
 						{ldelim}/if{rdelim}
 {/foreach}
 {literal}
 
-						{if $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_summary{literal}' )}
+						{if $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_summary{literal}' )}
 							<td>{$dataItem.summary|escape}</td>
 						{/if}
 

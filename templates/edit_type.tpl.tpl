@@ -53,6 +53,7 @@
 						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
 						{formfeedback warning=$errors.store}
 
+{/literal}{if $type.title}{literal}
 						<div class="row">
 							{formfeedback warning=$errors.title}
 							{formlabel label="Title" for="title"}
@@ -60,7 +61,7 @@
 								<input type="text" size="50" name="{/literal}{$type.name}{literal}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
-{/literal}
+{/literal}{/if}
 {foreach from=$type.fields key=fieldName item=field name=fields}
 {if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary'}
 						<div class="row" id="row_{$type.name}_{$fieldName}" style="{foreach from=$field.input.styles.row key=param item=value}{$param}:{$value};{/foreach}">

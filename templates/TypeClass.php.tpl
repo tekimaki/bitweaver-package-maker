@@ -184,8 +184,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$this->mInfo['format_guid'] = $pParamHash['{/literal}{$type.name}{literal}']["format_guid"];
 		}
 
-		if( isset( $pParamHash["group"]["edit"] ) ) {
-			$this->mInfo["data"] = $pParamHash["group"]["edit"];
+		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["edit"] ) ) {
+			$this->mInfo["data"] = $pParamHash['{/literal}{$type.name}{literal}']["edit"];
 			$this->mInfo['parsed_data'] = $this->parseData();
 		}
 	}
@@ -287,13 +287,15 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 			$pParamHash['{/literal}{$type.name}{literal}']['edit'] = $pParamHash['{/literal}{$type.name}{literal}']['data'];
 		}
 
+{/literal}{if $type.title}{literal}
 		// If title specified truncate to make sure not too long
 		// TODO: This shouldn't be required. LC should validate this.
 		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) {
 			$pParamHash['{/literal}{$type.name}{literal}']['content_store']['title'] = substr( $pParamHash['{/literal}{$type.name}{literal}']['title'], 0, 160 );
 		} else if( empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) { // else is error as must have title
-			$this->mErrors['title'] = tra('You must enter a title for this').' {/literal}{$type.name|lower}{literal}.';
+			$this->mErrors['title'] = tra('You must enter a title for this').' $this->getContentTypeName().';
 		}
+{/literal}{/if}{literal}
 
 		// collapse the hash that is passed to parent class so that service data is passed through properly - need to do so before verify service call below
 		$hashCopy = $pParamHash;
@@ -390,7 +392,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		$selectSql = $joinSql = $whereSql = '';
 		$bindVars = array();
 		array_push( $bindVars, $this->mContentTypeGuid );
-		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 
 {/literal}
 		/* =-=- CUSTOM BEGIN: getList -=-= */
@@ -434,7 +436,9 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		while( $res = $result->fetchRow() ) {
 {/literal}{if $type.data}
 {literal}
-			if ( $gBitSystem->isFeatureActive( '{/literal}{$package}_{$type.name}_list_data{literal}' ) ){
+			if ( $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_data{literal}' ) 
+				|| !empty( $pParamHash['parse_data'] )
+			){
 				// parse data if to be displayed in lists 
 				$parseHash['format_guid']	= $res['format_guid'];
 				$parseHash['content_id']	= $res['content_id'];

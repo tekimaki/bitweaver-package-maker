@@ -58,6 +58,8 @@ $gBitSmarty->assign_by_ref( '{$field.input.optionsHashName}', ${$field.input.opt
 {/foreach}
 {literal}
 
+$gContent->invokeServices( 'content_edit_function' );
+
 {/literal}
 /* =-=- CUSTOM BEGIN: edit -=-= */
 {if !empty($customBlock.edit)}

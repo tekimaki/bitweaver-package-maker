@@ -25,6 +25,9 @@ $tables = array(
 {foreach from=$type.typemaps key=typemapName item=typemap}
     {include file="bitpackage:pkgmkr/typemap_schema_inc.php.tpl"}
 {/foreach}
+{/foreach}
+{foreach from=$config.tables key=tableName item=table}
+    {include file="bitpackage:pkgmkr/table_schema_inc.php.tpl" tableName=$tableName table=$table}
 {/foreach}{literal}
 );
 
@@ -69,6 +72,7 @@ if (count($defaults) > 0) {
 // User Permissions
 $gBitInstaller->registerUserPermissions( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 	array ( 'p_{/literal}{$package}{literal}_admin'  , 'Can admin the {/literal}{$package}{literal} package', 'admin'      , {/literal}{$PACKAGE}{literal}_PKG_NAME ),
+	array ( 'p_{/literal}{$package}{literal}_view'  , 'Can view the {/literal}{$package}{literal} package', 'admin'      , {/literal}{$PACKAGE}{literal}_PKG_NAME ),
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
 	array ( 'p_{$typeName}_create' , 'Can create a {$typeName} entry'   , '{$type.permissions.default.create|default:registered}' , {$PACKAGE}_PKG_NAME ),
 	array ( 'p_{$typeName}_view'   , 'Can view {$typeName} entries'     , '{$type.permissions.default.view|default:basic}'      , {$PACKAGE}_PKG_NAME ),
@@ -81,10 +85,14 @@ $gBitInstaller->registerUserPermissions( {/literal}{$PACKAGE}{literal}_PKG_NAME,
 // Default Preferences
 $gBitInstaller->registerPreferences( {/literal}{$PACKAGE}{literal}_PKG_NAME, array(
 {/literal}{foreach from=$config.types key=typeName item=type name=types}
-	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_default_ordering'      , '{$typeName}_id_desc' ),
-{*	array ( {$PACKAGE}_PKG_NAME , '{$package}_list_{$typeName}_id'               , 'y'              ), *}
-	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_title'            , 'y'              ),
-	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_list_summary'          , 'y'              ),
+	array ( {$PACKAGE}_PKG_NAME , '{$typeName}_default_ordering'      , '{$typeName}_id_desc' ),
+{*	array ( {$PACKAGE}_PKG_NAME , 'list_{$typeName}_id'               , 'y'              ), *}
+{if $type.title}
+	array ( {$PACKAGE}_PKG_NAME , '{$typeName}_list_title'            , 'y'              ),
+{/if}
+{if $type.summary}
+	array ( {$PACKAGE}_PKG_NAME , '{$typeName}_list_summary'          , 'y'              ),
+{/if}
 {if $config.homeable}
 	array ( {$PACKAGE}_PKG_NAME , '{$package}_{$typeName}_home_id'               , 0                ),
 {if $smarty.foreach.types.first}

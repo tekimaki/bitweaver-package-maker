@@ -31,24 +31,26 @@ $form{$typeName}Lists = array(
 		'label' => 'Id',
 		'note' => 'Display the {$typeName} id.',
 	),
-	"{$package}_{$typeName}_list_title" => array(
+{if $type.title}
+	"{$typeName}_list_title" => array(
 		'label' => 'Title',
 		'note' => 'Display the title.',
 	),
+{/if}
 {if $type.summary}
-	"{$package}_{$typeName}_list_summary" => array(
+	"{$typeName}_list_summary" => array(
 		'label' => '{$type.fields.summary.name|default:'Summary'|capitalize}',
 		'note' => 'Display the summary.',
 	),
 {/if}
 {if $type.data}
-	"{$package}_{$typeName}_list_data" => array(
+	"{$typeName}_list_data" => array(
 		'label' => '{$type.fields.data.name|default:'Body Text'|capitalize}',
 		'note' => 'Display the body text.',
 	),
 {/if}
 {foreach from=$type.fields key=fieldName item=field name=fields}{if $fieldName != 'data' && $fieldName != 'summary'}
-        "{$package}_{$typeName}_list_{$fieldName}" => array(
+        "{$typeName}_list_{$fieldName}" => array(
 		'label' => '{$field.name|default:$fieldName|capitalize}',
 		'note' => 'Display the {$fieldName}',
 	),
@@ -62,7 +64,7 @@ $gBitSmarty->assign( 'form{$typeName}Lists', $form{$typeName}Lists );
 {foreach from=$type.settings key=typeSettingsName item=typeSettingsGroup name=typeSettings}
 $form{$typeName|ucfirst}{$typeSettingsName|ucfirst} = array(
 {foreach from=$typeSettingsGroup key=settingName item=settings name=settingsGroup}
-	"{$package}_{$typeName}_{$settingName}" => array(
+	"{$typeName}_{$settingName}" => array(
 		'label' => '{$settings.label}',
 		'note' => '{$settings.note}',
 		'type' => '{if $settings.type eq numeric}numeric{elseif $settings.type eq string}input{else}toggle{/if}',
