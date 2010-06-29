@@ -1,13 +1,13 @@
-{literal}<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
-{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
+<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
 
 // Initialization
 require_once( '../kernel/setup_inc.php' );
 
 // Is package installed and enabled
-$gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
+$gBitSystem->verifyPackage( '{{$package}}' );
 
-require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$type.name}{literal}_inc.php' );
+require_once( {{$PACKAGE}}_PKG_PATH.'lookup_{{$type.name}}_inc.php' );
 
 // Now check permissions to access this page
 if( $gContent->isValid() ){
@@ -17,7 +17,7 @@ if( $gContent->isValid() ){
 }
 
 // Check if the page has changed
-if( !empty( $_REQUEST["save_{/literal}{$type.name}{literal}"] ) ) {
+if( !empty( $_REQUEST["save_{{$type.name}}"] ) ) {
 	// Editing requires general ticket verification
 	$gBitUser->verifyTicket();
 
@@ -44,47 +44,47 @@ if( isset( $_REQUEST["preview"] ) ) {
 	$gContent->invokeServices( 'content_edit_function' );
 }
 
-{/literal}
+
 // Prep any data we may need for the form
-{foreach from=$type.fields key=fieldName item=field}
-{if $field.validator.type == 'reference' && $field.input.type == 'select'}
-${$field.input.optionsHashName} = $gContent->get{$field.name|replace:" ":""}Options();
-${$field.input.optionsHashName}_list = array( ''=>tra('Select one...') );
-foreach( ${$field.input.optionsHashName} as $key=>$value ){ldelim}
-	${$field.input.optionsHashName}_list[$key] = $value;
-{rdelim}
-$gBitSmarty->assign_by_ref( '{$field.input.optionsHashName}', ${$field.input.optionsHashName}_list );
-{/if}
-{/foreach}
-{literal}
+{{foreach from=$type.fields key=fieldName item=field}}
+{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+${{$field.input.optionsHashName}} = $gContent->get{{$field.name|replace:" ":""}}Options();
+${{$field.input.optionsHashName}}_list = array( ''=>tra('Select one...') );
+foreach( ${{$field.input.optionsHashName}} as $key=>$value ){
+	${{$field.input.optionsHashName}}_list[$key] = $value;
+}
+$gBitSmarty->assign_by_ref( '{{$field.input.optionsHashName}}', ${{$field.input.optionsHashName}}_list );
+{{/if}}
+{{/foreach}}
+
 
 $gContent->invokeServices( 'content_edit_function' );
 
-{/literal}
-/* =-=- CUSTOM BEGIN: edit -=-= */
-{if !empty($customBlock.edit)}
-{$customBlock.edit}
-{else}
 
-{/if}
+/* =-=- CUSTOM BEGIN: edit -=-= */
+{{if !empty($customBlock.edit)}}
+{{$customBlock.edit}}
+{{else}}
+
+{{/if}}
 /* =-=- CUSTOM END: edit -=-= */
 
 // Include any javascript files we need for editing
-{strip}
-{assign var=jsColorIncluded value=false}
-{foreach from=$type.fields item=data key=field name=fields}
-	{if !empty($data.validator.type) && $data.validator.type == 'hexcolor' && !$jsColorIncluded}
-		{assign var=jsColorIncluded value=true}
-		{literal}$gBitThemes->loadJavascript( PKGMKR_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );{/literal}
-	{/if}
-{/foreach}
-{if $type.js}
-	$gBitThemes->loadJavascript( {$PACKAGE}_PKG_PATH.'scripts/{$type.class_name}.js', TRUE );
-{/if}
-{/strip}
-{literal}
+{{strip}}
+{{assign var=jsColorIncluded value=false}}
+{{foreach from=$type.fields item=data key=field name=fields}}
+	{{if !empty($data.validator.type) && $data.validator.type == 'hexcolor' && !$jsColorIncluded}}
+		{{assign var=jsColorIncluded value=true}}
+		$gBitThemes->loadJavascript( PKGMKR_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
+	{{/if}}
+{{/foreach}}
+{{if $type.js}}
+	$gBitThemes->loadJavascript( {{$PACKAGE}}_PKG_PATH.'scripts/{{$type.class_name}}.js', TRUE );
+{{/if}}
+{{/strip}}
+
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}{literal}/edit_{/literal}{$type.name}{literal}.tpl', tra('Edit {/literal}{$type.content_name|capitalize}{literal}') , array( 'display_mode' => 'edit' ));
+$gBitSystem->display( 'bitpackage:{{$package}}/edit_{{$type.name}}.tpl', tra('Edit {{$type.content_name|capitalize}}') , array( 'display_mode' => 'edit' ));
 
-{/literal}
+

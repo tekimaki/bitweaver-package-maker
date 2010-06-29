@@ -1,53 +1,53 @@
-{literal}{strip}
-{/literal}{include file="bitpackage:pkgmkr/smarty_file_header.tpl}{literal}
+{strip}
+{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
 {form}
 	{jstabs}
 {* Are there homeable settings? *}
-{/literal}{if $config.homeable}{literal}
-		{jstab title="{/literal}{$Package}{literal} Home Settings"}
-			{legend legend="{/literal}{$Package}{literal} Home Settings"}
+{{if $config.homeable}}
+		{jstab title="{{$Package}} Home Settings"}
+			{legend legend="{{$Package}} Home Settings"}
 				<input type="hidden" name="page" value="{$page}" />
 				<div class="row">
-					{formlabel label="{/literal}{$Package}{literal} Home Type"}
+					{formlabel label="{{$Package}} Home Type"}
 					{forminput}
-						<select name="{/literal}{$package}{literal}_home_type" id="home{/literal}{$Package}{literal}">
+						<select name="{{$package}}_home_type" id="home{{$Package}}">
 							{section name=ix loop=$homeTypes}
-								<option value="{$homeTypes[ix]|escape}" {if ${/literal}{$package}{literal}_home_type == $homeTypes[ix]}selected="selected"{/if} >{$homeTypes[ix]}</option>
+								<option value="{$homeTypes[ix]|escape}" {if ${{$package}}_home_type == $homeTypes[ix]}selected="selected"{/if} >{$homeTypes[ix]}</option>
 							{/section}
 						</select>
 					{/forminput}
 				</div>		
 {* Output for each type *}
-{/literal}{foreach from=$config.types key=typeName item=type name=types}{literal}
+{{foreach from=$config.types key=typeName item=type name=types}}
 				<div class="row">
-					{formlabel label="Home {/literal}{$typeName|capitalize}{literal}" for="home{/literal}{$typeName|capitalize}{literal}"}
+					{formlabel label="Home {{$typeName|capitalize}}" for="home{{$typeName|capitalize}}"}
 					{forminput}
-						<select name="{/literal}{$package}_{$typeName}{literal}_home_id" id="home{/literal}{$typeName|capitalize}{literal}">
-							{section name=ix loop=${/literal}{$typeName}{literal}_data}
-								<option value="{${/literal}{$typeName}{literal}_data[ix].{/literal}{$typeName}{literal}_id|escape}" {if ${/literal}{$typeName}{literal}_data[ix].{/literal}{$typeName}{literal}_id eq ${/literal}{$package}_{$typeName}{literal}_home_id}selected="selected"{/if}>{${/literal}{$typeName}{literal}_data[ix].title|escape|truncate:20:"...":true}</option>
+						<select name="{{$package}}_{{$typeName}}_home_id" id="home{{$typeName|capitalize}}">
+							{section name=ix loop=${{$typeName}}_data}
+								<option value="{${{$typeName}}_data[ix].{{$typeName}}_id|escape}" {if ${{$typeName}}_data[ix].{{$typeName}}_id eq ${{$package}}_{{$typeName}}_home_id}selected="selected"{/if}>{${{$typeName}}_data[ix].title|escape|truncate:20:"...":true}</option>
 							{sectionelse}
 								<option>{tr}No records found{/tr}</option>
 							{/section}
 						</select>
-						{formhelp note="This is the {/literal}{$typeName}{literal} that will be displayed when viewing the {/literal}{$package}{literal} homepage if {/literal}{$Package}{literal} Home Type above is set to {/literal}{$typeName}{literal}"}
+						{formhelp note="This is the {{$typeName}} that will be displayed when viewing the {{$package}} homepage if {{$Package}} Home Type above is set to {{$typeName}}"}
 					{/forminput}
 				</div>
 {* End foreach type *}
-{/literal}{/foreach}{literal}
+{{/foreach}}
 			{/legend}
 			<div class="row submit">
-				<input type="submit" name="{/literal}{$package}{literal}_settings" value="{tr}Change preferences{/tr}" />
+				<input type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/jstab}
 {* End homeable section *}
-{/literal}{/if}
+{{/if}}
 
-{* Package Settings *}
-{if $config.settings}{literal}
-		{jstab title="{/literal}{$Package}{literal} Settings"}{/literal}
-{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}{literal}
-            {legend legend="{/literal}{$pkgSettingsName|ucfirst}{literal} Features"}
-                {foreach from=$form{/literal}{$pkgSettingsName|ucfirst}{literal} key=item item=output}
+{{* Package Settings *}}
+{{if $config.settings}}
+		{jstab title="{{$Package}} Settings"}
+{{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}}
+            {legend legend="{{$pkgSettingsName|ucfirst}} Features"}
+                {foreach from=$form{{$pkgSettingsName|ucfirst}} key=item item=output}
                     <div class="row">
 						{formlabel label=`$output.label` for=$item}
                         {forminput}
@@ -62,26 +62,26 @@
                         {/forminput}
                     </div>
                 {/foreach}
-            {/legend}{/literal}
-{/foreach}{literal}
+            {/legend}
+{{/foreach}}
 			<div class="row submit">
-				<input type="submit" name="{/literal}{$package}{literal}_settings" value="{tr}Change preferences{/tr}" />
+				<input type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
-		{/jstab}{/literal}
-{/if}
-{* End Package Settings *}
+		{/jstab}
+{{/if}}
+{{* End Package Settings *}}
 
-{* For Each Type Settings *}
-{foreach from=$config.types key=typeName item=type name=types}{literal}
-	{jstab title="{/literal}{$type.content_name|capitalize}{literal} Settings"}
-	{jstabs}{/literal}
+{{* For Each Type Settings *}}
+{{foreach from=$config.types key=typeName item=type name=types}}
+	{jstab title="{{$type.content_name|capitalize}} Settings"}
+	{jstabs}
 
-{* Defined Type Settings *}
-{if $type.settings}
-{foreach from=$type.settings key=typeSettingsName item=typeSettingGroup name=typeSettings}{literal}
-			{jstab title="{/literal}{$typeSettingsName|ucfirst}{literal} Settings"}
-				{legend legend="{/literal}{$typeSettingsName|ucfirst}{literal} Features"}
-				{foreach from=$form{/literal}{$typeName|ucfirst}{$typeSettingsName|ucfirst}{literal} key=item item=output}
+{{* Defined Type Settings *}}
+{{if $type.settings}}
+{{foreach from=$type.settings key=typeSettingsName item=typeSettingGroup name=typeSettings}}
+			{jstab title="{{$typeSettingsName|ucfirst}} Settings"}
+				{legend legend="{{$typeSettingsName|ucfirst}} Features"}
+				{foreach from=$form{{$typeName|ucfirst}}{{$typeSettingsName|ucfirst}} key=item item=output}
 						<div class="row">
 							{formlabel label=`$output.label` for=$item}
 							{forminput}
@@ -97,17 +97,17 @@
 						</div>
 					{/foreach}
 				{/legend}
-			{/jstab}{/literal}
-{/foreach}
-{/if}
-{* End Defined Type Settings *}
+			{/jstab}
+{{/foreach}}
+{{/if}}
+{{* End Defined Type Settings *}}
 
-{* List Settings *}
-{literal}
-			{jstab title="{/literal}{$type.content_name|capitalize}{literal} List Settings"}
-				{legend legend="{/literal}{$type.content_name|capitalize}{literal} List Settings"}
+{{* List Settings *}}
+
+			{jstab title="{{$type.content_name|capitalize}} List Settings"}
+				{legend legend="{{$type.content_name|capitalize}} List Settings"}
 					<input type="hidden" name="page" value="{$page}" />
-					{foreach from=$form{/literal}{$typeName}{literal}Lists key=item item=output}
+					{foreach from=$form{{$typeName}}Lists key=item item=output}
 						<div class="row">
 							{formlabel label=`$output.label` for=$item}
 							{forminput}
@@ -118,16 +118,16 @@
 					{/foreach}
 				{/legend}
 				<div class="row submit">
-					<input type="submit" name="{/literal}{$package}{literal}_settings" value="{tr}Change preferences{/tr}" />
+					<input type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
 				</div>
 			{/jstab}
 {* End List Settings *}
 
 		{/jstabs}
-	{/jstab}{/literal}
-{/foreach}
-{* End Each Type *}
-{literal}
+	{/jstab}
+{{/foreach}}
+{{* End Each Type *}}
+
 	{/jstabs}
 {/form}
-{/strip}{/literal}
+{/strip}

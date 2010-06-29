@@ -1,11 +1,11 @@
-{literal}{strip}
-{/literal}{include file="bitpackage:pkgmkr/smarty_file_header.tpl}{literal}
+{strip}
+{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
 <div class="floaticon">{bithelp}</div>
 
-<div class="edit {/literal}{$package} {$type.name}{literal}">
+<div class="edit {{$package}} {{$type.name}}">
 	<div class="header">
 		<h1>
-			{if $gContent->mInfo.{/literal}{$type.name}{literal}_id}
+			{if $gContent->mInfo.{{$type.name}}_id}
 				{tr}Edit {$gContent->mInfo.title|escape}{/tr}
 			{else}
 				{tr}Create New {$gContent->getContentTypeName()}{/tr}
@@ -15,23 +15,23 @@
 
 	<div class="body">
 		{formfeedback warning=$errors}
-		{form enctype="multipart/form-data" id="edit{/literal}{$type.name}{literal}form"}
+		{form enctype="multipart/form-data" id="edit{{$type.name}}form"}
 			{* =-=- CUSTOM BEGIN: input -=-= *}
-{/literal}{if !empty($customBlock.input)}
-{$customBlock.input}
-{else}
+{{if !empty($customBlock.input)}}
+{{$customBlock.input}}
+{{else}}
 
-{/if}{literal}
+{{/if}}
 			{* =-=- CUSTOM END: input -=-= *}
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<div class="servicetabs">
 			{jstabs id="servicetabs"}
 				{* =-=- CUSTOM BEGIN: servicetabs -=-= *}
-{/literal}{if !empty($customBlock.servicetabs)}
-{$customBlock.servicetabs}
-{else}
+{{if !empty($customBlock.servicetabs)}}
+{{$customBlock.servicetabs}}
+{{else}}
 
-{/if}{literal}
+{{/if}}
 				{* =-=- CUSTOM END: servicetabs -=-= *}
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" display_help_tab=1}
@@ -43,51 +43,51 @@
 					{jstab title="Preview"}
 						{legend legend="Preview"}
 						<div class="preview">
-							{include file="bitpackage:{/literal}{$package}{literal}/display_{/literal}{$type.name}{literal}.tpl" page=`$gContent->mInfo.{/literal}{$type.name}{literal}_id`}
+							{include file="bitpackage:{{$package}}/display_{{$type.name}}.tpl" page=`$gContent->mInfo.{{$type.name}}_id`}
 						</div>
 						{/legend}
 					{/jstab}
 				{/if}
 				{jstab title="Edit"}
 				{legend legend=$gContent->getContentTypeName()}
-						<input type="hidden" name="{/literal}{$type.name}{literal}[{/literal}{$type.name}{literal}_id]" value="{$gContent->mInfo.{/literal}{$type.name}{literal}_id}" />
+						<input type="hidden" name="{{$type.name}}[{{$type.name}}_id]" value="{$gContent->mInfo.{{$type.name}}_id}" />
 						{formfeedback warning=$errors.store}
 
-{/literal}{if $type.title}{literal}
+{{if $type.title}}
 						<div class="row">
 							{formfeedback warning=$errors.title}
 							{formlabel label="Title" for="title"}
 							{forminput}
-								<input type="text" size="50" name="{/literal}{$type.name}{literal}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
+								<input type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
-{/literal}{/if}
-{foreach from=$type.fields key=fieldName item=field name=fields}
-{if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary'}
-						<div class="row" id="row_{$type.name}_{$fieldName}" style="{foreach from=$field.input.styles.row key=param item=value}{$param}:{$value};{/foreach}">
-							{ldelim}formfeedback warning=$errors.{$fieldName}{rdelim}
-							{ldelim}formlabel label="{$field.name|capitalize}" for="{$fieldName}"{rdelim}
-							{ldelim}forminput{rdelim}
-							{include file="bitpackage:pkgmkr/edit_field.tpl"}
-							{if $field.validator.required}{ldelim}required{rdelim}
-							{/if}{ldelim}formhelp note="{$field.help}"{rdelim}
-							{ldelim}/forminput{rdelim}
+{{/if}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
+{{if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary'}}
+						<div class="row" id="row_{{$type.name}}_{{$fieldName}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
+							{formfeedback warning=$errors.{{$fieldName}}}
+							{formlabel label="{{$field.name|capitalize}}" for="{{$fieldName}}"}
+							{forminput}
+							{{include file="bitpackage:pkgmkr/edit_field.tpl"}}
+							{{if $field.validator.required}}{required}{{/if}}
+							{formhelp note="{{$field.help}}"}
+							{/forminput}
 						</div>
-{/if}
-{/foreach}
-{if $type.data}{literal}
-						{textarea label="{/literal}{$type.fields.data.name}{literal}" name="{/literal}{$type.name}{literal}[edit]" help="{/literal}{$type.fields.data.help}{literal}"}{$gContent->mInfo.data}{/textarea}
-{/literal}{/if}{literal}
+{{/if}}
+{{/foreach}}
+{{if $type.data}}
+						{textarea label="{{$type.fields.data.name}}" name="{{$type.name}}[edit]" help="{{$type.fields.data.help}}"}{$gContent->mInfo.data}{/textarea}
+{{/if}}
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 						<div class="row submit">
 							<input type="submit" name="preview" value="{tr}Preview{/tr}" />
-							<input type="submit" name="save_{/literal}{$type.name}{literal}" value="{tr}Save{/tr}" />
+							<input type="submit" name="save_{{$type.name}}" value="{tr}Save{/tr}" />
 						</div>
-{/literal}
-{if $type.attachments}
-{literal}
+
+{{if $type.attachments}}
+
 						{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 							<div class=row>
 							{legend legend="Attachments"}
@@ -95,15 +95,15 @@
 							{/legend}
 							</div>
 						{/if}
-{/literal}
-{/if}
-{literal}
+
+{{/if}}
+
 					{/legend}
 				{/jstab}
 			{/jstabs}
 			</div>
 		{/form}
 	</div><!-- end .body -->
-</div><!-- end .{/literal}{$sample.class}{literal} -->
+</div><!-- end .{{$sample.class}} -->
 
-{/strip}{/literal}
+{/strip}

@@ -1,30 +1,30 @@
-{literal}<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
-{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
+<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
 
 require_once( '../kernel/setup_inc.php' );
 
 // Is package installed and enabled
-$gBitSystem->verifyPackage( '{/literal}{$package}{literal}' );
+$gBitSystem->verifyPackage( '{{$package}}' );
 
 // Look up the content
-require_once( {/literal}{$PACKAGE}{literal}_PKG_PATH.'lookup_{/literal}{$type.name}{literal}_inc.php' );
+require_once( {{$PACKAGE}}_PKG_PATH.'lookup_{{$type.name}}_inc.php' );
 
 // Now check permissions to access this page
 $gContent->verifyViewPermission();
 
-// Remove {/literal}{$type.name}{literal} data if we don't want them anymore
-if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{/literal}{$type.name}{literal}_data" ) {
+// Remove {{$type.name}} data if we don't want them anymore
+if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{{$type.name}}_data" ) {
 
-	// Now check permissions to remove the selected {/literal}{$package}{literal} data
-	$gContent->verifyUserPermission( 'p_{/literal}{$type.name}{literal}_expunge' );
+	// Now check permissions to remove the selected {{$package}} data
+	$gContent->verifyUserPermission( 'p_{{$type.name}}_expunge' );
 
 	if( !empty( $_REQUEST['cancel'] ) ) {
 		// user cancelled - just continue on, doing nothing
 	} elseif( empty( $_REQUEST['confirm'] ) ) {
 		$formHash['delete'] = TRUE;
-		$formHash['submit_mult'] = 'remove_{/literal}{$type.name}{literal}_data';
+		$formHash['submit_mult'] = 'remove_{{$type.name}}_data';
 		foreach( $_REQUEST["checked"] as $del ) {
-			$tmpInst = new {/literal}{$type.class_name}{literal}($del);
+			$tmpInst = new {{$type.class_name}}($del);
 			if ( $tmpInst->load() && !empty( $tmpInst->mInfo['title'] )) {
 				$info = $tmpInst->mInfo['title'];
 			} else {
@@ -41,7 +41,7 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 		);
 	} else {
 		foreach( $_REQUEST["checked"] as $deleteId ) {
-			$tmpInst = new {/literal}{$type.class_name}{literal}( $deleteId );
+			$tmpInst = new {{$type.class_name}}( $deleteId );
 			if( !$tmpInst->load() || !$tmpInst->expunge() ) {
 				array_merge( $errors, array_values( $tmpInst->mErrors ) );
 			}
@@ -52,23 +52,23 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 	}
 }
 
-// Create new {/literal}{$type.class_name}{literal} object
-$obj = new {/literal}{$type.class_name}{literal}();
+// Create new {{$type.class_name}} object
+$obj = new {{$type.class_name}}();
 $list = $obj->getList( $_REQUEST );
-$gBitSmarty->assign_by_ref( '{/literal}{$type.name}{literal}List', $list );
+$gBitSmarty->assign_by_ref( '{{$type.name}}List', $list );
 
 // getList() has now placed all the pagination information in $_REQUEST['listInfo']
 $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
-{/literal}
+
 /* =-=- CUSTOM BEGIN: list -=-= */
-{if !empty($customBlock.list)}
-{$customBlock.list}
-{else}{/if}
+{{if !empty($customBlock.list)}}
+{{$customBlock.list}}
+{{else}}{{/if}}
 /* =-=- CUSTOM END: list -=-= */
-{literal}
+
 
 // Display the template
-$gBitSystem->display( 'bitpackage:{/literal}{$package}/list_{$type.name}.tpl{literal}', tra( $gContent->getContentTypeName( TRUE ) ) , array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:{{$package}}/list_{{$type.name}}.tpl', tra( $gContent->getContentTypeName( TRUE ) ) , array( 'display_mode' => 'list' ));
 
-{/literal}
+

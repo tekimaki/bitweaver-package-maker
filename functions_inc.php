@@ -328,6 +328,10 @@ function init_smarty($config) {
 
 	// Turn off tr prefilter so those tags come out right
 	$gBitSmarty->unregister_prefilter('tr');
+
+	// set the delimiters for tags
+	$gBitSmarty->left_delimiter = "{{";
+	$gBitSmarty->right_delimiter = "}}";
 }
 
 function activate_pkgmkr() {

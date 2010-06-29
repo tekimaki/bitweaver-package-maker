@@ -1,26 +1,26 @@
-{literal}{strip}
-{/literal}{include file="bitpackage:pkgmkr/smarty_file_header.tpl}{literal}
+{strip}
+{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
 	<ul>
-		{if $gBitUser->hasPermission( 'p_{/literal}{$package}{literal}_view')}
-			<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}index.php">{tr}{/literal}{$Package}{literal} Home{/tr}</a></li>
-{/literal}
-{foreach from=$config.types key=typeName item=type name=types}
-{literal}
-			{if $gBitUser->hasPermission( 'p_{/literal}{$typeName}{literal}_view')}
-				<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}list_{/literal}{$typeName}{literal}.php">{tr}List {/literal}{if $type.content_name_plural}{$type.content_name_plural}{else}{$type.content_name} Data{/if}{literal}{/tr}</a></li>
+		{if $gBitUser->hasPermission( 'p_{{$package}}_view')}
+			<li><a class="item" href="{$smarty.const.{{$PACKAGE}}_PKG_URL}index.php">{tr}{{$Package}} Home{/tr}</a></li>
+
+{{foreach from=$config.types key=typeName item=type name=types}}
+
+			{if $gBitUser->hasPermission( 'p_{{$typeName}}_view')}
+				<li><a class="item" href="{$smarty.const.{{$PACKAGE}}_PKG_URL}list_{{$typeName}}.php">{tr}List {{if $type.content_name_plural}}{{$type.content_name_plural}}{{else}}{{$type.content_name}} Data{{/if}}{/tr}</a></li>
 			{/if}
-{/literal}
-{/foreach}
-{literal}
+
+{{/foreach}}
+
 		{/if}
-{/literal}
-{foreach from=$config.types key=typeName item=type name=types}
-{literal}
-		{if $gBitUser->hasPermission( 'p_{/literal}{$typeName}{literal}_create')}
-		<li><a class="item" href="{$smarty.const.{/literal}{$PACKAGE}{literal}_PKG_URL}edit_{/literal}{$typeName}{literal}.php">{tr}Create {/literal}{$type.content_name}{literal}{/tr}</a></li>
+
+{{foreach from=$config.types key=typeName item=type name=types}}
+
+		{if $gBitUser->hasPermission( 'p_{{$typeName}}_create')}
+		<li><a class="item" href="{$smarty.const.{{$PACKAGE}}_PKG_URL}edit_{{$typeName}}.php">{tr}Create {{$type.content_name}}{/tr}</a></li>
 		{/if}
-{/literal}
-{/foreach}
-{literal}
+
+{{/foreach}}
+
 	</ul>
-{/strip}{/literal}
+{/strip}

@@ -1,6 +1,6 @@
-{literal}<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 /* vim: :set fdm=marker : */
-{/literal}{include file="bitpackage:pkgmkr/php_file_header.tpl"}{literal}
+{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
 /*
    -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    Portions of this file are modifiable
@@ -12,77 +12,77 @@
 */
 
 /**
-* {/literal}{$type.class_name}{literal} class
-* {/literal}{$type.description}{literal}
+* {{$type.class_name}} class
+* {{$type.description}}
 *
 * @version $Revision: $
-* @class {/literal}{$type.class_name}{literal}
+* @class {{$type.class_name}}
 */
 
-require_once( {/literal}{$type.base_package|upper}{literal}_PKG_PATH.'{/literal}{$type.base_class}{literal}.php' );
+require_once( {{$type.base_package|upper}}_PKG_PATH.'{{$type.base_class}}.php' );
 require_once( PKGMKR_PKG_PATH . 'LibertyValidator.php' );
-{/literal}
-/* =-=- CUSTOM BEGIN: require -=-= */
-{if !empty($customBlock.require)}
-{$customBlock.require}
-{else}
 
-{/if}
+/* =-=- CUSTOM BEGIN: require -=-= */
+{{if !empty($customBlock.require)}}
+{{$customBlock.require}}
+{{else}}
+
+{{/if}}
 /* =-=- CUSTOM END: require -=-= */
-{literal}
+
 
 /**
 * This is used to uniquely identify the object
 */
-define( 'BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID', 'bit{/literal}{$type.name|lower}{literal}' );
+define( 'BIT{{$type.name|upper}}_CONTENT_TYPE_GUID', 'bit{{$type.name|lower}}' );
 
-class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}{literal} {
+class {{$type.class_name}} extends {{$type.base_class}} {
 	/**
-	 * m{/literal}{$type.name|capitalize}{literal}Id Primary key for our mythical {/literal}{$type.name|capitalize}{literal} class object & table
+	 * m{{$type.name|capitalize}}Id Primary key for our mythical {{$type.name|capitalize}} class object & table
 	 *
 	 * @var array
 	 * @access public
 	 */
-	var $m{/literal}{$type.name|capitalize}{literal}Id;
+	var $m{{$type.name|capitalize}}Id;
 
 	var $mVerification;
 
 	/**
-	 * {/literal}{$type.class_name}{literal} During initialisation, be sure to call our base constructors
+	 * {{$type.class_name}} During initialisation, be sure to call our base constructors
 	 *
-	 * @param numeric $p{/literal}{$type.name|capitalize}{literal}Id
+	 * @param numeric $p{{$type.name|capitalize}}Id
 	 * @param numeric $pContentId
 	 * @access public
 	 * @return void
 	 */
-	function {/literal}{$type.class_name}{literal}( $p{/literal}{$type.name|capitalize}{literal}Id=NULL, $pContentId=NULL ) {
-		{/literal}{$type.base_class}::{$type.base_class}();{literal}
-		$this->m{/literal}{$type.name|capitalize}{literal}Id = $p{/literal}{$type.name|capitalize}{literal}Id;
+	function {{$type.class_name}}( $p{{$type.name|capitalize}}Id=NULL, $pContentId=NULL ) {
+		{{$type.base_class}}::{{$type.base_class}}();
+		$this->m{{$type.name|capitalize}}Id = $p{{$type.name|capitalize}}Id;
 		$this->mContentId = $pContentId;
-		$this->mContentTypeGuid = BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID;
-		$this->registerContentType( BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID, array(
-			'content_type_guid'	  => BIT{/literal}{$type.name|upper}{literal}_CONTENT_TYPE_GUID,
-{/literal}{if $type.content_name}
-			'content_name' => '{$type.content_name}',
-{else}
-			'content_name' => '{$type.name|capitalize} data',
-{/if}
-{if $type.content_name_plural}
-			'content_name_plural' => '{$type.content_name_plural}',
-{/if}{literal}			'handler_class'		  => '{/literal}{$type.class_name}{literal}',
-			'handler_package'	  => '{/literal}{$package}{literal}',
-			'handler_file'		  => '{/literal}{$type.class_name}{literal}.php',
-{/literal}{if !empty($config.maintainer_url)}
-			'maintainer_url'	  => '{$config.maintainer_url}'
-{else}
+		$this->mContentTypeGuid = BIT{{$type.name|upper}}_CONTENT_TYPE_GUID;
+		$this->registerContentType( BIT{{$type.name|upper}}_CONTENT_TYPE_GUID, array(
+			'content_type_guid'	  => BIT{{$type.name|upper}}_CONTENT_TYPE_GUID,
+{{if $type.content_name}}
+			'content_name' => '{{$type.content_name}}',
+{{else}}
+			'content_name' => '{{$type.name|capitalize}} data',
+{{/if}}
+{{if $type.content_name_plural}}
+			'content_name_plural' => '{{$type.content_name_plural}}',
+{{/if}}			'handler_class'		  => '{{$type.class_name}}',
+			'handler_package'	  => '{{$package}}',
+			'handler_file'		  => '{{$type.class_name}}.php',
+{{if !empty($config.maintainer_url)}}
+			'maintainer_url'	  => '{{$config.maintainer_url}}'
+{{else}}
 			'maintainer_url'	  => 'http://www.bitweaver.org'
-{/if}{literal}		));
+{{/if}}		));
 		// Permission setup
-		$this->mCreateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_create';
-		$this->mViewContentPerm	   = 'p_{/literal}{$type.name|lower}{literal}_view';
-		$this->mUpdateContentPerm  = 'p_{/literal}{$type.name|lower}{literal}_update';
-		$this->mExpungeContentPerm = 'p_{/literal}{$type.name|lower}{literal}_expunge';
-		$this->mAdminContentPerm   = 'p_{/literal}{$package}{literal}_admin';
+		$this->mCreateContentPerm  = 'p_{{$type.name|lower}}_create';
+		$this->mViewContentPerm	   = 'p_{{$type.name|lower}}_view';
+		$this->mUpdateContentPerm  = 'p_{{$type.name|lower}}_update';
+		$this->mExpungeContentPerm = 'p_{{$type.name|lower}}_expunge';
+		$this->mAdminContentPerm   = 'p_{{$package}}_admin';
 	}
 
 	/**
@@ -92,25 +92,25 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function load() {
-		if( $this->verifyId( $this->m{/literal}{$type.name|capitalize}{literal}Id ) || $this->verifyId( $this->mContentId ) ) {
+		if( $this->verifyId( $this->m{{$type.name|capitalize}}Id ) || $this->verifyId( $this->mContentId ) ) {
 			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
 			// This is a significant performance optimization
-			$lookupColumn = $this->verifyId( $this->m{/literal}{$type.name|capitalize}{literal}Id ) ? '{/literal}{$type.name|lower}{literal}_id' : 'content_id';
+			$lookupColumn = $this->verifyId( $this->m{{$type.name|capitalize}}Id ) ? '{{$type.name|lower}}_id' : 'content_id';
 			$bindVars = array();
 			$selectSql = $joinSql = $whereSql = '';
-			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->m{/literal}{$type.name|capitalize}{literal}Id ) ? $this->m{/literal}{$type.name|capitalize}{literal}Id : $this->mContentId );
+			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->m{{$type.name|capitalize}}Id ) ? $this->m{{$type.name|capitalize}}Id : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$query = "
-				SELECT {/literal}{$type.name|lower}{literal}.*, lc.*,
+				SELECT {{$type.name|lower}}.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				lch.`hits`,
 				lf.`storage_path` as avatar,
 				lfp.storage_path AS `primary_attachment_path`
 				$selectSql
-				FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
+				FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` {{$type.name|lower}}
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {{$type.name|lower}}.`content_id` ) $joinSql
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON( lch.`content_id` = lc.`content_id` )
@@ -118,17 +118,17 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON (lf.`file_id` = a.`foreign_id`)
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
-				WHERE {/literal}{$type.name|lower}{literal}.`$lookupColumn`=? $whereSql";
+				WHERE {{$type.name|lower}}.`$lookupColumn`=? $whereSql";
 			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mContentId = $result->fields['content_id'];
-{/literal}{if count($type.typemaps) > 0}
+{{if count($type.typemaps) > 0}}
 				// Load any typemaps
 				$this->loadTypemaps();
-{/if}{literal}
-				$this->m{/literal}{$type.name|capitalize}{literal}Id = $result->fields['{/literal}{$type.name|lower}{literal}_id'];
+{{/if}}
+				$this->m{{$type.name|capitalize}}Id = $result->fields['{{$type.name|lower}}_id'];
 
 				$this->mInfo['creator'] = ( !empty( $result->fields['creator_real_name'] ) ? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
 				$this->mInfo['editor'] = ( !empty( $result->fields['modifier_real_name'] ) ? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
@@ -136,7 +136,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 
-				{/literal}{$type.base_class}{literal}::load();
+				{{$type.base_class}}::load();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -165,27 +165,27 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 
 		$this->previewFields($pParamHash);
 
-{/literal}{if count($type.typemaps) > 0}
+{{if count($type.typemaps) > 0}}
 		// Preview any typemaps
 		$this->previewTypemaps($pParamHash);
-{/if}{literal}
+{{/if}}
 
 		// Liberty should really have a preview function that handles these
 		// But it doesn't so we handle them here.
-		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["title"] ) ) {
-			$this->mInfo["title"] = $pParamHash['{/literal}{$type.name}{literal}']["title"];
+		if( isset( $pParamHash['{{$type.name}}']["title"] ) ) {
+			$this->mInfo["title"] = $pParamHash['{{$type.name}}']["title"];
 		}
 
-		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["summary"] ) ) {
-			$this->mInfo["summary"] = $pParamHash['{/literal}{$type.name}{literal}']["summary"];
+		if( isset( $pParamHash['{{$type.name}}']["summary"] ) ) {
+			$this->mInfo["summary"] = $pParamHash['{{$type.name}}']["summary"];
 		}
 
-		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["format_guid"] ) ) {
-			$this->mInfo['format_guid'] = $pParamHash['{/literal}{$type.name}{literal}']["format_guid"];
+		if( isset( $pParamHash['{{$type.name}}']["format_guid"] ) ) {
+			$this->mInfo['format_guid'] = $pParamHash['{{$type.name}}']["format_guid"];
 		}
 
-		if( isset( $pParamHash['{/literal}{$type.name}{literal}']["edit"] ) ) {
-			$this->mInfo["data"] = $pParamHash['{/literal}{$type.name}{literal}']["edit"];
+		if( isset( $pParamHash['{{$type.name}}']["edit"] ) ) {
+			$this->mInfo["data"] = $pParamHash['{{$type.name}}']["edit"];
 			$this->mInfo['parsed_data'] = $this->parseData();
 		}
 	}
@@ -193,7 +193,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	/**
 	 * store Any method named Store inherently implies data will be written to the database
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
-	 * This is the ONLY method that should be called in order to store( create or update )an {/literal}{$type.name|lower}{literal}!
+	 * This is the ONLY method that should be called in order to store( create or update )an {{$type.name|lower}}!
 	 * It is very smart and will figure out what to do for you. It should be considered a black box.
 	 *
 	 * @param array $pParamHash hash of values that will be used to store the page
@@ -206,45 +206,45 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		// touch the filesystem in some way.
 		$abort = ignore_user_abort(FALSE);
 		if( $this->verify( $pParamHash )
-{/literal}{if count($type.typemaps) > 0}
+{{if count($type.typemaps) > 0}}
 			&& $this->verifyTypemaps( $pParamHash )
-{/if}{literal}
-			&& {/literal}{$type.base_class}{literal}::store( $pParamHash['{/literal}{$type.name}{literal}'] ) ) {
+{{/if}}
+			&& {{$type.base_class}}::store( $pParamHash['{{$type.name}}'] ) ) {
 			$this->mDb->StartTrans();
-			$table = BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data";
-			if( $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
-				$locId = array( "{/literal}{$type.name|lower}{literal}_id" => $pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'] );
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'], $locId );
+			$table = BIT_DB_PREFIX."{{$type.name|lower}}_data";
+			if( $this->m{{$type.name|capitalize}}Id ) {
+				$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
+				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_store'], $locId );
 			} else {
-				$pParamHash['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['{/literal}{$type.name}{literal}']['content_id'];
-				if( @$this->verifyId( $pParamHash['{/literal}{$type.name|lower}{literal}_id'] ) ) {
-					// if pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'] is set, some is requesting a particular {/literal}{$type.name|lower}{literal}_id. Use with caution!
-					$pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'] = $pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_id'];
+				$pParamHash['{{$type.name|lower}}_store']['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
+				if( @$this->verifyId( $pParamHash['{{$type.name|lower}}_id'] ) ) {
+					// if pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] is set, some is requesting a particular {{$type.name|lower}}_id. Use with caution!
+					$pParamHash['{{$type.name|lower}}_store']['{{$type.name|lower}}_id'] = $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'];
 				} else {
-					$pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'] = $this->mDb->GenID( '{/literal}{$type.name|lower}{literal}_data_id_seq' );
+					$pParamHash['{{$type.name|lower}}_store']['{{$type.name|lower}}_id'] = $this->mDb->GenID( '{{$type.name|lower}}_data_id_seq' );
 				}
-				$this->m{/literal}{$type.name|capitalize}{literal}Id = $pParamHash['{/literal}{$type.name|lower}{literal}_store']['{/literal}{$type.name|lower}{literal}_id'];
+				$this->m{{$type.name|capitalize}}Id = $pParamHash['{{$type.name|lower}}_store']['{{$type.name|lower}}_id'];
 
-				$result = $this->mDb->associateInsert( $table, $pParamHash['{/literal}{$type.name|lower}{literal}_store'] );
+				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name|lower}}_store'] );
 			}
 
-{/literal}{if count($type.typemaps) > 0}
+{{if count($type.typemaps) > 0}}
 			$this->storeTypemaps( $pParamHash );
-{/if}{literal}
-{/literal}
-			/* =-=- CUSTOM BEGIN: store -=-= */
-{if !empty($customBlock.store)}
-{$customBlock.store}
-{else}
+{{/if}}
 
-{/if}
+			/* =-=- CUSTOM BEGIN: store -=-= */
+{{if !empty($customBlock.store)}}
+{{$customBlock.store}}
+{{else}}
+
+{{/if}}
 			/* =-=- CUSTOM END: store -=-= */
-{literal}
+
 
 			$this->mDb->CompleteTrans();
 			$this->load();
 		} else {
-			$this->mErrors['store'] = tra('Failed to save this').' {/literal}{$type.name|lower}{literal}.';
+			$this->mErrors['store'] = tra('Failed to save this').' {{$type.name|lower}}.';
 		}
 		// Restore previous state for user abort
 		ignore_user_abort($abort);
@@ -262,63 +262,63 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 * @return boolean TRUE on success, FALSE on failure - $this->mErrors will contain reason for failure
 	 */
 	function verify( &$pParamHash ) {
-		// make sure we're all loaded up of we have a m{/literal}{$type.name|capitalize}{literal}Id
-		if( $this->verifyId( $this->m{/literal}{$type.name|capitalize}{literal}Id ) && empty( $this->mInfo ) ) {
+		// make sure we're all loaded up of we have a m{{$type.name|capitalize}}Id
+		if( $this->verifyId( $this->m{{$type.name|capitalize}}Id ) && empty( $this->mInfo ) ) {
 			$this->load();
 		}
 
 		if( @$this->verifyId( $this->mInfo['content_id'] ) ) {
-			$pParamHash['{/literal}{$type.name}{literal}']['content_id'] = $this->mInfo['content_id'];
+			$pParamHash['{{$type.name}}']['content_id'] = $this->mInfo['content_id'];
 		}
 
 		// It is possible a derived class set this to something different
-		if( @$this->verifyId( $pParamHash['{/literal}{$type.name}{literal}']['content_type_guid'] ) ) {
-			$pParamHash['{/literal}{$type.name}{literal}']['content_type_guid'] = $this->mContentTypeGuid;
+		if( @$this->verifyId( $pParamHash['{{$type.name}}']['content_type_guid'] ) ) {
+			$pParamHash['{{$type.name}}']['content_type_guid'] = $this->mContentTypeGuid;
 		}
 
-		if( @$this->verifyId( $pParamHash['{/literal}{$type.name}{literal}']['content_id'] ) ) {
-			$pParamHash['{/literal}{$type.name}{literal}']['{/literal}{$type.name|lower}{literal}_store']['content_id'] = $pParamHash['{/literal}{$type.name}{literal}']['content_id'];
+		if( @$this->verifyId( $pParamHash['{{$type.name}}']['content_id'] ) ) {
+			$pParamHash['{{$type.name}}']['{{$type.name|lower}}_store']['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
 		}
 
 		// Use $pParamHash here since it handles validation right
 		$this->validateFields($pParamHash);
 
-		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['data'] ) ) {
-			$pParamHash['{/literal}{$type.name}{literal}']['edit'] = $pParamHash['{/literal}{$type.name}{literal}']['data'];
+		if( !empty( $pParamHash['{{$type.name}}']['data'] ) ) {
+			$pParamHash['{{$type.name}}']['edit'] = $pParamHash['{{$type.name}}']['data'];
 		}
 
-{/literal}{if $type.title}{literal}
+{{if $type.title}}
 		// If title specified truncate to make sure not too long
 		// TODO: This shouldn't be required. LC should validate this.
-		if( !empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) {
-			$pParamHash['{/literal}{$type.name}{literal}']['content_store']['title'] = substr( $pParamHash['{/literal}{$type.name}{literal}']['title'], 0, 160 );
-		} else if( empty( $pParamHash['{/literal}{$type.name}{literal}']['title'] ) ) { // else is error as must have title
+		if( !empty( $pParamHash['{{$type.name}}']['title'] ) ) {
+			$pParamHash['{{$type.name}}']['content_store']['title'] = substr( $pParamHash['{{$type.name}}']['title'], 0, 160 );
+		} else if( empty( $pParamHash['{{$type.name}}']['title'] ) ) { // else is error as must have title
 			$this->mErrors['title'] = tra('You must enter a title for this').' $this->getContentTypeName().';
 		}
-{/literal}{/if}{literal}
+{{/if}}
 
 		// collapse the hash that is passed to parent class so that service data is passed through properly - need to do so before verify service call below
 		$hashCopy = $pParamHash;
-		$pParamHash['{/literal}{$type.name}{literal}'] = array_merge( $hashCopy, $pParamHash['{/literal}{$type.name}{literal}'] );
+		$pParamHash['{{$type.name}}'] = array_merge( $hashCopy, $pParamHash['{{$type.name}}'] );
 
-{/literal}
+
 		/* =-=- CUSTOM BEGIN: verify -=-= */
-{if !empty($customBlock.verify)}
-{$customBlock.verify}
-{else}
+{{if !empty($customBlock.verify)}}
+{{$customBlock.verify}}
+{{else}}
 
-{/if}
+{{/if}}
 		/* =-=- CUSTOM END: verify -=-= */
-{literal}
+
 
 		// if we have an error we get them all by checking parent classes for additional errors and the typeMaps if there are any
 		if( count( $this->mErrors ) > 0 ){
 			// check errors of base class so we get them all in one go
-			{/literal}{$type.base_class}{literal}::verify( $pParamHash['{/literal}{$type.name}{literal}'] );
-{/literal}{if count($type.typemaps) > 0}
+			{{$type.base_class}}::verify( $pParamHash['{{$type.name}}'] );
+{{if count($type.typemaps) > 0}}
 			// And now check the typemaps
 			$this->verifyTypemaps( $pParamHash );
-{/if}{literal}
+{{/if}}
 		}
 
 		return( count( $this->mErrors )== 0 );
@@ -336,45 +336,45 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
 
-{/literal}
-			/* =-=- CUSTOM BEGIN: expunge -=-= */
-{if !empty($customBlock.expunge)}
-{$customBlock.expunge}
-{else}
 
-{/if}
+			/* =-=- CUSTOM BEGIN: expunge -=-= */
+{{if !empty($customBlock.expunge)}}
+{{$customBlock.expunge}}
+{{else}}
+
+{{/if}}
 			/* =-=- CUSTOM END: expunge -=-= */
-{literal}
-{/literal}{if count($type.typemaps) > 0}
+
+{{if count($type.typemaps) > 0}}
 			// Expunge any typemaps
 			$this->expungeTypemaps();
-{/if}{literal}
+{{/if}}
 
-			$query = "DELETE FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` WHERE `content_id` = ?";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( {/literal}{$type.base_class}{literal}::expunge() ) {
+			if( {{$type.base_class}}::expunge() ) {
 				$ret = TRUE;
 			}
 			$this->mDb->CompleteTrans();
-			// If deleting the default/home {/literal}{$type.name|lower}{literal} record then unset this.
-			if( $ret && $gBitSystem->getConfig( '{/literal}{$type.name|lower}{literal}_home_id' ) == $this->m{/literal}{$type.name|capitalize}{literal}Id ) {
-				$gBitSystem->storeConfig( '{/literal}{$type.name|lower}{literal}_home_id', 0, {/literal}{$type.name|upper}{literal}_PKG_NAME );
+			// If deleting the default/home {{$type.name|lower}} record then unset this.
+			if( $ret && $gBitSystem->getConfig( '{{$type.name|lower}}_home_id' ) == $this->m{{$type.name|capitalize}}Id ) {
+				$gBitSystem->storeConfig( '{{$type.name|lower}}_home_id', 0, {{$type.name|upper}}_PKG_NAME );
 			}
 		}
 		return $ret;
 	}
 
-{/literal}
-{literal}
+
+
 
 	/**
-	 * isValid Make sure {/literal}{$type.name|lower}{literal} is loaded and valid
+	 * isValid Make sure {{$type.name|lower}} is loaded and valid
 	 * 
 	 * @access public
 	 * @return boolean TRUE on success, FALSE on failure
 	 */
 	function isValid() {
-		return( @BitBase::verifyId( $this->m{/literal}{$type.name|capitalize}{literal}Id ) && @BitBase::verifyId( $this->mContentId ));
+		return( @BitBase::verifyId( $this->m{{$type.name|capitalize}}Id ) && @BitBase::verifyId( $this->mContentId ));
 	}
 
 	/**
@@ -382,7 +382,7 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	 *
 	 * @param array $pParamHash
 	 * @access public
-	 * @return array List of {/literal}{$type.name|lower}{literal} data
+	 * @return array List of {{$type.name|lower}} data
 	 */
 	function getList( &$pParamHash ) {
 		global $gBitSystem;
@@ -394,15 +394,15 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		array_push( $bindVars, $this->mContentTypeGuid );
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 
-{/literal}
-		/* =-=- CUSTOM BEGIN: getList -=-= */
-{if !empty($customBlock.getList)}
-{$customBlock.getList}
-{else}
 
-{/if}
+		/* =-=- CUSTOM BEGIN: getList -=-= */
+{{if !empty($customBlock.getList)}}
+{{$customBlock.getList}}
+{{else}}
+
+{{/if}}
 		/* =-=- CUSTOM END: getList -=-= */
-{literal}
+
 
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
@@ -418,25 +418,25 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 		}
 
 		$query = "
-			SELECT {/literal}{$type.name|lower}{literal}.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql, lc.`format_guid`, lc.`user_id`, lc.`modifier_user_id`,
+			SELECT {{$type.name|lower}}.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql, lc.`format_guid`, lc.`user_id`, lc.`modifier_user_id`,
 				uu.`email`, uu.`login`, uu.`real_name`
-			FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
+			FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` {{$type.name|lower}}
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {{$type.name|lower}}.`content_id` ) $joinSql
 				INNER JOIN `".BIT_DB_PREFIX."users_users`     uu ON uu.`user_id`     = lc.`user_id`
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "
 			SELECT COUNT(*)
-			FROM `".BIT_DB_PREFIX."{/literal}{$type.name|lower}{literal}_data` {/literal}{$type.name|lower}{literal}
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {/literal}{$type.name|lower}{literal}.`content_id` ) $joinSql
+			FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` {{$type.name|lower}}
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {{$type.name|lower}}.`content_id` ) $joinSql
 				INNER JOIN `".BIT_DB_PREFIX."users_users`     uu ON uu.`user_id`     = lc.`user_id`
 			WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
-{/literal}{if $type.data}
-{literal}
-			if ( $gBitSystem->isFeatureActive( '{/literal}{$type.name}_list_data{literal}' ) 
+{{if $type.data}}
+
+			if ( $gBitSystem->isFeatureActive( '{{$type.name}}_list_data' ) 
 				|| !empty( $pParamHash['parse_data'] )
 			){
 				// parse data if to be displayed in lists 
@@ -446,8 +446,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 				$parseHash['data']			= $res['data'];
 				$res['parsed_data'] = $this->parseData( $parseHash ); 
 			}
-{/literal}{/if}
-{literal}
+{{/if}}
+
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
@@ -458,19 +458,19 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	}
 
 	/**
-	 * getDisplayUrl Generates the URL to the {/literal}{$type.name|lower}{literal} page
+	 * getDisplayUrl Generates the URL to the {{$type.name|lower}} page
 	 * 
 	 * @access public
-	 * @return string URL to the {/literal}{$type.name|lower}{literal} page
+	 * @return string URL to the {{$type.name|lower}} page
 	 */
 	function getDisplayUrl() {
 		global $gBitSystem;
 		$ret = NULL;
 		if( @$this->isValid() ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
-				$ret = {/literal}{$PACKAGE}_PKG_URL.'{if empty($type.rewrite_path)}{$type.name}{else}{$type.rewrite_path}{/if}/'.$this->m{$type.name|capitalize}{literal}Id;
+				$ret = {{$PACKAGE}}_PKG_URL.'{{if empty($type.rewrite_path)}}{{$type.name}}{{else}}{{$type.rewrite_path}}{{/if}}/'.$this->m{{$type.name|capitalize}}Id;
 			} else {
-				$ret = {/literal}{$PACKAGE}{literal}_PKG_URL."index.php?{/literal}{$type.name|lower}{literal}_id=".$this->m{/literal}{$type.name|capitalize}{literal}Id;
+				$ret = {{$PACKAGE}}_PKG_URL."index.php?{{$type.name|lower}}_id=".$this->m{{$type.name|capitalize}}Id;
 			}
 		}
 		return $ret;
@@ -482,8 +482,8 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	function previewFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::preview(
-		$this->mVerification['{/literal}{$type.name}_data{literal}'],
-			$pParamHash['{/literal}{$type.name}{literal}'],
+		$this->mVerification['{{$type.name}}_data'],
+			$pParamHash['{{$type.name}}'],
 			$this->mInfo);
 	}
 
@@ -493,130 +493,137 @@ class {/literal}{$type.class_name}{literal} extends {/literal}{$type.base_class}
 	function validateFields(&$pParamHash) {
 		$this->prepVerify();
 		LibertyValidator::validate(
-			$this->mVerification['{/literal}{$type.name}_data{literal}'],
-			$pParamHash['{/literal}{$type.name}{literal}'],
-			$this, $pParamHash['{/literal}{$type.name}{literal}_store']);
+			$this->mVerification['{{$type.name}}_data'],
+			$pParamHash['{{$type.name}}'],
+			$this, $pParamHash['{{$type.name}}_store']);
 	}
 
 	/**
 	 * prepVerify prepares the object for input verification
 	 */
 	function prepVerify() {
-		if (empty($this->mVerification['{/literal}{$type.name}{literal}_data'])) {
-{/literal}
-{foreach from=$type.fields key=fieldName item=field name=fields}
-	 		/* Validation for {$fieldName} */
-{if !empty($field.validator.type) && $field.validator.type != "no-input"}
-			$this->mVerification['{$type.name}_data']['{$field.validator.type}']['{$fieldName}'] = array(
-                               'name' => '{$fieldName}',
-{foreach from=$field.validator key=k item=v name=keys}
-{if $k != 'type'}
-				'{$k}' => {if is_array($v)}array(
-{foreach from=$v key=vk item=vv name=values}
-					{if is_numeric($vk)}{$vk}{else}'{$vk}'{/if} => '{$vv}'{if !$smarty.foreach.values.last},{/if}
+		if (empty($this->mVerification['{{$type.name}}_data'])) {
 
-{/foreach}
-					){else}'{$v}'{/if}{if !$smarty.foreach.keys.last},{/if}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
+	 		/* Validation for {{$fieldName}} */
+{{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
+			$this->mVerification['{{$type.name}}_data']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
+                               'name' => '{{$fieldName}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
 
-{/if}
-{/foreach}
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
 			);
-{elseif empty($field.validator.type)}
-	$this->mVerification['{$type.name}_data']['null']['{$fieldName}'] = TRUE;
-{/if}
-{/foreach}
-{literal}
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-		// prepVerify {$typemapName} fieldset
-		$this->prep{$typemapName|ucfirst}Verify();
-{/foreach}{literal}
+{{elseif empty($field.validator.type)}}
+	$this->mVerification['{{$type.name}}_data']['null']['{{$fieldName}}'] = TRUE;
+{{/if}}
+{{/foreach}}
+
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+		// prepVerify {{$typemapName}} fieldset
+		$this->prep{{$typemapName|ucfirst}}Verify();
+{{/foreach}}
 		}
 	}
 
-{/literal}
+
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
-{foreach from=$type.fields key=fieldName item=field}
-{if $field.validator.type == 'reference' && $field.input.type == 'select'}
-	function get{$field.name|replace:" ":""}Options( &$pParamHash=array() ){ldelim}
+{{foreach from=$type.fields key=fieldName item=field}}
+{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+	function get{{$field.name|replace:" ":""}}Options( &$pParamHash=array() ){
 		$bindVars = array();
 		$joinSql = $whereSql = "";
-{assign var=customlabel value="`$fieldName`_options"}
-		/* =-=- CUSTOM BEGIN: {$customlabel} -=-= */
-{if !empty($customBlock.$customlabel)}
-{$customBlock.$customlabel}
-{else}
+{{assign var=customlabel value="`$fieldName`_options"}}
+		/* =-=- CUSTOM BEGIN: {{$customlabel}} -=-= */
+{{if !empty($customBlock.$customlabel)}}
+{{$customBlock.$customlabel}}
+{{else}}
 
-{/if}
-		/* =-=- CUSTOM END: {$customlabel} -=-= */
-		$query = "{$field.input.optionsHashQuery} $joinSql $whereSql";
+{{/if}}
+		/* =-=- CUSTOM END: {{$customlabel}} -=-= */
+		$query = "{{$field.input.optionsHashQuery}} $joinSql $whereSql";
 		return $this->mDb->getAssoc( $query, $bindVars );
-	{rdelim}
+	}
 
-{/if}{/foreach}
-{literal}
-{/literal}
+{{/if}}{{/foreach}}
 
-{if count($type.typemaps) > 0}{literal}
+
+
+{{if count($type.typemaps) > 0}}
+{{literal}}
 	// {{{ =================== TypeMap Functions for FieldSets ====================
+{{/literal}}
 
 	function verifyTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// verify {$typemapName} fieldset
-			$this->verify{$typemapName|ucfirst}($pParamHash);
-{/foreach}{literal}
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+			// verify {{$typemapName}} fieldset
+			$this->verify{{$typemapName|ucfirst}}($pParamHash);
+{{/foreach}}
 
 			return ( count($this->mErrors) == 0);
 	}
 
 	function previewTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// verify {$typemapName} fieldset
-			$this->preview{$typemapName|ucfirst}Fields($pParamHash);
-{/foreach}{literal}
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+			// verify {{$typemapName}} fieldset
+			$this->preview{{$typemapName|ucfirst}}Fields($pParamHash);
+{{/foreach}}
 	}
 
 	function storeTypemaps( &$pParamHash ) {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// store {$typemapName} fieldset
-			$this->store{$typemapName|ucfirst}Mixed($pParamHash, TRUE);
-{/foreach}{literal}
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+			// store {{$typemapName}} fieldset
+			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, TRUE);
+{{/foreach}}
 	}
 
 	function expungeTypemaps() {
 		if ($this->isValid() ) {
 			$paramHash = array('content_id' => $this->mContentId);
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// expunge {$typemapName} fieldset
-			$this->expunge{$typemapName|ucfirst}($paramHash);
-{/foreach}{literal}
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+			// expunge {{$typemapName}} fieldset
+			$this->expunge{{$typemapName|ucfirst}}($paramHash);
+{{/foreach}}
 		}
 	}
 
 	function loadTypemaps() {
-{/literal}{foreach from=$type.typemaps key=typemapName item=typemap}
-			// load {$typemapName} list from sub map
-			$this->mInfo['{$typemapName}'] = $this->list{$typemapName|ucfirst}();
-{/foreach}{literal}
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+			// load {{$typemapName}} list from sub map
+			$this->mInfo['{{$typemapName}}'] = $this->list{{$typemapName|ucfirst}}();
+{{/foreach}}
 	}
 
+{{literal}}
 	// }}} -- end of TypeMap function for fieldsets
-{/literal}
-{foreach from=$type.typemaps key=typemapName item=typemap}
-{include file="bitpackage:pkgmkr/typemap_methods_inc.php.tpl"}
-{/foreach}
-{/if}{literal}
+{{/literal}}
 
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+{{include file="bitpackage:pkgmkr/typemap_methods_inc.php.tpl"}}
+{{/foreach}}
+{{/if}}
+{{literal}}
 	// {{{ =================== Custom Helper Mthods  ====================
-{/literal}
+{{/literal}}
+
 	/* This section is for any helper methods you wish to create */
 	/* =-=- CUSTOM BEGIN: methods -=-= */
-{if !empty($customBlock.methods)}
-{$customBlock.methods}
-{else}
+{{if !empty($customBlock.methods)}}
+{{$customBlock.methods}}
+{{else}}
 
-{/if}
+{{/if}}
 	/* =-=- CUSTOM END: methods -=-= */
-{literal}
+
+{{literal}}
 	// }}} -- end of Custom Helper Methods
+{{/literal}}
 }
-{/literal}
+
