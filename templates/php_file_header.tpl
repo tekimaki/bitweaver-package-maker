@@ -11,3 +11,14 @@
  * @subpackage class
  */
 
+/*
+   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   Portions of this file are modifiable
+
+   Anything between the CUSTOM BEGIN: and CUSTOM END:
+   comments will be preserved on regeneration of this
+   file.
+   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
+
+

@@ -1,16 +1,6 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 /* vim: :set fdm=marker : */
 {{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
-/*
-   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   Portions of this file are modifiable
-
-   Anything between the CUSTOM BEGIN: and CUSTOM END:
-   comments will be preserved on regeneration of this
-   file.
-   -==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-*/
-
 /**
 * {{$type.class_name}} class
 * {{$type.description}}
