@@ -75,7 +75,7 @@
 	}
 
 	/** 
-	 * verifies a data set for storage in the {$type.name}_{$typemapName|ucfirst} table
+	 * verifies a data set for storage in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 * data is put into $pParamHash['{{$typemapName}}_store'] for storage
 	 */
 	function verify{{$typemapName|ucfirst}}( &$pParamHash ){
