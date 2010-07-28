@@ -10,7 +10,7 @@
 */
 
 require_once( {{$type.base_package|upper}}_PKG_PATH.'{{$type.base_class}}.php' );
-require_once( PKGMKR_PKG_PATH . 'LibertyValidator.php' );
+require_once( LIBERTY_PKG_PATH . 'LibertyValidator.php' );
 
 /* =-=- CUSTOM BEGIN: require -=-= */
 {{if !empty($customBlock.require)}}
@@ -28,7 +28,7 @@ define( 'BIT{{$type.name|upper}}_CONTENT_TYPE_GUID', 'bit{{$type.name|lower}}' )
 
 class {{$type.class_name}} extends {{$type.base_class}} {
 	/**
-	 * m{{$type.name|capitalize}}Id Primary key for our mythical {{$type.name|capitalize}} class object & table
+	 * m{{$type.name|capitalize}}Id Primary key for our {{$type.name|capitalize}} class object & table
 	 *
 	 * @var array
 	 * @access public
@@ -183,10 +183,10 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	/**
 	 * store Any method named Store inherently implies data will be written to the database
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
-	 * This is the ONLY method that should be called in order to store( create or update )an {{$type.name|lower}}!
+	 * This is the ONLY method that should be called in order to store( create or update ) an {{$type.name|lower}}!
 	 * It is very smart and will figure out what to do for you. It should be considered a black box.
 	 *
-	 * @param array $pParamHash hash of values that will be used to store the page
+	 * @param array $pParamHash hash of values that will be used to store the data
 	 * @access public
 	 * @return boolean TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
