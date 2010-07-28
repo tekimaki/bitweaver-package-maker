@@ -40,6 +40,11 @@ function convert_typename($file, $type, $className) {
 	return preg_replace("/TypeClass/", $className, $tmp_file);
 }
 
+function convert_servicename($file, $service, $className){
+	$tmp_file = preg_replace("/service/", strtolower($service), $file);
+	return preg_replace("/ServiceClass/", $className, $tmp_file);
+}
+
 function convert_packagename($file, $config) {
 	$pkg_file = preg_replace("/package/", $config['package'], $file);
 	return preg_replace("/Package/", $config['Package'], $pkg_file);
@@ -59,15 +64,33 @@ function copy_files($config, $dir, $files) {
 }
 
 function render_type_files($config, $dir, $files) {
-	foreach($config['types'] as $type => $params) {
-		global $gBitSmarty;
-		$params['name'] = $type;
-		$gBitSmarty->assign('type', $params);
-		foreach ($files as $file) {
-			$pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
-			$template = $file.".tpl";
-			// Render the file
-			render_type_file($dir, $pkg_file, $template, $config);
+	if( !empty( $config['types'] ) ){
+		foreach($config['types'] as $type => $params) {
+			global $gBitSmarty;
+			$params['name'] = $type;
+			$gBitSmarty->assign('type', $params);
+			foreach ($files as $file) {
+				$pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
+				$template = $file.".tpl";
+				// Render the file
+				render_file($dir, $pkg_file, $template, $config);
+			}
+		}
+	}
+}
+
+function render_service_files($config, $dir, $files) {
+	if( !empty( $config['services'] ) ){
+		foreach($config['services'] as $service => $params) {
+			global $gBitSmarty;
+			$params['name'] = $service;
+			$gBitSmarty->assign('service', $params);
+			foreach ($files as $file) {
+				$pkg_file = convert_packagename(convert_servicename($file, $service, $params['class_name']), $config);
+				$template = $file.".tpl";
+				// Render the file
+				render_file($dir, $pkg_file, $template, $config);
+			}
 		}
 	}
 }
@@ -77,11 +100,11 @@ function generate_package_files($config, $dir, $files) {
 		$pkg_file = convert_packagename($file, $config);
 		$template = $file.".tpl";
 		// Render the file
-		render_type_file($dir, $pkg_file, $template, $config);
+		render_file($dir, $pkg_file, $template, $config);
 	}
 }
 
-function render_type_file($dir, $file, $template, $config) {
+function render_file($dir, $file, $template, $config) {
 	global $gBitSmarty;
 
 	$filename = $dir."/".$file;
@@ -165,54 +188,17 @@ function validate_config(&$config) {
 		error("A version number is required.");
 	}
 
-	foreach ($config['types'] as $typeName => $type) {
-		if ( substr( $typeName,0,2 ) === 'pg' ){
-			error("Do not start type names with 'pg' as there is a bug in the ADODB library which causes it to not see tables with names start with 'pg'" );
+	// validate type class schemas
+	if( !empty( $config['types'] ) ){
+		foreach ($config['types'] as $name => $schema) {
+			validate_schema( $config['types'], $name, $schema, 'type' );
 		}
-		if (empty($type['class_name'])) {
-			$config['types'][$typeName]['class_name'] = 'Bit'.ucfirst($typeName);
-		}
-		if (empty($type['content_name'])) {
-			error("A content name is required for $typeName");
-		}
-		if (empty($type['description'])) {
-			error("A description is required for $typeName");
-		}
-		if (empty($type['base_class'])) {
-			error("A base class is required for $typeName");
-		}
-		if (empty($type['base_package'])) {
-			error("A base package is required for $typeName");
-		}
+	}
 
-		$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
-		foreach ($type['fields'] as $fieldName => $field) {
-			if( !in_array( $fieldName, $excludeFields ) ){
-				if (empty($field['schema'])) {
-					error("A schema is required for field $fieldName in type $typeName");
-				}
-				if (empty($field['schema']['type'])) {
-					error("A type is required in the schema for field $fieldName in type $typeName");
-				}
-				if( !validate_reserved_sql( $fieldName ) ){
-					error( "$fieldName is a reserved sql term please change the schema in type $typeName" );
-				}	
-			}
-		}
-		if( !empty( $type['typemaps'] ) ){
-			foreach ($type['typemaps'] as $typemapName => $typemap) {
-				foreach ($typemap['fields'] as $fieldName => $field) {
-					if (empty($field['schema'])) {
-						error("A schema is required for typemap $typemapName field $fieldName in type $typeName");
-					}
-					if (empty($field['schema']['type'])) {
-						error("A type is required in the schema for typemap $typemapName field $fieldName in type $typeName");
-					}
-					if( !validate_reserved_sql( $fieldName ) ){
-						error( "$fieldName is a reserved sql term please change the schema in typemap $typemapName" );
-					}	
-				}
-			}
+	// validate service class schemas
+	if( !empty( $config['services'] ) ){
+		foreach ($config['services'] as $name => $schema) {
+			validate_schema( $config['services'], $name, $schema, 'service' );
 		}
 	}
 
@@ -221,6 +207,59 @@ function validate_config(&$config) {
 	//  print_r($config);
 	
 	return $config;
+}
+
+function validate_schema( &$configHash, $name, $schema, $schemaType = 'type' ){
+	if ( substr( $name,0,2 ) === 'pg' ){
+		error("Do not start $schemaType names with 'pg' as there is a bug in the ADODB library which causes it to not see tables with names start with 'pg'" );
+	}
+	if (empty($schema['class_name'])) {
+		$configHash[$name]['class_name'] = 'Bit'.ucfirst($name);
+	}
+	if (empty($schema['content_name'])) {
+		error("A content name is required for $name");
+	}
+	if (empty($schema['description'])) {
+		error("A description is required for $name");
+	}
+	if (empty($schema['base_class'])) {
+		error("A base class is required for $name");
+	}
+	if (empty($schema['base_package'])) {
+		error("A base package is required for $name");
+	}
+
+	$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
+	foreach ($schema['fields'] as $fieldName => $field) {
+		if( !in_array( $fieldName, $excludeFields ) ){
+			if (empty($field['schema'])) {
+				error("A schema is required for field $fieldName in $schemaType $name");
+			}
+			if (empty($field['schema']['type'])) {
+				error("A datatype is required in the schema for field $fieldName in $schemaType $name");
+			}
+			if( !validate_reserved_sql( $fieldName ) ){
+				error( "$fieldName is a reserved sql term please change the schema in $schemaType $name" );
+			}	
+		}
+	}
+
+	// typemap - for type only (not services)  
+	if( !empty( $schema['typemaps'] ) ){
+		foreach ($type['typemaps'] as $typemapName => $typemap) {
+			foreach ($typemap['fields'] as $fieldName => $field) {
+				if (empty($field['schema'])) {
+					error("A schema is required for typemap $typemapName field $fieldName in type $name");
+				}
+				if (empty($field['schema']['type'])) {
+					error("A type is required in the schema for typemap $typemapName field $fieldName in type $name");
+				}
+				if( !validate_reserved_sql( $fieldName ) ){
+					error( "$fieldName is a reserved sql term please change the schema in typemap $typemapName" );
+				}	
+			}
+		}
+	}
 }
 
 function validate_reserved_sql( $pParam ){
@@ -235,66 +274,68 @@ function prep_config(&$config){
 	$config['PACKAGE'] = strtoupper($config['package']);
 	$config['Package'] = ucfirst(strtolower($config['package']));
 
-	foreach ($config['types'] as $typeName => &$type) {
-		// defaults
-		if( !isset( $type['title'] ) ){
-			$type['title'] = TRUE;
-		}
-		if( !isset( $type['data'] ) ){
-			$type['data'] = TRUE;
-		}
+	if( !empty( $config['types'] ) ){
+		foreach ($config['types'] as $typeName => &$type) {
+			// defaults
+			if( !isset( $type['title'] ) ){
+				$type['title'] = TRUE;
+			}
+			if( !isset( $type['data'] ) ){
+				$type['data'] = TRUE;
+			}
 
-		// prep form fields
-		$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
-		foreach ($type['fields'] as $fieldName => &$field) {
-			if( !in_array( $fieldName, $excludeFields ) ){
-				// prep input hash
+			// prep form fields
+			$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
+			foreach ($type['fields'] as $fieldName => &$field) {
+				if( !in_array( $fieldName, $excludeFields ) ){
+					// prep input hash
 
-				// default type inherited from validator settings
-				if( empty( $field['input']['type'] ) ){
-					$field['input']['type'] = $field['validator']['type'];
-				}
+					// default type inherited from validator settings
+					if( empty( $field['input']['type'] ) ){
+						$field['input']['type'] = $field['validator']['type'];
+					}
 
-				// convenience
-				$input = &$field['input'];
-				$validator = &$field['validator'];
+					// convenience
+					$input = &$field['input'];
+					$validator = &$field['validator'];
 
-				switch( $input['type'] ){
-					case 'select':
-						// create select menu building blocks
-						// a hash name
-						$optionsHashName = $fieldName.'_options';
+					switch( $input['type'] ){
+						case 'select':
+							// create select menu building blocks
+							// a hash name
+							$optionsHashName = $fieldName.'_options';
 
-						// list sql
-						$tableBPrefix = !empty( $input['desc_column'] )?'b':'a';
-						$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
+							// list sql
+							$tableBPrefix = !empty( $input['desc_column'] )?'b':'a';
+							$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
 
-						// create sql for loading up a select list of options
-						$optionsHashQuery = "SELECT a.".$validator['column'].", ".$tableBPrefix.".".$input['desc_column']." FROM ".$validator['table']." a"; 
-						$optionsHashQuery .= !empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
+							// create sql for loading up a select list of options
+							$optionsHashQuery = "SELECT a.".$validator['column'].", ".$tableBPrefix.".".$input['desc_column']." FROM ".$validator['table']." a"; 
+							$optionsHashQuery .= !empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
 
-						// set references to the hash name and the query
-						$input['optionsHashName'] = $optionsHashName;
-						$input['optionsHashQuery'] = $optionsHashQuery; 
-						break;
-				}
+							// set references to the hash name and the query
+							$input['optionsHashName'] = $optionsHashName;
+							$input['optionsHashQuery'] = $optionsHashQuery; 
+							break;
+					}
 
-				// prep js
-				if( !empty($input['js']) ){
-					// make mixedCase js handler function names
-					// assembled from two parts: the js handler name e.g. onclick etc, and the field name e.g. myfield_id => onClickMyfieldId
-					foreach( $input['js'] as $handler ){
-						preg_match( '/(^on)(.*)/', $handler, $hmatches ); 
-						$fmatches = explode( '_', $fieldName );
-						$suffix = "";
-						while (list($key, $val) = each($fmatches)) {
-							$suffix .= ucfirst($val);
+					// prep js
+					if( !empty($input['js']) ){
+						// make mixedCase js handler function names
+						// assembled from two parts: the js handler name e.g. onclick etc, and the field name e.g. myfield_id => onClickMyfieldId
+						foreach( $input['js'] as $handler ){
+							preg_match( '/(^on)(.*)/', $handler, $hmatches ); 
+							$fmatches = explode( '_', $fieldName );
+							$suffix = "";
+							while (list($key, $val) = each($fmatches)) {
+								$suffix .= ucfirst($val);
+							}
+							$funcName = $hmatches[1].ucfirst($hmatches[2]).$suffix;
+
+							// set references to the handler name for tpls to use
+							$config['types'][$typeName]['js']['funcs'][] = $funcName;
+							$input['jshandlers'][$handler] = $type['class_name'].'.'.$funcName;
 						}
-						$funcName = $hmatches[1].ucfirst($hmatches[2]).$suffix;
-
-						// set references to the handler name for tpls to use
-						$config['types'][$typeName]['js']['funcs'][] = $funcName;
-						$input['jshandlers'][$handler] = $type['class_name'].'.'.$funcName;
 					}
 				}
 			}
@@ -384,6 +425,8 @@ function generate_package($config) {
 				generate_package_files($config, $dir, $files);
 			} elseif ($action == "type") {
 				render_type_files($config, $dir, $files);
+			} elseif ($action == "service") {
+				render_service_files($config, $dir, $files);
 			} elseif ($action == "copy") {
 				copy_files($config, $dir, $files);
 			} else {

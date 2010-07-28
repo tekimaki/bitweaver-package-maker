@@ -10,6 +10,8 @@ package:
     - remove_type.php
     - lookup_type_inc.php
     - TypeClass.php
+  service:
+    - ServiceClass.php
 package/templates: 
   package: 
     - menu_package.tpl

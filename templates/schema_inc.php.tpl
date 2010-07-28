@@ -26,6 +26,9 @@ $tables = array(
     {{include file="bitpackage:pkgmkr/typemap_schema_inc.php.tpl"}}
 {{/foreach}}
 {{/foreach}}
+{{foreach from=$config.services key=serviceName item=service}}
+    {{include file="bitpackage:pkgmkr/service_schema_inc.php.tpl"}}
+{{/foreach}}
 {{foreach from=$config.tables key=tableName item=table}}
     {{include file="bitpackage:pkgmkr/table_schema_inc.php.tpl" tableName=$tableName table=$table}}
 {{/foreach}}
