@@ -2,6 +2,9 @@
 what: Bitweaver Package Maker
 authors:
   - Nick Palmer (nick@overtsolutions.com)
+  - Will James (will@tekimaki.com)
+sponsors:
+  - Tekamaki LLC (http://www.tekimaki.com)
 license: LGPL http://www.gnu.org/copyleft/lesser.html
 about: >
   This system is designed to generate bitweaver packages.
