@@ -37,6 +37,8 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 
 	var $mVerification;
 
+	var $mSchema;
+
 	/**
 	 * {{$type.class_name}} During initialisation, be sure to call our base constructors
 	 *
@@ -498,7 +500,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	 		/* Validation for {{$fieldName}} */
 {{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
 			$this->mVerification['{{$type.name}}_data']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
-                               'name' => '{{$fieldName}}',
+				'name' => '{{$fieldName}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(
@@ -523,6 +525,61 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		}
 	}
 
+	/**
+	 * prepVerify prepares the object for input verification
+	 */
+	public function getSchema() {
+		if (empty($this->mSchema['{{$type.name}}_data'])) {
+
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
+	 		/* Schema for {{$fieldName}} */
+			$this->mSchema['{{$type.name}}_data']['{{$fieldName}}'] = array(
+				'name' => '{{$fieldName}}',
+				'type' => '{{$field.validator.type|default:'null'}}',
+				'label' => '{{$field.name}}',
+				'help' => '{{$field.help}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
+
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
+			);
+{{/foreach}}
+		}
+
+{{foreach from=$type.typemaps key=typemapName item=typemap}}
+		if (empty($this->mSchema['{{$typeName}}_{{$typemapName}}'])) {
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+	 		/* Schema for {{$fieldName}} */
+			$this->mSchema['{{$typeName}}_{{$typemapName}}']['{{$fieldName}}'] = array(
+				'name' => '{{$fieldName}}',
+				'type' => '{{$field.validator.type|default:'null'}}',
+				'label' => '{{$field.name}}',
+				'help' => '{{$field.help}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
+
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
+			);
+{{/foreach}}
+		}
+{{/foreach}}
+
+		return $this->mSchema;
+	}
 
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
 {{foreach from=$type.fields key=fieldName item=field}}
