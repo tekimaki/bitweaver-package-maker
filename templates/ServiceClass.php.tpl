@@ -33,8 +33,10 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 
 	var $mVerification;
 
+	var $mSchema;
+
 	public function __construct( $pContentId=NULL ) {
-		LibertyBase::LibertyBase();
+		{{$service.base_class}}::{{$service.base_class}}();
 		$this->mContentId = $pContentId;
 	}
 
@@ -43,7 +45,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	/**
 	 * load a row from the {{$service.name}} table 
 	 */
-	 function load{{$service.name|ucfirst}}( $p{{$service.name|ucfirst}}Id = NULL ){
+	 function load( $p{{$service.name|ucfirst}}Id = NULL ){
 		$ret = array();
 		if( $this->verifyId( $p{{$service.name|ucfirst}}Id ) ){
 			$query = "SELECT `{{$service.name}}_id` as hash_key, `{{$service.name}}_id`,{{foreach from=$service.fields key=fieldName item=field name=fields}}
@@ -54,14 +56,17 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 		}
 		return $ret;
 	}
+{{/if}}
 
+{{if $service.sequence}}
 	/**
 	 * stores one or more records in the {{$service.name}} table
 	 */
-	function store{{$service.name|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-		if( $skipVerify || $this->verify{{$service.name|ucfirst}}( $pParamHash ) ) {
-			$table = '{{$service.name}}';
+	function store( &$pParamHash ){
+		if( $this->verify( $pParamHash ) ) {
 			if( !empty( $pParamHash['{{$service.name}}_store'] )){
+				$table = '{{$service.name}}';
+				$this->mDb->StartTrans();
 				foreach ($pParamHash['{{$service.name}}_store'] as $key => &$data) {
 {{if $service.base_package == "liberty"}}
 					if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
@@ -81,6 +86,16 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 						$result = $this->mDb->associateInsert( $table, $data );
 					}
 				}
+
+				/* =-=- CUSTOM BEGIN: store -=-= */
+{{if !empty($customBlock.store)}}
+{{$customBlock.store}}
+{{else}}
+
+{{/if}}
+				/* =-=- CUSTOM END: store -=-= */
+
+				$this->mDb->CompleteTrans();
 			}
 		}
 	}
@@ -88,41 +103,64 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	/**
 	 * stores a single record in the {{$service.name}} table
 	 */
-	function store{{$service.name|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-		if( $skipVerify || $this->verify{{$service.name|ucfirst}}( &$pParamHash ) ) {
+	function store( &$pParamHash ){
+		if( $this->verify( &$pParamHash ) ) {
 			if ( !empty( $pParamHash['{{$service.name}}_store'] )){
 				$table = '{{$service.name}}';
+				$this->mDb->StartTrans();
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
 			}
+
+			/* =-=- CUSTOM BEGIN: store -=-= */
+{{if !empty($customBlock.store)}}
+{{$customBlock.store}}
+{{else}}
+
+{{/if}}
+			/* =-=- CUSTOM END: store -=-= */
+
+			$this->mDb->CompleteTrans();
 		}
 	}
 {{/if}}
 
+{{* @TODO build out mixed storage - this is very incomplete 
 	/**
 	 * stores multiple records in the {{$service.name}} table
-{{if !$service.sequence}}	 * uses bulk delete to avoid trying to store duplicate records{{/if}} 
+{{if !$service.sequence && $service.base_package == "liberty"}}	 * uses bulk delete to avoid trying to store duplicate records{{/if}} 
 	 */
-	function store{{$service.name|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-
+	function storeMixed( &$pParamHash ){
+{{if !$service.sequence && $service.base_package == "liberty"}}
 		$query = "DELETE FROM `{{$service.name}}` WHERE `content_id` = ?";
-
+{{/if}}
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
-		$this->store{{$service.name|ucfirst}}( $pParamHash, $skipVerify );
+		$this->store( $pParamHash );
 	}
+*}}
 
 	/** 
-	* verifies a data set for storage in the {{$service.name|ucfirst}} table
+	 * verifies a data set for storage in the {{$service.name|ucfirst}} table
 	 * data is put into $pParamHash['{{$service.name}}_store'] for storage
 	 */
-	function verify{{$service.name|ucfirst}}( &$pParamHash ){
+	function verify( &$pParamHash ){
 		// Use $pParamHash here since it handles validation right
-		$this->validate{{$service.name|ucfirst}}Fields($pParamHash);
+		$this->validateFields($pParamHash);
+
+		/* =-=- CUSTOM BEGIN: verify -=-= */
+{{if !empty($customBlock.verify)}}
+{{$customBlock.verify}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: verify -=-= */
+
 		return( count( $this->mErrors )== 0 );
 	}
 
-	function expunge{{$service.name|ucfirst}}( &$pParamHash ){
+	function expunge( &$pParamHash ){
 		$ret = FALSE;
+		$this->mDb->StartTrans();
 		$bindVars = array();
 		$whereSql = "";
 
@@ -132,35 +170,85 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$bindVars[] = $pParamHash['{{$service.name}}_id'];
 			$whereSql .= "`{{$service.name}}_id` = ?";
 		}
-
-{{/if}}
-
+{{elseif $service.base_package == "liberty"}}
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
 			$whereSql .= "`content_id` = ?";
 		}
+{{else}}
+{{foreach from=$service.fields key=fieldName item=field name=fields}}
+{{if $field.schema.primary}}
+		// limit results by {{$fieldName}}
+		if( !empty( $pParamHash['{{$fieldName}}'] ) ){
+			$bindVars[] = $pParamHash['{{$fieldName}}'];
+			$whereSql .= " AND `{$fieldName}}` = ?";
+{{if !$field.validator.required}}
+		}elseif( isset( $pParamHash['{{$fieldName}}'] ) ){
+			$whereSql .= " AND `{{$fieldName}}` IS NULL";
+{{/if}}
+		}
+{{/if}}
+{{/foreach}}
+{{/if}}
 
-		$query = "DELETE FROM `{{$service.name}}` WHERE ".$whereSql;
-		$this->mDb->query( $query, $bindVars );
+		/* =-=- CUSTOM BEGIN: expunge -=-= */
+{{if !empty($customBlock.expunge)}}
+{{$customBlock.expunge}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: expunge -=-= */
+
+		if( !empty( $whereSql ) ){
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+		}
+
+		$query = "DELETE FROM `{{$service.name}}` ".$whereSql;
 
 		if( $this->mDb->query( $query, $bindVars ) ){
 			$ret = TRUE;
 		}
 
+		$this->mDb->CompleteTrans();
 		return $ret;
 	}
 
-	function list{{$service.name|ucfirst}}( $pParamHash = NULL ){
+	function getList( &$pParamHash = NULL ){
 		$ret = $bindVars = array();
+		$whereSql = "";
 
+{{if $service.base_package == "liberty"}}
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
-			$whereSql = " WHERE `{{$service.name}}`.content_id = ?";
-		} else {
+			$whereSql = " AND `{{$service.name}}`.content_id = ?";
+		} elseif ( $this->isValid() ) ) {
 			$bindVars[] = $this->mContentId;
-			$whereSql = " WHERE `{{$service.name}}`.content_id = ?";
+			$whereSql = " AND `{{$service.name}}`.content_id = ?";
+		}
+
+{{/if}}
+{{foreach from=$service.fields key=fieldName item=field name=fields}}
+{{if $field.schema.primary}}
+		// limit results by {{$fieldName}}
+		if( !empty( $pParamHash['{{$fieldName}}'] ) ){
+			$bindVars[] = $pParamHash['{{$fieldName}}'];
+			$whereSql .= " AND `{{$fieldName}}` = ?";
+		}
+
+{{/if}}
+{{/foreach}}
+		/* =-=- CUSTOM BEGIN: getList -=-= */
+{{if !empty($customBlock.getList)}}
+{{$customBlock.getList}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: getList -=-= */
+
+		if( !empty( $whereSql ) ){
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
 		}
 
 		$query = "SELECT {{if $service.sequence}}`{{$service.name}}_id` as hash_key, `{{$service.name}}_id`,{{/if}}
@@ -177,45 +265,41 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	}
 
 	/**
-	 * preview{{$service.name|ucfirst}}Fields prepares the fields in this type for preview
+	 * preview prepares the fields in this type for preview
 	 */
-	 function preview{{$service.name|ucfirst}}Fields(&$pParamHash) {
-		$this->prep{{$service.name|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$service.name}}'])) {
-			foreach($pParamHash['{{$service.name}}'] as $key => $data) {
-				LibertyValidator::preview(
-					$this->mVerification['{{$service.name}}'],
-					$pParamHash['{{$service.name}}'][$key],
-					$this, $pParamHash['{{$service.name}}_store'][$key]);
-			}
+	 function previewFields( &$pParamHash ) {
+		$this->prepVerify();
+		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
+			LibertyValidator::preview(
+				$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
+				$pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
+				$this, $pParamHash['{{$service.name}}_store']);
 		}
 	}
 
 	/**
-	 * validate{{$service.name|ucfirst}}Fields validates the fields in this type
+	 * validateFields validates the fields in this type
 	 */
-	function validate{{$service.name|ucfirst}}Fields(&$pParamHash) {
-		$this->prep{{$service.name|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$service.name}}'])) {
-			foreach($pParamHash['{{$service.name}}'] as $key => &$data) {
-				LibertyValidator::validate(
-					$this->mVerification['{{$service.name}}'],
-					$pParamHash['{{$service.name}}'][$key],
-					$this, $pParamHash['{{$service.name}}_store'][$key]);
-			}
+	function validateField( &$pParamHash ) {
+		$this->prepVerify();
+		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
+			LibertyValidator::validate(
+				$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
+				$pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
+				$this, $pParamHash['{{$service.name}}_store']);
 		}
 	}
 
 	/**
-	 * prep{{$service.name|ucfirst}}Verify prepares the object for input verification
+	 * prepVerify prepares the object for input verification
 	 */
-	function prep{{$service.name|ucfirst}}Verify() {
-		if (empty($this->mVerification['{{$service.name}}'])) {
+	function prepVerify() {
+		if (empty($this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 	 		/* Validation for {{$fieldName}} */
 {{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
-			$this->mVerification['{{$service.name}}']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
+			$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
@@ -230,12 +314,143 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 {{/foreach}}
 			);
 {{elseif empty($field.validator.type)}}
-			$this->mVerification['{{$service.name}}']['null']['{{$fieldName}}'] = TRUE;
+		$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}']['null']['{{$fieldName}}'] = TRUE;
 {{/if}}
 {{/foreach}}
 
 		}
 	}
 
+	/**
+	 * returns the data schema by database table
+	 */
+	public function getSchema() {
+		if (empty($this->mSchema['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
+
+{{foreach from=$service.fields key=fieldName item=field name=fields}}
+	 		/* Schema for {{$fieldName}} */
+			$this->mSchema['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}']['{{$fieldName}}'] = array(
+				'name' => '{{$fieldName}}',
+				'type' => '{{$field.validator.type|default:'null'}}',
+				'label' => '{{$field.name}}',
+				'help' => '{{$field.help}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
+
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
+			);
+{{/foreach}}
+		}
+
+{{foreach from=$service.typemaps key=typemapName item=typemap}}
+		if (empty($this->mSchema['{{$typeName}}_{{$typemapName}}'])) {
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+	 		/* Schema for {{$fieldName}} */
+			$this->mSchema['{{$typeName}}_{{$typemapName}}']['{{$fieldName}}'] = array(
+				'name' => '{{$fieldName}}',
+				'type' => '{{$field.validator.type|default:'null'}}',
+				'label' => '{{$field.name}}',
+				'help' => '{{$field.help}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
+
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
+			);
+{{/foreach}}
+		}
+{{/foreach}}
+
+		return $this->mSchema;
+	}
+
+{{literal}}
+	// {{{ =================== Custom Helper Mthods  ====================
+{{/literal}}
+
+	/* This section is for any helper methods you wish to create */
+	/* =-=- CUSTOM BEGIN: methods -=-= */
+{{if !empty($customBlock.methods)}}
+{{$customBlock.methods}}
+{{else}}
+
+{{/if}}
+	/* =-=- CUSTOM END: methods -=-= */
+
+{{literal}}
+	// }}} -- end of Custom Helper Methods
+{{/literal}}
+
 }
 
+{{foreach from=$service.functions item=func}}
+function {{$serviceName}}_{{$func}}( $pObject, $pParamHash ){
+	if( $pObject->hasService( LIBERTY_SERVICE_{{$serviceName|strtoupper}} ) ){
+{{if $func eq 'content_load'}}
+		{{* unknown need a model of behavior *}}
+{{elseif $func eq 'content_display'}}
+		if( $pObject->isValid() ) {
+			${{$serviceName}} = new {{$service.class_name}}(); 
+			$listHash = array( 'content_id' => $pObject->mContentId );
+			$pObject->mInfo['{{$serviceName}}'] = ${{$serviceName}}->getList( $listHash );
+		}
+{{elseif $func eq 'content_list'}}
+		{{* unknown need a model of behavior *}}
+{{elseif $func eq 'content_list_history'}}
+		{{* unknown need a model of behavior *}}
+{{elseif $func eq 'content_preview'}}
+		${{$serviceName}} = new {{$service.class_name}}(); 
+		$pObject->mInfo['{{$serviceName}}'] = ${{$serviceName}}->previewFields( $pParamHash );
+{{elseif $func eq 'content_edit'}}
+		// pass through to display to load up content data
+		{{$serviceName}}_content_display( $pObject, $pParamHash );
+{{elseif $func eq 'content_store'}}
+		${{$serviceName}} = new {{$service.class_name}}( $pObject->mContentId ); 
+		if( !${{$serviceName}}->store( $pParamHash ) ){
+			$pObject->setError( '{{$serviceName}}', ${{$serviceName}}->mErrors );
+		}
+{{elseif $func eq 'content_expunge'}}
+		${{$serviceName}} = new {{$service.class_name}}( $pObject->mContentId ); 
+		if( !${{$serviceName}}->expunge() ){
+			$pObject->setError( '{{$serviceName}}', ${{$serviceName}}->mErrors );
+		}
+{{elseif $func eq 'content_load_sql'}}
+		global $gBitSystem;
+		$ret = array();
+		$ret['select_sql'] = " {{foreach from=$service.fields key=fieldName item=field name=fields}},{{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}}.`{{$fieldName}}`{{/foreach}}";
+		$ret['join_sql'] = " LEFT JOIN `".BIT_DB_PREFIX."{{$serviceName}}` {{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}} ON ( lc.`content_id`={{$serviceName}}.`content_id` )";
+		$ret['where_sql'] = "";
+		return $ret;
+{{elseif $func eq 'content_list_sql'}}
+		global $gBitSystem;
+		$ret = array();
+		$ret['select_sql'] = " {{foreach from=$service.fields key=fieldName item=field name=fields}},{{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}}.`{{$fieldName}}`{{/foreach}}";
+		$ret['join_sql'] = " LEFT JOIN `".BIT_DB_PREFIX."{{$serviceName}}` {{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}} ON ( lc.`content_id`={{$serviceName}}.`content_id` )";
+		$ret['where_sql'] = "";
+{{*
+        // return the values sent for pagination / url purposes
+        $pParamHash['listInfo']['{{$serviceName}}'] = $pParamHash['{{$serviceName}}'];
+        $pParamHash['listInfo']['ihash']['{{$serviceName}}'] = $pParamHash['{{$serviceName}}'];
+*}}
+		return $ret;
+{{elseif $func eq 'comment_store'}}
+		if( $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) ){
+		{{* likely will be custom behavior *}}
+		}
+{{/if}}
+	}
+}
+{{/foreach}}

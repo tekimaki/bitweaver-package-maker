@@ -1,4 +1,4 @@
-'{{$typeName}}_{{$typemapName}}' => "
+'{{$tablePrefix}}_{{$typemapName}}' => "
 {{if $typemap.sequence}}
         {{$typemapName}}_id I4 PRIMARY,
 {{/if}}
