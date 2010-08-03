@@ -1,4 +1,9 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+{{* no types redirect home *}}
+{{if !$config.types}}
+   header ("location: ../index.php");
+{{* if types *}}
+{{elseif $config.types}}
 {{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
 
 // Initialization
@@ -87,4 +92,6 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 
 }
 {{/if}}
+{{/if}}
+{{* end type index block *}}
 
