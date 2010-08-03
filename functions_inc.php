@@ -216,9 +216,6 @@ function validate_schema( &$configHash, $name, $schema, $schemaType = 'type' ){
 	if (empty($schema['class_name'])) {
 		$configHash[$name]['class_name'] = 'Bit'.ucfirst($name);
 	}
-	if (empty($schema['content_name'])) {
-		error("A content name is required for $name");
-	}
 	if (empty($schema['description'])) {
 		error("A description is required for $name");
 	}
@@ -227,6 +224,9 @@ function validate_schema( &$configHash, $name, $schema, $schemaType = 'type' ){
 	}
 	if (empty($schema['base_package'])) {
 		error("A base package is required for $name");
+	}
+	if ( $schemaType == 'type' && empty($schema['content_name'])) {
+		error("A content name is required for $name");
 	}
 
 	$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
@@ -246,7 +246,7 @@ function validate_schema( &$configHash, $name, $schema, $schemaType = 'type' ){
 
 	// typemap - for type only (not services)  
 	if( !empty( $schema['typemaps'] ) ){
-		foreach ($type['typemaps'] as $typemapName => $typemap) {
+		foreach ($schema['typemaps'] as $typemapName => $typemap) {
 			foreach ($typemap['fields'] as $fieldName => $field) {
 				if (empty($field['schema'])) {
 					error("A schema is required for typemap $typemapName field $fieldName in type $name");
@@ -421,16 +421,26 @@ function generate_package($config) {
 		}
 
 		foreach ($actions as $action => $files) {
-			if ($action == "package") {
+			switch( $action ){
+			case "package":
 				generate_package_files($config, $dir, $files);
-			} elseif ($action == "type") {
-				render_type_files($config, $dir, $files);
-			} elseif ($action == "service") {
-				render_service_files($config, $dir, $files);
-			} elseif ($action == "copy") {
+				break;
+			case "type":
+				if ( !empty( $config['types'] ) ) {
+					render_type_files($config, $dir, $files);
+				}
+				break;
+			case "service":
+				if ( !empty( $config['services'] ) ) {
+					render_service_files($config, $dir, $files);
+				}
+				break;
+			case "copy":
 				copy_files($config, $dir, $files);
-			} else {
+				break;
+			default:
 				error("Unknown action: " . $action);
+				break;
 			}
 		}
 	}
