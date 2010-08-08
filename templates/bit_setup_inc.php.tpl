@@ -18,7 +18,9 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
 	$menuHash = array(
 		'package_name'  => {{$PACKAGE}}_PKG_NAME,
 		'index_url'     => {{$PACKAGE}}_PKG_URL.'index.php',
+{{if $config.types}}
 		'menu_template' => 'bitpackage:{{$package}}/menu_{{$package}}.tpl',
+{{/if}}
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
 
