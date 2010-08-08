@@ -41,8 +41,12 @@ YAML validation: >
 
 service generation: >
 
-  We would like to be able to generate services as well as a portion
-  of a package.
+  Service generation has been initiated, services currently anticipate and 
+  only generate their own class, much as types implement a class. This needs
+  further refinement for possibly supporting services within types. Services 
+  also have complex variations like one to one and one to many and many to
+  many schenarios - definiting such conditions and properly rendering the
+  necessary crud processes for those needs further refinement.
 
 update script generation: >
 
@@ -63,3 +67,14 @@ wrap it in a package: >
 smarty validator generation: >
 
   Length should not be required if it can be infered from the schema.
+
+php unit testing: >
+
+  This should be automatically generated. We want this!
+
+template overriding: >
+
+  It would be very helpful to be able to override specfic templates
+  for greater output customization. This could be implemented as themes
+  and or as specific template sets on a file output basis from within the
+  package yaml definitiion. We want this!
