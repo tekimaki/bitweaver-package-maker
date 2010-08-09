@@ -6,6 +6,8 @@ authors:
 sponsors:
   - Tekamaki LLC (http://www.tekimaki.com)
 license: LGPL http://www.gnu.org/copyleft/lesser.html
+requirements:
+	liberty: {min: 2.1.5}
 about: >
   This system is designed to generate bitweaver packages.
 
@@ -15,6 +17,9 @@ about: >
 
   It is very much still a work in progress. See the TODO for things you can
   do to help out.
+
+  As bleeding edge code, his generator currently requires using 
+  the bitweaverpro code from tekimaki: http://github.com/tekimaki/bitweaverpro
 
 running: >
 
