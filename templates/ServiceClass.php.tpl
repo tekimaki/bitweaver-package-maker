@@ -105,7 +105,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 */
 	function store( &$pParamHash ){
 		if( $this->verify( &$pParamHash ) ) {
-			if ( !empty( $pParamHash['{{$service.name}}_store'] )){
+			if ( !empty( $pParamHash['{{$service.name}}_store'] ) && !$this->getOne( $pParamHash['{{$service.name}}'] ) ){
 				$table = '{{$service.name}}';
 				$this->mDb->StartTrans();
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
@@ -280,7 +280,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	/**
 	 * validateFields validates the fields in this type
 	 */
-	function validateField( &$pParamHash ) {
+	function validateFields( &$pParamHash ) {
 		$this->prepVerify();
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 			LibertyValidator::validate(

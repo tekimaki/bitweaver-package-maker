@@ -128,6 +128,14 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 
+				/* =-=- CUSTOM BEGIN: load -=-= */
+{{if !empty($customBlock.load)}}
+{{$customBlock.load}}
+{{else}}
+
+{{/if}}
+				/* =-=- CUSTOM END: load -=-= */
+
 				{{$type.base_class}}::load();
 			}
 		}
