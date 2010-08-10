@@ -182,7 +182,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 		// limit results by {{$fieldName}}
 		if( !empty( $pParamHash['{{$fieldName}}'] ) ){
 			$bindVars[] = $pParamHash['{{$fieldName}}'];
-			$whereSql .= " AND `{$fieldName}}` = ?";
+			$whereSql .= " AND `{{$fieldName}}` = ?";
 {{if !$field.validator.required}}
 		}elseif( isset( $pParamHash['{{$fieldName}}'] ) ){
 			$whereSql .= " AND `{{$fieldName}}` IS NULL";
