@@ -158,7 +158,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 		return( count( $this->mErrors )== 0 );
 	}
 
-	function expunge( &$pParamHash ){
+	function expunge( &$pParamHash = array() ){
 		$ret = FALSE;
 		$this->mDb->StartTrans();
 		$bindVars = array();
@@ -376,6 +376,15 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 
 		return $this->mSchema;
 	}
+
+
+    /**
+     * Check mContentId to establish if the object has been loaded with a valid record
+     */
+    function isValid() {
+        return( BitBase::verifyId( $this->mContentId ) );
+    }
+
 
 {{literal}}
 	// {{{ =================== Custom Helper Mthods  ====================
