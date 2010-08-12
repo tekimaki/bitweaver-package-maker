@@ -46,7 +46,7 @@
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( '{{$type.name}}_list_title' )}
-							<td>{$dataItem.title|escape}</td>
+							<td><a href="{$smarty.const.{{$PACKAGE}}_PKG_URL}index.php?{{$type.name}}_id={$dataItem.{{$type.name}}_id|escape:"url"}" title="{$dataItem.{{$type.name}}_id}">{$dataItem.title|escape}</a></td>
 						{/if}
 
 
