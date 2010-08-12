@@ -67,7 +67,7 @@
 							{smartlink ititle="Edit" ifile="edit_{{$type.name}}.php" ibiticon="icons/accessories-text-editor" {{$type.name}}_id=$dataItem.{{$type.name}}_id}
 						{/if}
 						{if $gBitUser->hasPermission( 'p_{{$package}}_{{$type.name}}_expunge' )}
-							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$data_item.{{$type.name}}_id}" />
+							<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$dataItem.{{$type.name}}_id}" />
 						{/if}
 						</td>
 					</tr>
