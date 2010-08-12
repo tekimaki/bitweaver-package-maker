@@ -448,6 +448,14 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			}
 {{/if}}
 
+			/* =-=- CUSTOM BEGIN: getListIter -=-= */
+{{if !empty($customBlock.getListIter)}}
+{{$customBlock.getListIter}}
+{{else}}
+
+{{/if}}
+			/* =-=- CUSTOM END: getListIter -=-= */
+
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
