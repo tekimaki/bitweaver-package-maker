@@ -25,8 +25,11 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
 	$gBitSystem->registerAppMenu( $menuHash );
 
 {{if $config.services}}
-    $gLibertySystem->registerService(
+    // include service functions
 {{foreach from=$config.services key=serviceName item=service}}
+	require_once( {{$PACKAGE}}_PKG_PATH.'{{$service.class_name}}.php' );
+
+    $gLibertySystem->registerService(
 		LIBERTY_SERVICE_{{$serviceName|strtoupper}},
 		{{$PACKAGE}}_PKG_NAME,
         array(
@@ -37,8 +40,8 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
         array(
 			'description' => '{{$service.description}}'
         )
-{{/foreach}}
     );
+{{/foreach}}
 {{/if}}
 
 }
