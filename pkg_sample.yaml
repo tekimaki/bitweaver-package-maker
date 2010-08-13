@@ -2,7 +2,6 @@
 package: sample
 description: An example package to show the power of the pkgmkr package.
 copyright:
-  - {year: 2010, name: Bitweaver, contact: http://bitweaver.org}
   - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
   - {year: 2010, name: Nick Palmer, contact: palmer@overtsolutions.com}
   - {year: 2010, name: Will James, contact: will@tekimaki.com}
@@ -12,9 +11,9 @@ license:
   url: http://www.gnu.org/copyleft/lesser.html 
 version: 0.1
 requirements:
-	liberty: {min: 2.1.4}
+	liberty: {min: 2.1.5}
 homeable: true
-maintainer_url: http://www.bitweaver.org
+maintainer_url: http://www.tekimaki.com
 settings:
   group:
     boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
