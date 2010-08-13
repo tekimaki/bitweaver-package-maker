@@ -1,0 +1,38 @@
+---
+package: pkgmkr_typemap_sequenced
+description: Package maker unittest\: Typemap - Sequenced.
+copyright:
+  - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+  - {year: 2010, name: Nick Palmer, contact: palmer@overtsolutions.com}
+  - {year: 2010, name: Will James, contact: will@tekimaki.com}
+license:
+  name: LGPL
+  description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
+  url: http://www.gnu.org/copyleft/lesser.html 
+version: 0.1
+requirements:
+	liberty: {min: 2.1.5}
+homeable: true
+maintainer_url: http://www.tekimaki.com
+types:
+  uttypemapseq:
+    content_name: Typemap Sequenced Unittest
+    content_name_plural: Typemap Sequenced Unittests
+    description: A unittest class of the package maker typemap-sequenced feature.
+    base_class: LibertyContent
+    base_package: liberty
+    class_name: UTTypemapSeq
+    typemaps:
+      typemapseq:
+        sequence: true
+        fields:
+          field_a:
+            name: Field A
+            schema: {type: C(160)}
+            validator: {type: string}
+          field_b:
+            name: Field B
+            schema: {type: C(160)}
+            validator: {type: string}
+        constraints:
+          - UNIQUE(content_id)

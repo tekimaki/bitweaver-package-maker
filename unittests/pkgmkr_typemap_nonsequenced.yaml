@@ -1,0 +1,38 @@
+---
+package: pkgmkr_typemap_nonsequenced
+description: Package maker unittest\: Typemap - Non-Sequenced.
+copyright:
+  - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+  - {year: 2010, name: Nick Palmer, contact: palmer@overtsolutions.com}
+  - {year: 2010, name: Will James, contact: will@tekimaki.com}
+license:
+  name: LGPL
+  description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
+  url: http://www.gnu.org/copyleft/lesser.html 
+version: 0.1
+requirements:
+	liberty: {min: 2.1.5}
+homeable: true
+maintainer_url: http://www.tekimaki.com
+types:
+  uttypemapnonseq:
+    content_name: Typemap Non-Sequenced Unittest
+    content_name_plural: Typemap Non-Sequenced Unittests
+    description: A unittest class of the package maker typemap-nonsequenced feature.
+    base_class: LibertyContent
+    base_package: liberty
+    class_name: UTTypemapNonSeq
+    typemaps:
+      typemapnonseq:
+        sequence: false
+        fields:
+          field_a:
+            name: Field A
+            schema: {type: C(160)}
+            validator: {type: string}
+          field_b:
+            name: Field B
+            schema: {type: C(160)}
+            validator: {type: string}
+        constraints:
+          - UNIQUE(content_id)
