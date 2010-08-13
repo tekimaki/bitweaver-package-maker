@@ -67,6 +67,12 @@ features:
 
         name: Currently this is auto generated from each types: key: value, it is lowercase
         class_name: This is optional in the yaml definition file, and if not set will be auto generated as 'Bit'.ucfirst($type.name)
+  unittests:
+    description: >
+      There are unittest package description files included with package maker for testing changes to the templates
+
+      If you need to bug fix a template or are adding a new feature you can generate a test bundle of code using the unittest yaml files
+      This lets you see the changes in real code in the context of a simplified package
 
   validator:
     label: Validator
