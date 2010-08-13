@@ -63,15 +63,24 @@
 
 	/**
 	 * stores multiple records in the {{$type.name}}_{{$typemapName}} table
-{{if !$typemap.sequence}}	 * uses bulk delete to avoid trying to store duplicate records{{/if}} 
+{{if !$typemap.sequence}}	 * uses bulk delete to avoid storage of duplicate records{{/if}} 
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-
+{{if !$typemap.sequence}}
 		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
-
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
-		$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+{{/if}} 
+		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
+					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
+					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+				}
+			}else{
+				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+			}
+		}
 	}
 
 	/** 
