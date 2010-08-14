@@ -1,12 +1,12 @@
 {strip}
 {{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
 {form}
+<input type="hidden" name="page" value="{$page}" />
 	{jstabs}
 {* Are there homeable settings? *}
 {{if $config.homeable}}
 		{jstab title="{{$Package}} Home Settings"}
 			{legend legend="{{$Package}} Home Settings"}
-				<input type="hidden" name="page" value="{$page}" />
 				<div class="row">
 					{formlabel label="{{$Package}} Home Type"}
 					{forminput}
@@ -106,7 +106,6 @@
 
 			{jstab title="{{$type.content_name|capitalize}} List Settings"}
 				{legend legend="{{$type.content_name|capitalize}} List Settings"}
-					<input type="hidden" name="page" value="{$page}" />
 					{foreach from=$form{{$typeName}}Lists key=item item=output}
 						<div class="row">
 							{formlabel label=`$output.label` for=$item}

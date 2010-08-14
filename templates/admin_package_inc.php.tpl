@@ -98,7 +98,7 @@ if( !empty( $_REQUEST['{{$package}}_settings'] ) ){
 {{/if}}
 {{/foreach}}
 
-
+{{if $config.types}}
 	${{$package}}Toggles = array_merge( 
 {{foreach from=$config.types key=typeName item=type name=types}}
 		$form{{$typeName}}Lists{{if !$smarty.foreach.types.last}},{{/if}}
@@ -107,6 +107,7 @@ if( !empty( $_REQUEST['{{$package}}_settings'] ) ){
 	foreach( ${{$package}}Toggles as $item => $data ) {
 		simple_set_toggle( $item, {{$PACKAGE}}_PKG_NAME );
 	}
+{{/if}}
 {{if $config.homeable}}
 {{foreach from=$config.types key=typeName item=type name=types}}
 	simple_set_int( '{{$package}}_{{$typeName}}_home_id', {{$PACKAGE}}_PKG_NAME );
