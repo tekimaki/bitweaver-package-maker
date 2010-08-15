@@ -407,6 +407,12 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
 
+		if (empty($sort_mode) || ! strpos($sort_mode, '.') ) {
+			$sort_mode_prefix = 'lc.';
+		} else {
+			$sort_mode_prefix = '';
+		}
+
 		if( is_array( $find ) ) {
 			// you can use an array of pages
 			$whereSql .= " AND lc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
@@ -424,7 +430,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = {{$type.name|lower}}.`content_id` ) $joinSql
 				INNER JOIN `".BIT_DB_PREFIX."users_users`     uu ON uu.`user_id`     = lc.`user_id`
 			WHERE lc.`content_type_guid` = ? $whereSql
-			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
+			ORDER BY ".$sort_mode_prefix.$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "
 			SELECT COUNT(*)
 			FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` {{$type.name|lower}}
