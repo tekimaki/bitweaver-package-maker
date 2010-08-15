@@ -75,7 +75,7 @@ $gContent->invokeServices( 'content_edit_function' );
 {{foreach from=$type.fields item=data key=field name=fields}}
 	{{if !empty($data.validator.type) && $data.validator.type == 'hexcolor' && !$jsColorIncluded}}
 		{{assign var=jsColorIncluded value=true}}
-		$gBitThemes->loadJavascript( PKGMKR_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
+		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
 	{{/if}}
 {{/foreach}}
 {{if $type.js}}
