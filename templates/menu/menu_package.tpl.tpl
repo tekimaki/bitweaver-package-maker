@@ -1,5 +1,5 @@
 {strip}
-{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
+{{include file="smarty_file_header.tpl}}
 	<ul>
 		{if $gBitUser->hasPermission( 'p_{{$package}}_view')}
 			<li><a class="item" href="{$smarty.const.{{$PACKAGE}}_PKG_URL}index.php">{tr}{{$Package}} Home{/tr}</a></li>

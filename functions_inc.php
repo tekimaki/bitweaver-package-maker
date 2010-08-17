@@ -14,6 +14,30 @@
  * @subpackage functions
  */
 
+function locate_templates_r($dir) {
+	global $gTemplatePaths;
+	if ($dh = opendir(PKGMKR_PKG_DIR . "/templates/" . $dir)) {
+        while (($file = readdir($dh)) !== false) {
+			if ($file != "." && $file != "..") {
+				if (is_dir(PKGMKR_PKG_DIR . "/templates/".$dir."/".$file)) {
+					locate_templates_r($dir . "/" . $file);
+				} else {
+					if (!empty($gTemplatePaths[$file])) {
+						error("Doh! You have added a new template with the same name as another in the ".$gTemplatePaths[$file]." directory! This is NOT supported. All template names must be unique package maker wide.", true);
+					}
+					$gTemplatePaths[$file] = $dir;
+				}
+			}
+        }
+        closedir($dh);
+    }
+}
+
+function locate_templates() {
+	global $gTemplatePaths;
+	$gTemplatePaths = array();
+	locate_templates_r("");
+}
 
 function usage($argv) {
 	echo "Usage: ".$argv[0]." <package>\n\n";
@@ -149,7 +173,7 @@ function render_file($dir, $file, $template, $config) {
 	}
 
 	// Get the contents of the file from smarty
-	$content = $gBitSmarty->fetch('bitpackage:pkgmkr/'.$template);
+	$content = $gBitSmarty->fetch($template);
 	if (!empty($content)) {
 		if (!$handle = fopen($filename, 'w+')) {
 			error("Cannot open file ($filename)");
@@ -295,7 +319,11 @@ function prep_config(&$config){
 
 						// default type inherited from validator settings
 						if( empty( $field['input']['type'] ) ){
-							$field['input']['type'] = $field['validator']['type'];
+							if (!empty($field['validator']['type'])) {
+									$field['input']['type'] = $field['validator']['type'];
+							} else {
+								error("No validator for $field.", true);
+							}
 						}
 
 						// convenience
@@ -359,6 +387,21 @@ function check_args($argv) {
 	error("Not a readable file: " .$argv[1]);
 }
 
+function find_pkgmkr_template($resource_type, $resource_name, &$template_source, &$template_timestamp, &$smarty_obj) {
+	global $gTemplatePaths;
+
+	if( $resource_type == 'file' ) {
+		if (!empty($gTemplatePaths[$resource_name])) {
+			$file = PKGMKR_PKG_DIR ."/templates/".
+				$gTemplatePaths[$resource_name] . "/" . $resource_name;
+			$template_source = file_get_contents($file);
+			$template_timestamp = filemtime($file);
+			return true;
+		}
+    }
+	return false;
+}
+
 function init_smarty($config) {
 	global $gBitSmarty;
 
@@ -377,6 +420,8 @@ function init_smarty($config) {
 	// set the delimiters for tags
 	$gBitSmarty->left_delimiter = "{{";
 	$gBitSmarty->right_delimiter = "}}";
+
+	$gBitSmarty->default_template_handler_func = "find_pkgmkr_template";
 }
 
 function activate_pkgmkr() {
@@ -405,6 +450,9 @@ function generate_package($config) {
 	// Now change directory to BIT_ROOT_PATH to generate the package in
 	// the root of this install.
 	chdir(BIT_ROOT_PATH);
+
+	// Locate all our templates.
+	locate_templates();
 
 	// Prepare any additional data based config data
 	prep_config($config);

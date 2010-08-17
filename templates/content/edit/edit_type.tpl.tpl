@@ -1,5 +1,5 @@
 {strip}
-{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
+{{include file="smarty_file_header.tpl}}
 <div class="floaticon">{bithelp}</div>
 
 <div class="edit {{$package}} {{$type.name}}">
@@ -68,7 +68,7 @@
 							{formfeedback warning=$errors.{{$fieldName}}}
 							{formlabel label="{{$field.name|capitalize}}" for="{{$fieldName}}"}
 							{forminput}
-							{{include file="bitpackage:pkgmkr/edit_field.tpl"}}
+							{{include file="edit_field.tpl"}}
 							{{if $field.validator.required}}{required}{{/if}}
 							{formhelp note="{{$field.help}}"}
 							{/forminput}

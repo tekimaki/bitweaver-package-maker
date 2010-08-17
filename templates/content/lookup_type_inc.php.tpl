@@ -1,5 +1,5 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
-{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
+{{include file="php_file_header.tpl"}}
 
 global $gContent;
 require_once( {{$PACKAGE}}_PKG_PATH.'{{$type.class_name}}.php');

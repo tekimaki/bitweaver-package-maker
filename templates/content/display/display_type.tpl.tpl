@@ -1,5 +1,5 @@
 {strip}
-{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
+{{include file="smarty_file_header.tpl}}
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 <div class="display {{$package}} {{$type.name}}">
 	<div class="floaticon">

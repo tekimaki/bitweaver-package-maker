@@ -4,7 +4,7 @@
    header ("location: ../index.php");
 {{* if types *}}
 {{elseif $config.types}}
-{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
+{{include file="php_file_header.tpl"}}
 
 // Initialization
 require_once( '../kernel/setup_inc.php' );

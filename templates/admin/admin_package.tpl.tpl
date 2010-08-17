@@ -1,5 +1,5 @@
 {strip}
-{{include file="bitpackage:pkgmkr/smarty_file_header.tpl}}
+{{include file="smarty_file_header.tpl}}
 {form}
 <input type="hidden" name="page" value="{$page}" />
 	{jstabs}

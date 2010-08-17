@@ -1,24 +1,24 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
-{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
+{{include file="php_file_header.tpl"}}
 
 $tables = array(
 {{* content types *}}
 {{foreach from=$config.types key=typeName item=type}}
-    {{include file="bitpackage:pkgmkr/type_schema_inc.php.tpl"}}
+    {{include file="type_schema_inc.php.tpl"}}
 {{foreach from=$type.typemaps key=typemapName item=typemap}}
-    {{include file="bitpackage:pkgmkr/typemap_schema_inc.php.tpl" tablePrefix=$typeName}}
+    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$typeName}}
 {{/foreach}}
 {{/foreach}}
 {{* services *}}
 {{foreach from=$config.services key=serviceName item=service}}
-    {{include file="bitpackage:pkgmkr/service_schema_inc.php.tpl"}}
+    {{include file="service_schema_inc.php.tpl"}}
 {{foreach from=$service.typemaps key=typemapName item=typemap}}
-    {{include file="bitpackage:pkgmkr/typemap_schema_inc.php.tpl" tablePrefix=$serviceName}}
+    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$serviceName}}
 {{/foreach}}
 {{/foreach}}
 {{* tables *}}
 {{foreach from=$config.tables key=tableName item=table}}
-    {{include file="bitpackage:pkgmkr/table_schema_inc.php.tpl" tableName=$tableName table=$table}}
+    {{include file="table_schema_inc.php.tpl" tableName=$tableName table=$table}}
 {{/foreach}}
 );
 

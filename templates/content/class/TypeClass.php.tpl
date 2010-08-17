@@ -1,6 +1,6 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 /* vim: :set fdm=marker : */
-{{include file="bitpackage:pkgmkr/php_file_header.tpl"}}
+{{include file="php_file_header.tpl"}}
 /**
 * {{$type.class_name}} class
 * {{$type.description}}
@@ -675,7 +675,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{/literal}}
 
 {{foreach from=$type.typemaps key=typemapName item=typemap}}
-{{include file="bitpackage:pkgmkr/typemap_methods_inc.php.tpl"}}
+{{include file="typemap_methods_inc.php.tpl"}}
 {{/foreach}}
 {{/if}}
 {{literal}}
