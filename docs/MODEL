@@ -6,7 +6,7 @@ package_model:
   components:
   - admin:
     - settings:
-  - menu:
+    - menu:
   - content:
     - LibertyContent
     - LibertyMime
@@ -29,8 +29,8 @@ package_model:
           - list
           - load
         - sql_extensions:
-      - load_sql
-      - list_sql
+          - load_sql
+          - list_sql
         - comments:
           - comment_store
         - other:
@@ -62,3 +62,5 @@ package_model:
   - system:
     - plugins
       - nearly same as in content
+  - modules
+  - menu
