@@ -1,0 +1,64 @@
+---
+what: Bitweaver Package System Model
+about: >
+  This document outlines component relations within a package. This is a work in progress and may contain inaccuracies, make corrections if you know them.
+package_model:
+  components:
+  - admin:
+    - settings:
+	- menu:
+  - content:
+    - LibertyContent
+    - LibertyMime
+    - LibertyEdge
+      - one to one
+      - one to many
+      - many to many
+    - MetaData (typemaps)
+      - one to one
+      - one to many
+      - many to many
+    - Services:
+      - callbacks:
+        - content:
+          - create/edit
+          - store
+          - expunge
+          - display
+          - preview
+          - list
+          - load
+        - sql_extensions:
+			- load_sql
+			- list_sql
+        - comments:
+          - comment_store
+        - other:
+          - user_perms
+          - access_control
+          - users_register_function
+      - templates
+        - see http://www.bitweaver.org/wiki/LibertyServices?highlight=Services
+    - PluginSystem
+      - properties
+        - plugins
+        - registered callback handlers
+      - methods
+        - load
+        - register
+        - custom
+        	- has callback
+        	- no callback
+        - callbacks
+          - admin
+            added to pkg admin panel within a type config
+          - setup
+            called at system initialization time
+          - services
+          	- same as content
+          - custom
+  - services: >
+    same as services in liberty content but without being a content type
+  - system:
+    - plugins
+      - nearly same as in content
