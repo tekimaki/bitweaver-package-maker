@@ -6,7 +6,7 @@ package_model:
   components:
   - admin:
     - settings:
-	- menu:
+  - menu:
   - content:
     - LibertyContent
     - LibertyMime
@@ -29,8 +29,8 @@ package_model:
           - list
           - load
         - sql_extensions:
-			- load_sql
-			- list_sql
+      - load_sql
+      - list_sql
         - comments:
           - comment_store
         - other:
@@ -47,15 +47,15 @@ package_model:
         - load
         - register
         - custom
-        	- has callback
-        	- no callback
+          - has callback
+          - no callback
         - callbacks
           - admin
             added to pkg admin panel within a type config
           - setup
             called at system initialization time
           - services
-          	- same as content
+            - same as content
           - custom
   - services: >
     same as services in liberty content but without being a content type
