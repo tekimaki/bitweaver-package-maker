@@ -14,6 +14,24 @@
  * @subpackage functions
  */
 
+function pkgmkr_setup() {
+	// Avoid anoying errors about timezone
+	ini_set('date.timezone', 'GMT');
+
+	// Define where we get some resources from.
+	// Files to be copied will come from here.
+	define("RESOURCE_DIR", "resources/");
+
+	// Where is the root?
+	$script_path = $_SERVER['PWD'] .'/'. $_SERVER["SCRIPT_FILENAME"];
+	$root = preg_replace('|pkgmkr/generate\.php|', '', preg_replace('|/./|', '/', $script_path));
+
+	// Some constants that we tend to use without thinking
+	define("BIT_ROOT_PATH", $root);
+	define("UTIL_PKG_PATH", $root.'/util/');
+	define("PKGMKR_PKG_DIR", $root.'/pkgmkr/');
+}
+
 function locate_templates_r($dir) {
 	global $gTemplatePaths;
 	if ($dh = opendir(PKGMKR_PKG_DIR . "/templates/" . $dir)) {
@@ -395,7 +413,8 @@ function check_args($argv) {
 		usage($argv);
 	}
 	if (is_file($argv[1])) {
-		return validate_config(Spyc::YAMLLoad($argv[1]));
+		$yaml = Spyc::YAMLLoad($argv[1]);
+		return validate_config($yaml);
 	}
 	error("Not a readable file: " .$argv[1]);
 }
@@ -418,6 +437,11 @@ function find_pkgmkr_template($resource_type, $resource_name, &$template_source,
 function init_smarty($config) {
 	global $gBitSmarty;
 
+	require_once(BIT_ROOT_PATH . "util/smarty/libs/Smarty.class.php");
+	$gBitSmarty = new Smarty();
+	$gBitSmarty->template_dir = PKGMKR_PKG_DIR . "templates";
+	$gBitSmarty->compile_dir = BIT_ROOT_PATH . "temp/templates_c";
+
 	// Assign package in various cases to the context for
 	// easier to read templates.
 	$gBitSmarty->assign('package', $config['package']);
@@ -428,7 +452,7 @@ function init_smarty($config) {
 	$gBitSmarty->assign('config', $config);
 
 	// Turn off tr prefilter so those tags come out right
-	$gBitSmarty->unregister_prefilter('tr');
+	//	$gBitSmarty->unregister_prefilter('tr');
 
 	// set the delimiters for tags
 	$gBitSmarty->left_delimiter = "{{";

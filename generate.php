@@ -15,21 +15,11 @@
  * @subpackage functions
  */
 
-global $gShellScript, $gVerbose;
-$gShellScript = TRUE;
-$gVerbose = TRUE;
-
-// Define where we get some resources from.
-// Files to be copied will come from here.
-define("RESOURCE_DIR", "resources/");
-
 // Load our libraries
-require_once("../kernel/setup_inc.php");
 require_once("spyc-0.4.5/spyc.php");
 require_once("functions_inc.php");
 
-// Activate this package so we get template rendering
-$active = activate_pkgmkr();
+pkgmkr_setup();
 
 // What package are we building today boys and girls?
 $config = check_args($argv);
@@ -37,5 +27,4 @@ $config = check_args($argv);
 // Generate the package
 generate_package($config);
 
-// Inactivate if we need to
-inactivate_pkgmkr($active);
+
