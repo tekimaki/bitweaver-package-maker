@@ -27,6 +27,8 @@ types:
     base_class: LibertyMime
     base_package: liberty
     attachments: true
+    templates:
+      list_type.tpl: ulli
     fields:
       field_var_char:
         name: A Var Char Field
@@ -52,6 +54,7 @@ types:
       field_blob: 
         name: Blob Field
         schema: {type: B}
+        validator: {type: no-input}
       field_date: 
         name: Date Field
         schema: {type: D}
@@ -71,9 +74,11 @@ types:
       field_byte: 
         name: Byte Field
         schema: {type: I1}
+        validator: {type: no-input}
       field_word: 
         name: Word Field
         schema:    {type: I2}
+        validator: {type: no-input}
       field_int4: 
         name: Another Int Field
         schema: {type: I4}

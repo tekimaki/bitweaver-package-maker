@@ -87,6 +87,15 @@ function copy_files($config, $dir, $files) {
 	}
 }
 
+function get_template_prefix($template, $params) {
+	$prefix = '';
+	if (!empty($params) && !empty($params['templates']) &&
+		!empty($params['templates'][$template])) {
+		$prefix = $params['templates'][$template] . "_";
+	}
+	return $prefix;
+}
+
 function render_type_files($config, $dir, $files) {
 	if( !empty( $config['types'] ) ){
 		foreach($config['types'] as $type => $params) {
@@ -96,8 +105,9 @@ function render_type_files($config, $dir, $files) {
 			foreach ($files as $file) {
 				$pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
 				$template = $file.".tpl";
+				$prefix = get_template_prefix($file, $params);
 				// Render the file
-				render_file($dir, $pkg_file, $template, $config);
+				render_file($dir, $pkg_file, $template, $config, $prefix);
 			}
 		}
 	}
@@ -112,23 +122,25 @@ function render_service_files($config, $dir, $files) {
 			foreach ($files as $file) {
 				$pkg_file = convert_packagename(convert_servicename($file, $service, $params['class_name']), $config);
 				$template = $file.".tpl";
+				$prefix = get_template_prefix($file, $params);
 				// Render the file
-				render_file($dir, $pkg_file, $template, $config);
+				render_file($dir, $pkg_file, $template, $config, $prefix);
 			}
 		}
 	}
 }
 
-function generate_package_files($config, $dir, $files) {
+function render_package_files($config, $dir, $files) {
 	foreach ($files as $file) {
 		$pkg_file = convert_packagename($file, $config);
 		$template = $file.".tpl";
+		$prefix = get_template_prefix($file, $config);
 		// Render the file
-		render_file($dir, $pkg_file, $template, $config);
+		render_file($dir, $pkg_file, $template, $config, $prefix);
 	}
 }
 
-function render_file($dir, $file, $template, $config) {
+function render_file($dir, $file, $template, $config, $prefix) {
 	global $gBitSmarty;
 
 	$filename = $dir."/".$file;
@@ -173,7 +185,7 @@ function render_file($dir, $file, $template, $config) {
 	}
 
 	// Get the contents of the file from smarty
-	$content = $gBitSmarty->fetch($template);
+	$content = $gBitSmarty->fetch($prefix . $template);
 	if (!empty($content)) {
 		if (!$handle = fopen($filename, 'w+')) {
 			error("Cannot open file ($filename)");
@@ -322,6 +334,7 @@ function prep_config(&$config){
 							if (!empty($field['validator']['type'])) {
 									$field['input']['type'] = $field['validator']['type'];
 							} else {
+								vd($field);
 								error("No validator for $field.", true);
 							}
 						}
@@ -475,7 +488,7 @@ function generate_package($config) {
 		foreach ($actions as $action => $files) {
 			switch( $action ){
 			case "package":
-				generate_package_files($config, $dir, $files);
+				render_package_files($config, $dir, $files);
 				break;
 			case "type":
 				if ( !empty( $config['types'] ) ) {
