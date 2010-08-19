@@ -1,9 +1,10 @@
-<?php /* -*- mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
-/* vim:set ft=php ts=4 sw=4 sts=4 */
+<?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
+/* vim: :set fdm=marker : */
 /**
  * $Header: $
  *
- * Copyright (c) 2010 bitweaver.org
+ * Copyright (c) 2010 Tekimaki LLC http://tekimaki.com
+ * Copyright (c) 2010 will james will@tekimaki.com
  * Copyright (c) 2010 nick palmer@overtsolutions.com
  *
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -28,8 +29,13 @@ function pkgmkr_setup() {
 
 	// Some constants that we tend to use without thinking
 	define("BIT_ROOT_PATH", $root);
+	define("KERNEL_PKG_PATH", $root.'/kernel/');
+	define("CONFIG_PKG_PATH", $root.'/config/');
 	define("UTIL_PKG_PATH", $root.'/util/');
 	define("PKGMKR_PKG_DIR", $root.'/pkgmkr/');
+
+	// some convenient debugging tools
+	require_once( KERNEL_PKG_PATH.'bit_error_inc.php' );
 }
 
 function locate_templates_r($dir) {
@@ -77,21 +83,6 @@ function message($message) {
 	}
 }
 
-function convert_typename($file, $type, $className) {
-	$tmp_file = preg_replace("/type/", strtolower($type), $file);
-	return preg_replace("/TypeClass/", $className, $tmp_file);
-}
-
-function convert_servicename($file, $service, $className){
-	$tmp_file = preg_replace("/service/", strtolower($service), $file);
-	return preg_replace("/ServiceClass/", $className, $tmp_file);
-}
-
-function convert_packagename($file, $config) {
-	$pkg_file = preg_replace("/package/", $config['package'], $file);
-	return preg_replace("/Package/", $config['Package'], $pkg_file);
-}  
-
 function copy_files($config, $dir, $files) {
 	foreach ($files as $file) {
 		$pkg_file = convert_packagename($file, $config);
@@ -114,6 +105,34 @@ function get_template_prefix($template, $params) {
 	return $prefix;
 }
 
+// {{{ =================== Package Mthods  ====================
+
+function convert_packagename($file, $config) {
+	$pkg_file = preg_replace("/package/", $config['package'], $file);
+	return preg_replace("/Package/", $config['Package'], $pkg_file);
+}  
+
+
+function render_package_files($config, $dir, $files) {
+	foreach ($files as $file) {
+		$pkg_file = convert_packagename($file, $config);
+		$template = $file.".tpl";
+		$prefix = get_template_prefix($file, $config);
+		// Render the file
+		render_file($dir, $pkg_file, $template, $config, $prefix);
+	}
+}
+
+// }}} -- end of Package Methods
+
+// {{{ =================== Type Mthods  ====================
+
+function convert_typename($file, $type, $className) {
+	$tmp_file = preg_replace("/type/", strtolower($type), $file);
+	return preg_replace("/TypeClass/", $className, $tmp_file);
+}
+
+
 function render_type_files($config, $dir, $files) {
 	if( !empty( $config['types'] ) ){
 		foreach($config['types'] as $type => $params) {
@@ -129,6 +148,15 @@ function render_type_files($config, $dir, $files) {
 			}
 		}
 	}
+}
+
+// }}} -- end of Type Methods
+
+// {{{ =================== Service Mthods  ====================
+
+function convert_servicename($file, $service, $className){
+	$tmp_file = preg_replace("/service/", strtolower($service), $file);
+	return preg_replace("/ServiceClass/", $className, $tmp_file);
 }
 
 function render_service_files($config, $dir, $files) {
@@ -148,15 +176,8 @@ function render_service_files($config, $dir, $files) {
 	}
 }
 
-function render_package_files($config, $dir, $files) {
-	foreach ($files as $file) {
-		$pkg_file = convert_packagename($file, $config);
-		$template = $file.".tpl";
-		$prefix = get_template_prefix($file, $config);
-		// Render the file
-		render_file($dir, $pkg_file, $template, $config, $prefix);
-	}
-}
+// }}} -- end of Service Methods
+
 
 function render_file($dir, $file, $template, $config, $prefix) {
 	global $gBitSmarty;
@@ -414,7 +435,7 @@ function check_args($argv) {
 	}
 	if (is_file($argv[1])) {
 		$yaml = Spyc::YAMLLoad($argv[1]);
-		return validate_config($yaml);
+		return $yaml;
 	}
 	error("Not a readable file: " .$argv[1]);
 }
@@ -477,8 +498,48 @@ function inactivate_pkgmkr($off) {
 	}
 }
 
-function generate_package($config) {
+function generate( $spec ){
+	if( !is_array( $spec ) ){
+		error("Nothing to render - please check your yaml specification file.");
+	}else{
+		// validate the entire spec file first
+		foreach( $spec as $key=>$config ){
+			if( !validate_factory_type( $key ) ){
+				error( $key." is an invalid config type.");
+			}
+			switch( $key ){
+			case 'package':
+				validate_config($config);
+				break;
+			case 'plugin':
+				// not supported yet
+				return false;
+			}
+		}
+		// process each config in the file
+		foreach( $spec as $key=>$config ){
+			switch( $key ){
+			case 'package':
+				generate_package( $config );
+				break;
+			case 'plugin':
+				// not supported yet
+				return false;
+			}
+		}
+	}
+}
 
+function validate_factory_type( $key ){
+	switch( $key ){
+	case 'package':
+	case 'plugin':
+		return true;
+	}
+	return false;
+}
+
+function generate_package($config) {
 	message("Generating package: ".$config['package']);
 
 	// Load the files we are to generate

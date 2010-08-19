@@ -4,7 +4,8 @@
 /**
  * $Header: $
  *
- * Copyright (c) 2010 bitweaver.org
+ * Copyright (c) 2010 Tekimaki LLC http://tekimaki.com
+ * Copyright (c) 2010 will james will@tekimaki.com
  * Copyright (c) 2010 nick palmer@overtsolutions.com
  *
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -22,9 +23,9 @@ require_once("functions_inc.php");
 pkgmkr_setup();
 
 // What package are we building today boys and girls?
-$config = check_args($argv);
+$spec = check_args($argv);
 
 // Generate the package
-generate_package($config);
+generate( $spec );
 
 
