@@ -38,6 +38,58 @@ function pkgmkr_setup() {
 	require_once( KERNEL_PKG_PATH.'bit_error_inc.php' );
 }
 
+function check_args($argv) {
+	if (count($argv) != 2) {
+		usage($argv);
+	}
+	if (is_file($argv[1])) {
+		$yaml = Spyc::YAMLLoad($argv[1]);
+		return $yaml;
+	}
+	error("Not a readable file: " .$argv[1]);
+}
+
+function generate( $spec ){
+	if( !is_array( $spec ) ){
+		error("Nothing to render - please check your yaml specification file.");
+	}else{
+		// validate the entire spec file first
+		foreach( $spec as $key=>$config ){
+			if( !validate_factory_type( $key ) ){
+				error( $key." is an invalid config type.");
+			}
+			switch( $key ){
+			case 'package':
+				validate_config($config);
+				break;
+			case 'plugin':
+				// not supported yet
+				return false;
+			}
+		}
+		// process each config in the file
+		foreach( $spec as $key=>$config ){
+			switch( $key ){
+			case 'package':
+				generate_package( $config );
+				break;
+			case 'plugin':
+				// not supported yet
+				return false;
+			}
+		}
+	}
+}
+
+function validate_factory_type( $key ){
+	switch( $key ){
+	case 'package':
+	case 'plugin':
+		return true;
+	}
+	return false;
+}
+
 function locate_templates_r($dir) {
 	global $gTemplatePaths;
 	if ($dh = opendir(PKGMKR_PKG_DIR . "/templates/" . $dir)) {
@@ -104,80 +156,6 @@ function get_template_prefix($template, $params) {
 	}
 	return $prefix;
 }
-
-// {{{ =================== Package Mthods  ====================
-
-function convert_packagename($file, $config) {
-	$pkg_file = preg_replace("/package/", $config['package'], $file);
-	return preg_replace("/Package/", $config['Package'], $pkg_file);
-}  
-
-
-function render_package_files($config, $dir, $files) {
-	foreach ($files as $file) {
-		$pkg_file = convert_packagename($file, $config);
-		$template = $file.".tpl";
-		$prefix = get_template_prefix($file, $config);
-		// Render the file
-		render_file($dir, $pkg_file, $template, $config, $prefix);
-	}
-}
-
-// }}} -- end of Package Methods
-
-// {{{ =================== Type Mthods  ====================
-
-function convert_typename($file, $type, $className) {
-	$tmp_file = preg_replace("/type/", strtolower($type), $file);
-	return preg_replace("/TypeClass/", $className, $tmp_file);
-}
-
-
-function render_type_files($config, $dir, $files) {
-	if( !empty( $config['types'] ) ){
-		foreach($config['types'] as $type => $params) {
-			global $gBitSmarty;
-			$params['name'] = $type;
-			$gBitSmarty->assign('type', $params);
-			foreach ($files as $file) {
-				$pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
-				$template = $file.".tpl";
-				$prefix = get_template_prefix($file, $params);
-				// Render the file
-				render_file($dir, $pkg_file, $template, $config, $prefix);
-			}
-		}
-	}
-}
-
-// }}} -- end of Type Methods
-
-// {{{ =================== Service Mthods  ====================
-
-function convert_servicename($file, $service, $className){
-	$tmp_file = preg_replace("/service/", strtolower($service), $file);
-	return preg_replace("/ServiceClass/", $className, $tmp_file);
-}
-
-function render_service_files($config, $dir, $files) {
-	if( !empty( $config['services'] ) ){
-		foreach($config['services'] as $service => $params) {
-			global $gBitSmarty;
-			$params['name'] = $service;
-			$gBitSmarty->assign('service', $params);
-			foreach ($files as $file) {
-				$pkg_file = convert_packagename(convert_servicename($file, $service, $params['class_name']), $config);
-				$template = $file.".tpl";
-				$prefix = get_template_prefix($file, $params);
-				// Render the file
-				render_file($dir, $pkg_file, $template, $config, $prefix);
-			}
-		}
-	}
-}
-
-// }}} -- end of Service Methods
-
 
 function render_file($dir, $file, $template, $config, $prefix) {
 	global $gBitSmarty;
@@ -429,17 +407,6 @@ function prep_config(&$config){
 	return $config;
 }
 
-function check_args($argv) {
-	if (count($argv) != 2) {
-		usage($argv);
-	}
-	if (is_file($argv[1])) {
-		$yaml = Spyc::YAMLLoad($argv[1]);
-		return $yaml;
-	}
-	error("Not a readable file: " .$argv[1]);
-}
-
 function find_pkgmkr_template($resource_type, $resource_name, &$template_source, &$template_timestamp, &$smarty_obj) {
 	global $gTemplatePaths;
 
@@ -480,63 +447,6 @@ function init_smarty($config) {
 	$gBitSmarty->right_delimiter = "}}";
 
 	$gBitSmarty->default_template_handler_func = "find_pkgmkr_template";
-}
-
-function activate_pkgmkr() {
-	global $gBitSystem;
-	if (!$gBitSystem->isPackageActive('pkgmkr')) {
-		$gBitSystem->setConfig('package_pkgmkr', 'y');
-		return true;
-	}
-	return false;
-}
-
-function inactivate_pkgmkr($off) {
-	global $gBitSystem;
-	if ($off) {
-		$gBitSystem->setConfig('package_pkgmkr', 'n');
-	}
-}
-
-function generate( $spec ){
-	if( !is_array( $spec ) ){
-		error("Nothing to render - please check your yaml specification file.");
-	}else{
-		// validate the entire spec file first
-		foreach( $spec as $key=>$config ){
-			if( !validate_factory_type( $key ) ){
-				error( $key." is an invalid config type.");
-			}
-			switch( $key ){
-			case 'package':
-				validate_config($config);
-				break;
-			case 'plugin':
-				// not supported yet
-				return false;
-			}
-		}
-		// process each config in the file
-		foreach( $spec as $key=>$config ){
-			switch( $key ){
-			case 'package':
-				generate_package( $config );
-				break;
-			case 'plugin':
-				// not supported yet
-				return false;
-			}
-		}
-	}
-}
-
-function validate_factory_type( $key ){
-	switch( $key ){
-	case 'package':
-	case 'plugin':
-		return true;
-	}
-	return false;
 }
 
 function generate_package($config) {
@@ -606,3 +516,92 @@ function lint_file($filename) {
 	}
 }
 
+function activate_pkgmkr() {
+	global $gBitSystem;
+	if (!$gBitSystem->isPackageActive('pkgmkr')) {
+		$gBitSystem->setConfig('package_pkgmkr', 'y');
+		return true;
+	}
+	return false;
+}
+
+function inactivate_pkgmkr($off) {
+	global $gBitSystem;
+	if ($off) {
+		$gBitSystem->setConfig('package_pkgmkr', 'n');
+	}
+}
+
+
+// {{{ =================== Package Mthods  ====================
+
+function convert_packagename($file, $config) {
+	$pkg_file = preg_replace("/package/", $config['package'], $file);
+	return preg_replace("/Package/", $config['Package'], $pkg_file);
+}  
+
+
+function render_package_files($config, $dir, $files) {
+	foreach ($files as $file) {
+		$pkg_file = convert_packagename($file, $config);
+		$template = $file.".tpl";
+		$prefix = get_template_prefix($file, $config);
+		// Render the file
+		render_file($dir, $pkg_file, $template, $config, $prefix);
+	}
+}
+
+// }}} -- end of Package Methods
+
+// {{{ =================== Type Mthods  ====================
+
+function convert_typename($file, $type, $className) {
+	$tmp_file = preg_replace("/type/", strtolower($type), $file);
+	return preg_replace("/TypeClass/", $className, $tmp_file);
+}
+
+
+function render_type_files($config, $dir, $files) {
+	if( !empty( $config['types'] ) ){
+		foreach($config['types'] as $type => $params) {
+			global $gBitSmarty;
+			$params['name'] = $type;
+			$gBitSmarty->assign('type', $params);
+			foreach ($files as $file) {
+				$pkg_file = convert_packagename(convert_typename($file, $type, $params['class_name']), $config);
+				$template = $file.".tpl";
+				$prefix = get_template_prefix($file, $params);
+				// Render the file
+				render_file($dir, $pkg_file, $template, $config, $prefix);
+			}
+		}
+	}
+}
+
+// }}} -- end of Type Methods
+
+// {{{ =================== Service Mthods  ====================
+
+function convert_servicename($file, $service, $className){
+	$tmp_file = preg_replace("/service/", strtolower($service), $file);
+	return preg_replace("/ServiceClass/", $className, $tmp_file);
+}
+
+function render_service_files($config, $dir, $files) {
+	if( !empty( $config['services'] ) ){
+		foreach($config['services'] as $service => $params) {
+			global $gBitSmarty;
+			$params['name'] = $service;
+			$gBitSmarty->assign('service', $params);
+			foreach ($files as $file) {
+				$pkg_file = convert_packagename(convert_servicename($file, $service, $params['class_name']), $config);
+				$template = $file.".tpl";
+				$prefix = get_template_prefix($file, $params);
+				// Render the file
+				render_file($dir, $pkg_file, $template, $config, $prefix);
+			}
+		}
+	}
+}
+
+// }}} -- end of Service Methods
