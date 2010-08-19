@@ -482,7 +482,7 @@ function generate_package($config) {
 	message("Generating package: ".$config['package']);
 
 	// Load the files we are to generate
-	$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'files.yaml');
+	$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'package.yaml');
 
 	// Now change directory to BIT_ROOT_PATH to generate the package in
 	// the root of this install.

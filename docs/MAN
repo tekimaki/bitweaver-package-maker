@@ -2,15 +2,15 @@
 features:
   rendering_process:
     label: Rendering process
-    description: How the package maker builds various files from a pkg description yaml file based on the resources/files.yaml
+    description: How the package maker builds various files from a pkg description yaml file based on the resources/package.yaml
     structure: >
 
-      The resources/files.yaml files defines what templates will be
-      rendered and how. At the root level are the directories that
-      will be created. For each directory there is a list of
-      actions. Within each action there are a list of target files to
-      be generated.  For each action type some substitutions will be
-      done to the filename before the file is generated.
+      The resources/package.yaml defines what templates will be
+      rendered and how when rendering a full package. At the root level 
+	  are the directories that will be created. For each directory 
+	  there is a list of actions. Within each action there are a list 
+	  of target files to be generated.  For each action type some 
+	  substitutions will be done to the filename before the file is generated.
 
     actions:
       type: >
