@@ -40,11 +40,11 @@ class TypeRenderer extends aRenderer{
 				$params['name'] = $params['type'] = $type;
 				$gBitSmarty->assign('type', $params);
 				foreach ($files as $file) {
-					$pkg_file = PackageRenderer::convertName(TypeRenderer::convertName($file, $config, $params), $config);
+					$render_file = PackageRenderer::convertName(TypeRenderer::convertName($file, $config, $params), $config);
 					$template = $file.".tpl";
 					$prefix = TypeRenderer::getTemplatePrefix($file, $params);
 					// Render the file
-					TypeRenderer::renderFile($dir, $pkg_file, $template, $config, $prefix);
+					TypeRenderer::renderFile($dir, $render_file, $template, $config, $prefix);
 				}
 			}
 		}

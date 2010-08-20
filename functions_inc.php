@@ -35,10 +35,13 @@ function pkgmkr_setup() {
 	define("UTIL_PKG_PATH", $root.'util/');
 	define("PKGMKR_PKG_PATH", $root.'pkgmkr/');
 
+	// some convenient programming tools
+	require_once( KERNEL_PKG_PATH.'kernel_lib.php' );
 	// some convenient debugging tools
 	require_once( KERNEL_PKG_PATH.'bit_error_inc.php' );
 
 	// create autoloader for classes
+	/* this just doesnt seem to work for nested classes or something
 	if( !spl_autoload_functions() || !in_array( 'pkgmkr_autoloader', spl_autoload_functions() ) ) {
 		function pkgmkr_autoloader($class) {
 			$filePath =  './'.$class.'.php';
@@ -47,9 +50,13 @@ function pkgmkr_setup() {
 		}
 		spl_autoload_register('pkgmkr_autoloader');
 	}
-	// for some reason getting an error when trying to autoload this class
-	// PHP Fatal error:  Class 'TypeRenderer' not found in /home/consulting/live/clients/bwpro/pkgmkr/PackageRenderer.php on line 180
+	*/
+	require_once( './aRenderer.php' );
+	require_once( './PackageRenderer.php' );
 	require_once( './TypeRenderer.php' );
+	require_once( './ServiceRenderer.php' );
+	require_once( './PluginRenderer.php' );
+	require_once( './SectionRenderer.php' );
 }
 
 function check_args($argv) {
@@ -127,28 +134,3 @@ function inactivate_pkgmkr($off) {
 	}
 }
 
-// {{{ =================== Service Mthods  ====================
-
-function convert_servicename($file, $service, $className){
-	$tmp_file = preg_replace("/service/", strtolower($service), $file);
-	return preg_replace("/ServiceClass/", $className, $tmp_file);
-}
-
-function render_service_files($config, $dir, $files) {
-	if( !empty( $config['services'] ) ){
-		foreach($config['services'] as $service => $params) {
-			global $gBitSmarty;
-			$params['name'] = $service;
-			$gBitSmarty->assign('service', $params);
-			foreach ($files as $file) {
-				$pkg_file = PackageRenderer::convertName(convert_servicename($file, $service, $params), $config);
-				$template = $file.".tpl";
-				$prefix = PackageRenderer::getTemplatePrefix($file, $params);
-				// Render the file
-				PackageRenderer::renderFile($dir, $pkg_file, $template, $config, $prefix);
-			}
-		}
-	}
-}
-
-// }}} -- end of Service Methods

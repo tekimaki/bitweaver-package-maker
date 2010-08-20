@@ -184,7 +184,7 @@ abstract class aRenderer{
 		exec("php -l $filename", $output, $ret);
 		if ($ret != 0) {
 			error("ERROR: The generated file: $filename is invalid.", FALSE);
-			error($output);
+			error($output, FALSE);
 		}
 	}
 

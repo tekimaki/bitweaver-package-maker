@@ -40,11 +40,11 @@ class ServiceRenderer extends aRenderer{
 				$params['name'] = $service;
 				$gBitSmarty->assign('service', $params);
 				foreach ($files as $file) {
-					$pkg_file = PackageRenderer::convertName(ServiceRendere::convertName($file, $service, $params), $config);
+					$render_file = PackageRenderer::convertName(ServiceRendere::convertName($file, $service, $params), $config);
 					$template = $file.".tpl";
 					$prefix = ServiceRenderer::getTemplatePrefix($file, $params);
 					// Render the file
-					ServiceRenderer::renderFile($dir, $pkg_file, $template, $config, $prefix);
+					ServiceRenderer::renderFile($dir, $render_file, $template, $config, $prefix);
 				}
 			}
 		}
