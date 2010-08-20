@@ -69,21 +69,16 @@ function generate( $spec ){
 	}else{
 		// validate the entire spec file first
 		foreach( $spec as $key=>$config ){
-			if( !validate_factory_type( $key ) ){
+			$baseClass = 'aRenderer';
+			$targetClass = ucfirst($key).'Renderer';
+			if (!class_exists($targetClass) || !is_subclass_of($targetClass, $baseClass)){
 				error( $key." is an invalid config type.");
 			}
-			switch( $key ){
-			case 'package':
-				PackageRenderer::validateConfig($config);
-				break;
-			case 'plugin':
-				// not supported yet
-				return false;
-			}
+			$Renderer = new $targetClass;
+			$Renderer->validateConfig($config);
 		}
 		// process each config in the file
 		foreach( $spec as $key=>$config ){
-
 			$baseClass = 'aRenderer';
 			$targetClass = ucfirst($key).'Renderer';
 			if (class_exists($targetClass) && is_subclass_of($targetClass, $baseClass))
@@ -94,15 +89,6 @@ function generate( $spec ){
 			$Renderer->generate( $config );
 		}
 	}
-}
-
-function validate_factory_type( $key ){
-	switch( $key ){
-	case 'package':
-	case 'plugin':
-		return true;
-	}
-	return false;
 }
 
 function usage($argv) {
