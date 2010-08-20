@@ -30,10 +30,10 @@ function pkgmkr_setup() {
 
 	// Some constants that we tend to use without thinking
 	define("BIT_ROOT_PATH", $root);
-	define("KERNEL_PKG_PATH", $root.'/kernel/');
-	define("CONFIG_PKG_PATH", $root.'/config/');
-	define("UTIL_PKG_PATH", $root.'/util/');
-	define("PKGMKR_PKG_PATH", $root.'/pkgmkr/');
+	define("KERNEL_PKG_PATH", $root.'kernel/');
+	define("CONFIG_PKG_PATH", $root.'config/');
+	define("UTIL_PKG_PATH", $root.'util/');
+	define("PKGMKR_PKG_PATH", $root.'pkgmkr/');
 
 	// some convenient debugging tools
 	require_once( KERNEL_PKG_PATH.'bit_error_inc.php' );
