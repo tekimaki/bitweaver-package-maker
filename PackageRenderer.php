@@ -182,11 +182,11 @@ class PackageRenderer extends aRenderer{
 					break;
 				case "service":
 					if ( !empty( $config['services'] ) ) {
-						render_service_files($config, $dir, $files);
+						ServiceRenderer::renderFiles($config, $dir, $files);
 					}
 					break;
 				case "copy":
-					copy_files($config, $dir, $files);
+					$this->copyFiles($config, $dir, $files);
 					break;
 				default:
 					error("Unknown action: " . $action);
@@ -197,17 +197,17 @@ class PackageRenderer extends aRenderer{
 	}
 
 	public static function convertName( $file, $config, $params = array() ){
-		$pkg_file = preg_replace("/package/", $config['package'], $file);
-		return preg_replace("/Package/", $config['Package'], $pkg_file);
+		$tmp_file = preg_replace("/package/", $config['package'], $file);
+		return preg_replace("/Package/", $config['Package'], $tmp_file);
 	}
 
 	public static function renderFiles( $config, $dir, $files ){
 		foreach ($files as $file) {
-			$pkg_file = PackageRenderer::convertName($file, $config);
+			$render_file = PackageRenderer::convertName($file, $config);
 			$template = $file.".tpl";
 			$prefix = PackageRenderer::getTemplatePrefix($file, $config);
 			// Render the file
-			PackageRenderer::renderFile($dir, $pkg_file, $template, $config, $prefix);
+			PackageRenderer::renderFile($dir, $render_file, $template, $config, $prefix);
 		}
 	}
 
@@ -225,10 +225,10 @@ class PackageRenderer extends aRenderer{
 		$gBitSmarty->assign('config', $config);
 	}
 
-	public function copy_files($config, $dir, $files) {
+	public function copyFiles($config, $dir, $files) {
 		foreach ($files as $file) {
-			$pkg_file = PackageRenderer::convertName($file, $config);
-			$filename = $dir."/".$pkg_file;
+			$render_file = PackageRenderer::convertName($file, $config);
+			$filename = $dir."/".$render_file;
 
 			message(" ".$filename);
 
