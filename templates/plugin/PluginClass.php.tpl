@@ -172,4 +172,4 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/literal}}
 }
 
-{{include file="service_functions_inc.php.tpl" service=$config}}
+{{include file="plugin_service_functions_inc.php.tpl"}}

@@ -4,25 +4,22 @@
 
 // If package is active and the user has view auth then register the package menu
 if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermission( 'p_{{$config.package}}_view' ) ) {
-// include service functions
-{{foreach from=$config.typemap key=serviceName item=service}}
+	// service functions
 	require_once( CONFIG_PKG_PATH.'{{$config.package}}/plugins/{{$config.plugin}}/{{$service.class_name}}.php' );
 
-	define( 'LIBERTY_SERVICE_{{$serviceName|strtoupper}}', '{{$service.type}}' );
+	define( 'LIBERTY_SERVICE_{{$config.name|strtoupper}}', '{{$config.type}}' );
 
     $gLibertySystem->registerService(
-		LIBERTY_SERVICE_{{$serviceName|strtoupper}},
+		LIBERTY_SERVICE_{{$config.name|strtoupper}},
 		{{$PACKAGE}}_PKG_NAME,
         array(
-{{foreach from=$service.functions item=func}}
-			'{{$func}}_function' => '{{$serviceName}}_{{$func}}',
+{{foreach from=$config.services key=func item=typemaps}}
+			'{{$func}}_function' => '{{$config.name}}_{{$func}}',
 {{/foreach}}
         ),
         array(
-			'description' => '{{$service.description}}'
+			'description' => '{{$config.description}}'
         )
     );
-{{/foreach}}
-
 }
 
