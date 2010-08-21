@@ -3,7 +3,7 @@
 
 $tables = array(
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
-    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$serviceName}}
+    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$config.name}}
 {{/foreach}}
 {{foreach from=$config.tables key=tableName item=table}}
     {{include file="table_schema_inc.php.tpl" tableName=$tableName table=$table}}

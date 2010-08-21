@@ -123,10 +123,10 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 		}
 
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
-		if (empty($this->mSchema['{{$typeName}}_{{$typemapName}}'])) {
+		if (empty($this->mSchema['{{$config.name}}_{{$typemapName}}'])) {
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-	 		/* Schema for {{$fieldName}} */
-			$this->mSchema['{{$typeName}}_{{$typemapName}}']['{{$fieldName}}'] = array(
+	 		/* Schema for {{$config.name}} */
+			$this->mSchema['{{$config.name}}_{{$typemapName}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
 				'label' => '{{$field.name}}',
@@ -222,7 +222,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/literal}}
 
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
-{{include file="typemap_methods_inc.php.tpl"}}
+{{include file="typemap_methods_inc.php.tpl" type=$config}}
 {{/foreach}}
 {{/if}}
 {{literal}}

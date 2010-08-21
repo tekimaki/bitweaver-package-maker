@@ -22,7 +22,7 @@ class PluginRenderer extends aRenderer{
 
 	public function prepConfig( &$config ){ 
 		// Generate a few capitalization variations
-		$config['plugin'] = strtolower($config['plugin']);
+		$config['plugin'] = $config['name'] = strtolower($config['plugin']);
 		$config['PLUGIN'] = strtoupper($config['plugin']);
 		$config['Plugin'] = ucfirst(strtolower($config['plugin']));
 		$config['package'] = strtolower($config['package']);
