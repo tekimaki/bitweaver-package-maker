@@ -50,30 +50,6 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 	 * getSchema prepares the object for input verification
 	 */
 	public function getSchema() {
-		if (empty($this->mSchema['{{$config.name}}_data'])) {
-
-{{foreach from=$config.fields key=fieldName item=field name=fields}}
-	 		/* Schema for {{$fieldName}} */
-			$this->mSchema['{{$config.name}}_data']['{{$fieldName}}'] = array(
-				'name' => '{{$fieldName}}',
-				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
-				'help' => '{{$field.help}}',
-{{foreach from=$field.validator key=k item=v name=keys}}
-{{if $k != 'type'}}
-				'{{$k}}' => {{if is_array($v)}}array(
-{{foreach from=$v key=vk item=vv name=values}}
-					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
-
-{{/foreach}}
-					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
-
-{{/if}}
-{{/foreach}}
-			);
-{{/foreach}}
-		}
-
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 		if (empty($this->mSchema['{{$config.name}}_{{$typemapName}}'])) {
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
@@ -145,10 +121,10 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/foreach}}
 	}
 
-	function storeTypemaps( &$pParamHash ) {
+	function storeTypemaps( &$pParamHash, $skipVerify = TRUE ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// store {{$typemapName}} fieldset
-			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, TRUE);
+			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, $skipVerify);
 {{/foreach}}
 	}
 
@@ -196,4 +172,4 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/literal}}
 }
 
-{{include file="service_functions_inc.php.tpl"}}
+{{include file="service_functions_inc.php.tpl" service=$config}}
