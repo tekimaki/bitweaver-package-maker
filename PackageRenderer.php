@@ -145,10 +145,6 @@ class PackageRenderer extends aRenderer{
 		// Load the files we are to generate
 		$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'package.yaml');
 
-		// Now change directory to BIT_ROOT_PATH to generate the package in
-		// the root of this install.
-		chdir(BIT_ROOT_PATH);
-
 		// Locate all our templates.
 		$this->locateTemplates();
 
@@ -157,6 +153,10 @@ class PackageRenderer extends aRenderer{
 
 		// Initialize smarty
 		$this->initSmarty($config);
+
+		// Now change directory to BIT_ROOT_PATH to generate the package in
+		// the root of this install.
+		chdir(BIT_ROOT_PATH);
 
 		// Now figure out the real directory and file names
 		foreach ($gFiles as $file_dir => $actions) {
