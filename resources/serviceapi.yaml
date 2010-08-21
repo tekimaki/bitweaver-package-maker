@@ -13,10 +13,12 @@ functions:
   - content_expunge
   - content_user_perms
   - content_verify_access
+  - content_admin
+  - content_schema_inc
   - comment_store
   - user_register
-  - commerce_pre_purchase_function
-  - commerce_post_purchase_function
+  - commerce_pre_purchase
+  - commerce_post_purchase
 files:
   - content_edit_tab
   - content_list_options
