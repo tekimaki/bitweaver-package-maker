@@ -37,65 +37,17 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 		$this->mContentId = $pContentId;
 	}
 
-	/**
-	 * previewFields prepares the fields in this type for preview
-	 */
-	function previewFields(&$pParamHash) {
-		$this->prepVerify();
-		LibertyValidator::preview(
-		$this->mVerification['{{$config.name}}_data'],
-			$pParamHash['{{$config.name}}'],
-			$this->mInfo);
-	}
+	
+    /**
+     * Check mContentId to establish if the object has been loaded with a valid record
+     */
+    function isValid() {
+        return( BitBase::verifyId( $this->mContentId ) );
+    }
+
 
 	/**
-	 * validateFields validates the fields in this type
-	 */
-	function validateFields(&$pParamHash) {
-		$this->prepVerify();
-		LibertyValidator::validate(
-			$this->mVerification['{{$config.name}}_data'],
-			$pParamHash['{{$config.name}}'],
-			$this, $pParamHash['{{$config.name}}_store']);
-	}
-
-	/**
-	 * prepVerify prepares the object for input verification
-	 */
-	function prepVerify() {
-		if (empty($this->mVerification['{{$config.name}}_data'])) {
-
-{{foreach from=$config.fields key=fieldName item=field name=fields}}
-	 		/* Validation for {{$fieldName}} */
-{{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
-			$this->mVerification['{{$config.name}}_data']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
-				'name' => '{{$fieldName}}',
-{{foreach from=$field.validator key=k item=v name=keys}}
-{{if $k != 'type'}}
-				'{{$k}}' => {{if is_array($v)}}array(
-{{foreach from=$v key=vk item=vv name=values}}
-					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
-
-{{/foreach}}
-					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
-
-{{/if}}
-{{/foreach}}
-			);
-{{elseif empty($field.validator.type)}}
-	$this->mVerification['{{$config.name}}_data']['null']['{{$fieldName}}'] = TRUE;
-{{/if}}
-{{/foreach}}
-
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-		// prepVerify {{$typemapName}} fieldset
-		$this->prep{{$typemapName|ucfirst}}Verify();
-{{/foreach}}
-		}
-	}
-
-	/**
-	 * prepVerify prepares the object for input verification
+	 * getSchema prepares the object for input verification
 	 */
 	public function getSchema() {
 		if (empty($this->mSchema['{{$config.name}}_data'])) {
@@ -223,6 +175,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{include file="typemap_methods_inc.php.tpl" type=$config}}
+
 {{/foreach}}
 {{/if}}
 {{literal}}
