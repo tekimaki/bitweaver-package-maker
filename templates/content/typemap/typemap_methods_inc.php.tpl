@@ -66,7 +66,7 @@
 {{if !$typemap.sequence}}	 * uses bulk delete to avoid storage of duplicate records{{/if}} 
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-{{if !$typemap.sequence}}
+{{if !$typemap.sequence && $typemap.relation != 'one-to-one'}}
 		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
@@ -130,7 +130,7 @@
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
 			$whereSql = " WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
-		} else {
+		} elseif( $this->isValid() ){
 			$bindVars[] = $this->mContentId;
 			$whereSql = " WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
 		}
