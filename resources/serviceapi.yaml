@@ -1,0 +1,31 @@
+---
+sql:
+  - content_load_sql
+  - content_list_sql
+functions:
+  - content_load
+  - content_display
+  - content_list
+  - content_list_history
+  - content_preview
+  - content_edit
+  - content_store
+  - content_expunge
+  - content_user_perms
+  - content_verify_access
+  - comment_store
+  - user_register
+  - commerce_pre_purchase_function
+  - commerce_post_purchase_function
+files:
+  - content_edit_tab
+  - content_list_options
+  - content_list_sort
+  - content_list_actions
+  - content_upload_tab
+  - content_edit_mini
+  - content_view
+  - content_nav
+  - content_icon
+  - content_list
+  - user_register_inc

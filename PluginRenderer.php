@@ -17,7 +17,34 @@
 
 class PluginRenderer extends aRenderer{
 	public static function validateConfig( $config ){ 
-		// todo 
+		$vFile = 'plugin_validation.yaml';
+		$errors = array();
+		// This is a first pass at using a validation file 
+		// Move to aRendere when more developed
+		// Load the files we are to generate
+		$configDefs = Spyc::YAMLLoad(RESOURCE_DIR.$vFile);
+		foreach( $configDefs as $config_value=>$config_def ){
+			switch( $config_def['type'] ){
+			case 'string':
+				if( empty($config[$config_value]) || !is_string($config[$config_value]) )
+					$errors[$config_value] = $config_def['error'];
+				break;
+			case 'array':
+				if( empty($config[$config_value]) || !is_array($config[$config_value]) )
+					$errors[$config_value] = $config_def['error'];
+				break;
+			default:
+				error( 'unknown config type '.$config_def['type'].' in validation requirements for config value '.$config_value.' in file '.$vFile);
+				die;
+			}
+		}
+		// Output any errors
+		if( !empty( $errors ) ){ 
+			foreach ( $errors as $error_type=>$msg ){
+				error( 'Config error:'.$error_type." - ".$msg, FALSE );
+			}
+			die;
+		}
 	}
 
 	public function prepConfig( &$config ){ 
@@ -37,11 +64,27 @@ class PluginRenderer extends aRenderer{
 		if( empty( $config['base_package'] ) )
 			$config['base_package'] = 'Liberty'; 
 
-		// set default base package
+		// set default base class
 		if( empty( $config['base_class'] ) )
 			$config['base_class'] = 'LibertyBase'; 
 
-		// set default base class
+		// prep service-typemap association hash
+		$services = Spyc::YAMLLoad(RESOURCE_DIR.'serviceapi.yaml');
+		foreach( $services as $type=>$slist ){
+			switch( $type ){
+			case 'sql':
+			case 'functions':
+				foreach( $slist as $func ){
+					foreach( $config['typemaps'] as $typemapName=>$typemap ){
+						if( in_array( $func, $typemap['services'] ) ){
+							$config['services'][$func][] = $typemapName;
+						}
+					}
+				}
+				break;
+			}
+		}
+
 		return $config;
 	}
 
@@ -51,10 +94,6 @@ class PluginRenderer extends aRenderer{
 		// Load the files we are to generate
 		$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'plugin.yaml');
 
-		// Now change directory to CONFIG_PKG_PATH to generate the package in
-		// the root of this install.
-		chdir( CONFIG_PKG_PATH.$config['package'].'/plugins/' );
-
 		// Locate all our templates.
 		$this->locateTemplates();
 
@@ -63,6 +102,10 @@ class PluginRenderer extends aRenderer{
 
 		// Initialize smarty
 		$this->initSmarty($config);
+
+		// Now change directory to CONFIG_PKG_PATH to generate the package in
+		// the root of this install.
+		chdir( CONFIG_PKG_PATH.$config['package'].'/plugins/' );
 
 		// Now figure out the real directory and file names
 		foreach ($gFiles as $file_dir => $actions) {
