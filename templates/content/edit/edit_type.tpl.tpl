@@ -54,16 +54,16 @@
 						{formfeedback warning=$errors.store}
 
 {{if $type.title}}
-						<div class="row">
+						<div class="row" id="row_title">
 							{formfeedback warning=$errors.title}
-							{formlabel label="Title" for="title"}
+							{formlabel label="{{$type.fields.title.name|default:'Title'}}" for="title"}
 							{forminput}
 								<input type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
 {{/if}}
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
-{{if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary'}}
+{{if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary' && $fieldName !='title'}}
 						<div class="row" id="row_{{$type.name}}_{{$fieldName}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
 							{formfeedback warning=$errors.{{$fieldName}}}
 							{formlabel label="{{$field.name|capitalize}}" for="{{$fieldName}}"}
