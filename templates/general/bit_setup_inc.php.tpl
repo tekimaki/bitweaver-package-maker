@@ -44,5 +44,9 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
 {{/foreach}}
 {{/if}}
 
+{{if $config.pluggable}}
+$gLibertySystem->loadPackagePlugins( {{$PACKAGE}}_PKG_NAME );
+{{/if}}
+
 }
 

@@ -12,12 +12,6 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{{$package}}' );
 
-$typeIds = array(
-{{foreach from=$config.types key=typeName item=type name=types}}
-		"{{$typeName}}_id"{{if !$smarty.foreach.types.last}},{{/if}}
-{{/foreach}}
-	);
-
 // if a content type key id is requested load it up
 $requestType = NULL;
 foreach( $_REQUEST as $key => $val ) {
@@ -25,6 +19,46 @@ foreach( $_REQUEST as $key => $val ) {
 		$requestType = substr($key, 0, -3);
 		break;
 	}
+}
+
+// Define content lookup keys
+$typeNames = array(
+{{foreach from=$config.types key=typeName item=type name=types}}
+{{if in_array('title',$type.lookup_by)}}
+		"{{$typeName}}_name"{{if !$smarty.foreach.types.last}},{{/if}}
+{{/if}}
+{{/foreach}}
+	);
+$typeIds = array(
+{{foreach from=$config.types key=typeName item=type name=types}}
+		"{{$typeName}}_id"{{if !$smarty.foreach.types.last}},{{/if}}
+{{/foreach}}
+	);
+$typeContentIds = array(
+{{foreach from=$config.types key=typeName item=type name=types}}
+		"{{$typeName}}_content_id"{{if !$smarty.foreach.types.last}},{{/if}}
+{{/foreach}}
+	);
+
+// If a content type key id is requested load it up
+$requestType = NULL;
+$requestKeyType = NULL;
+foreach( $_REQUEST as $key => $val ) {
+    if (in_array($key, $typeNames)) {
+        $requestType = substr($key, 0, -5);
+        $requestKeyType = 'name';
+        break;
+    }
+    elseif (in_array($key, $typeIds)) {
+        $requestType = substr($key, 0, -3);
+        $requestKeyType = 'id';
+        break;
+    }
+    elseif (in_array($key, $typeContentIds)) {
+        $requestType = substr($key, 0, -10);
+        $requestKeyType = 'content_id';
+        break;
+    }
 }
 
 {{if $config.homeable}}
@@ -36,7 +70,9 @@ if (empty($requestType)) {
 {{/if}}
 
 // If there is an id to get, specified or default, then attempt to get it and display
-if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
+if( !empty( $_REQUEST[$requestType.'_name'] ) ||
+    !empty( $_REQUEST[$requestType.'_id'] ) ||
+    !empty( $_REQUEST[$requestType.'_content_id'] ) ) {
 	// Look up the content
 	require_once( {{$PACKAGE}}_PKG_PATH.'lookup_'.$requestType.'_inc.php' );
 
@@ -52,9 +88,27 @@ if( !empty( $_REQUEST[$requestType.'_id'] ) ) {
 	// Now check permissions to access this content
 	$gContent->verifyViewPermission();
 
-    // Call display services
-    $displayHash = array( 'perm_name' => $gContent->mViewContentPerm );
-    $gContent->invokeServices( 'content_display_function', $displayHash );
+	{{if $config.pluggable}}
+	// If package plugin section is specified invoke the related service - it is responsible for displaying the section
+	if( !empty( $_REQUEST['section'] ) ){
+		// Someone is trying an attack - piss off
+		if (preg_match("/[a-z_]/", $_REQUEST['section']) != 1) { 
+			$gBitSystem->fatalError( tra('nice try') );
+		}elseif( !function_exists( 'content_section_'.$_REQUEST['section'].'_func' ) ){
+			$gBitSystem->fatalError( tra('unknown section' ) );
+		}else{
+			$gLibertySystem->invokeService( 'content_section_'.$_REQUEST['section'].'_func', $_REQUEST );
+
+			// Display the plugin template
+			$gBitSystem->display( 'bitpackage:config/{{$package}}/plugins/templates/content_display_section_'.$_REQUEST['section'].'.tpl', htmlentities($gContent->getField('title', '{{$Package}} '.ucfirst($_REQUEST['section']))) , array( 'display_mode' => 'display' ));
+			die;
+		}
+	}
+	{{/if}}
+
+	// Call display services
+	$displayHash = array( 'perm_name' => $gContent->mViewContentPerm );
+	$gContent->invokeServices( 'content_display_function', $displayHash );
 
 	// Add a hit to the counter
 	$gContent->addHit();

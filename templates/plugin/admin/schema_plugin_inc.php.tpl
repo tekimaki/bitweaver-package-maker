@@ -21,58 +21,40 @@ foreach( array_keys( $tables ) AS $tableName ) {
 
 // Sequences
 $gBitInstaller->registerSchemaSequences( {{$PACKAGE}}_PKG_NAME, array (
-{{foreach from=$config.types key=typeName item=type name=types}}
-	'{{$typeName}}_data_id_seq' => array( 'start' => 1 ),
-{{foreach from=$type.typemaps key=typemapName item=typemap}}
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.sequence}}
-	'{{$typeName}}_{{$typemapName}}_id_seq' => array( 'start' => 1 ),
+	'{{$config.name}}_{{$typemapName}}_id_seq' => array( 'start' => 1 ),
 {{/if}}
-{{/foreach}}
 {{/foreach}}
 ));
 
 // Schema defaults
 $defaults = array(
-{{foreach from=$config.types key=typeName item=type name=types}}
-{{foreach from=$type.defaults item=default}}
-	"INSERT INTO `{{$typeName}}_data` {{$default}}"{{if !$smarty.foreach.types.last}},{{/if}}
+{{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
+{{foreach from=$typemap.defaults item=default}}
+	"INSERT INTO `{{$typemapName}}_data` {{$default}}"{{if !$smarty.foreach.typemaps.last}},{{/if}}
 {{/foreach}}{{/foreach}}
 );
 if (count($defaults) > 0) {
 	$gBitInstaller->registerSchemaDefault( {{$PACKAGE}}_PKG_NAME, $defaults);
 }
 
-
 // User Permissions
 $gBitInstaller->registerUserPermissions( {{$PACKAGE}}_PKG_NAME, array(
-{{foreach from=$config.types key=typeName item=type name=types}}
-	array ( 'p_{{$typeName}}_create' , 'Can create a {{$typeName}} entry'   , '{{$type.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typeName}}_view'   , 'Can view {{$typeName}} entries'     , '{{$type.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typeName}}_update' , 'Can update any {{$typeName}} entry' , '{{$type.permissions.default.update|default:editors}}'    , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typeName}}_expunge', 'Can delete any {{$typeName}} entry' , '{{$type.permissions.default.expunge|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typeName}}_admin'  , 'Can admin any {{$typeName}} entry'  , '{{$type.permissions.default.admin|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+{{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
+	array ( 'p_{{$typemapName}}_service_create' , 'Can create a {{$typemapName}} entry'   , '{{$typemap.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$typemapName}}_service_view'   , 'Can view {{$typemapName}} entries'     , '{{$typemap.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$typemapName}}_service_update' , 'Can update any {{$typemapName}} entry' , '{{$typemap.permissions.default.update|default:editors}}'    , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$typemapName}}_service_expunge', 'Can delete any {{$typemapName}} entry' , '{{$typemap.permissions.default.expunge|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$typemapName}}_service_admin'  , 'Can admin any {{$typemapName}} entry'  , '{{$typemap.permissions.default.admin|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
 {{/foreach}}
 ));
 
-// Default Preferences
-$gBitInstaller->registerPreferences( {{$PACKAGE}}_PKG_NAME, array(
-{{foreach from=$config.types key=typeName item=type name=types}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$typeName}}_default_ordering'      , '{{$typeName}}_id_desc' ),
-{{*	array ( {{$PACKAGE}}_PKG_NAME , 'list_{{$typeName}}_id'               , 'y'              ), *}}
-{{if $type.title}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$typeName}}_list_title'            , 'y'              ),
-{{/if}}
-{{if $type.summary}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$typeName}}_list_summary'          , 'y'              ),
-{{/if}}
-{{if $config.homeable}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$package}}_{{$typeName}}_home_id'               , 0                ),
-{{if $smarty.foreach.types.first}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$package}}_home_type'                    , 'bit{{$typeName}}'      ),
-{{/if}}
-{{/if}}
+// Service Preferences
+{{* currently passes guid as string - cant assume constants are defined - since they are defined in classes*}}
+{{foreach from=$config.content_types item=ctypes}}
+$gBitInstaller->registerServicePreferences( '{{$config.type}}', array( {{foreach from=$ctypes item=ctype}}'{{$ctype}}',{{/foreach}}) );
 {{/foreach}}
-));
 
 // Requirements
 /* add the time of generation of this package there is no means for plugins to add requirements */
