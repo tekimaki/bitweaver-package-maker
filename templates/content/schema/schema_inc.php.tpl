@@ -1,6 +1,28 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 {{include file="php_file_header.tpl"}}
 
+global $gBitSystem;
+
+// Requirements
+$gBitSystem->registerRequirements( {{$PACKAGE}}_PKG_NAME, array(
+{{if empty($config.requirements)}}
+	'liberty' => array( 'min' => '2.1.0' ),
+{{else}}{{foreach from=$config.requirements key=pkg item=reqs name=reqs}}
+	'{{$pkg}}' => array( {{foreach from=$reqs key=k item=v name=values}}'{{$k}}' => '{{$v}}',{{/foreach}} ),
+{{/foreach}}
+{{/if}}
+));
+
+$gBitSystem->registerPackageInfo( {{$PACKAGE}}_PKG_NAME, array(
+	'description' => "{{$config.description}}",
+	{{if $config.license}}'license' => '{{if $config.license.url}}<a href="{{$config.license.url}}">{{/if}}{{$config.license.name}}{{if $config.license.url}}</a>{{/if}}',{{/if}}
+));
+
+
+// Install process
+global $gBitInstaller;
+if( is_object( $gBitInstaller ) ){
+
 $tables = array(
 {{* content types *}}
 {{foreach from=$config.types key=typeName item=type}}
@@ -22,16 +44,9 @@ $tables = array(
 {{/foreach}}
 );
 
-global $gBitInstaller;
-
 foreach( array_keys( $tables ) AS $tableName ) {
 	$gBitInstaller->registerSchemaTable( {{$PACKAGE}}_PKG_NAME, $tableName, $tables[$tableName] );
 }
-
-$gBitInstaller->registerPackageInfo( {{$PACKAGE}}_PKG_NAME, array(
-	'description' => "{{$config.description}}",
-	{{if $config.license}}'license' => '{{if $config.license.url}}<a href="{{$config.license.url}}">{{/if}}{{$config.license.name}}{{if $config.license.url}}</a>{{/if}}',{{/if}}
-));
 
 // $indices = array();
 // $gBitInstaller->registerSchemaIndexes( {{$PACKAGE}}_PKG_NAME, $indices );
@@ -93,14 +108,9 @@ $gBitInstaller->registerPreferences( {{$PACKAGE}}_PKG_NAME, array(
 {{/foreach}}
 ));
 
-// Requirements
-$gBitInstaller->registerRequirements( {{$PACKAGE}}_PKG_NAME, array(
-{{if empty($config.requirements)}}
-	'liberty' => array( 'min' => '2.1.0' ),
-{{else}}{{foreach from=$config.requirements key=pkg item=reqs name=reqs}}
-	'{{$pkg}}' => array( {{foreach from=$reqs key=k item=v name=values}}'{{$k}}' => '{{$v}}',{{/foreach}} ),
-{{/foreach}}
+{{if $config.pluggable}}
+// Process plugin settings
+$gBitInstaller->loadPackagePluginSchemas( {{$PACKAGE}}_PKG_NAME );
 {{/if}}
 
-));
-
+}
