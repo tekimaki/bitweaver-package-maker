@@ -140,9 +140,13 @@ class PluginRenderer extends aRenderer{
 
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = $file;
+		// rename plugin_schema_inc file to schema_inc
+		$tmp_file = preg_replace("plugin_schema_inc", "schema_inc", $tmp_file);
+		// swop plugin as keyword
 		if( !empty( $params['plugin'] ) ){
 			$tmp_file = preg_replace("/plugin/", strtolower($params['plugin']), $tmp_file);
 		}
+		// set plugin Class name
 		if( !empty( $config['class_name'] ) ){
 			$tmp_file = preg_replace("/PluginClass/", $config['class_name'], $tmp_file);
 		}
