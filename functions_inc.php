@@ -20,10 +20,6 @@ function pkgmkr_setup() {
 	// Avoid anoying errors about timezone
 	ini_set('date.timezone', 'GMT');
 
-	// Define where we get some resources from.
-	// Files to be copied will come from here.
-	define("RESOURCE_DIR", "resources/");
-
 	// Where is the root?
 	$script_path = $_SERVER['PWD'] .'/'. $_SERVER["SCRIPT_FILENAME"];
 	$root = preg_replace('|pkgmkr/generate\.php|', '', preg_replace('|/./|', '/', $script_path));
@@ -34,6 +30,10 @@ function pkgmkr_setup() {
 	define("CONFIG_PKG_PATH", $root.'config/');
 	define("UTIL_PKG_PATH", $root.'util/');
 	define("PKGMKR_PKG_PATH", $root.'pkgmkr/');
+
+	// Define where we get some resources from.
+	// Files to be copied will come from here.
+	define("RESOURCE_DIR", PKGMKR_PKG_PATH . "resources/");
 
 	// some convenient programming tools
 	require_once( KERNEL_PKG_PATH.'kernel_lib.php' );
@@ -51,12 +51,12 @@ function pkgmkr_setup() {
 		spl_autoload_register('pkgmkr_autoloader');
 	}
 	*/
-	require_once( './aRenderer.php' );
-	require_once( './PackageRenderer.php' );
-	require_once( './TypeRenderer.php' );
-	require_once( './ServiceRenderer.php' );
-	require_once( './PluginRenderer.php' );
-	require_once( './SectionRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'aRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'PackageRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'TypeRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'ServiceRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'PluginRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'SectionRenderer.php' );
 }
 
 function check_args($argv) {
