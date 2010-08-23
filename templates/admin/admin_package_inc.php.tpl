@@ -33,23 +33,23 @@ $form{{$typeName}}Lists = array(
 	),
 {{if $type.title}}
 	"{{$typeName}}_list_title" => array(
-		'label' => 'Title',
-		'note' => 'Display the title.',
+		'label' => '{{$type.fields.title.name|default:'Title'}}',
+		'note' => 'Display the {{$type.fields.title.name|default:'title'|strtolower}}.',
 	),
 {{/if}}
 {{if $type.summary}}
 	"{{$typeName}}_list_summary" => array(
 		'label' => '{{$type.fields.summary.name|default:'Summary'|capitalize}}',
-		'note' => 'Display the summary.',
+		'note' => 'Display the {{$type.fields.summary.name|default:'summary'|strtolower}}.',
 	),
 {{/if}}
 {{if $type.data}}
 	"{{$typeName}}_list_data" => array(
 		'label' => '{{$type.fields.data.name|default:'Body Text'|capitalize}}',
-		'note' => 'Display the body text.',
+		'note' => 'Display the {{$type.fields.data.name|default:'body'|strtolower}} text.',
 	),
 {{/if}}
-{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $fieldName != 'data' && $fieldName != 'summary'}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $fieldName != 'data' && $fieldName != 'summary' && $fieldName != 'title'}}
         "{{$typeName}}_list_{{$fieldName}}" => array(
 		'label' => '{{$field.name|default:$fieldName|capitalize}}',
 		'note' => 'Display the {{$fieldName}}',
@@ -143,3 +143,12 @@ $gBitSmarty->assign( 'homeTypes', array(
 {{/foreach}}
 	));
 {{/if}}
+
+{{if $config.pluggable}}
+// invoke content admin services
+{{foreach from=$config.types key=typeName item=type name=types}}
+${{$type.class_name}} = new {{$type.class_name}}();
+${{$type.class_name}}->invokeService( 'content_admin_function', $_REQUEST );
+{{/foreach}}
+{{/if}}
+
