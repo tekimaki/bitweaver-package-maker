@@ -108,6 +108,13 @@ $gBitInstaller->registerPreferences( {{$PACKAGE}}_PKG_NAME, array(
 {{/foreach}}
 ));
 
+// ### Register content types
+$gBitInstaller->registerContentObjects( {{$PACKAGE}}_PKG_NAME, array(
+{{foreach from=$config.types key=typeName item=type name=types}}
+    '{{$type.class_name}}'=>{{$PACKAGE}}_PKG_PATH.'{{$type.class_name}}.php',
+{{/foreach}}
+));
+
 {{if $config.pluggable}}
 // Process plugin settings
 $gBitInstaller->loadPackagePluginSchemas( {{$PACKAGE}}_PKG_NAME );
