@@ -82,9 +82,8 @@ class PackageRenderer extends aRenderer{
 							// default type inherited from validator settings
 							if( empty( $field['input']['type'] ) ){
 								if (!empty($field['validator']['type'])) {
-										$field['input']['type'] = $field['validator']['type'];
+									$field['input']['type'] = $field['validator']['type'];
 								} else {
-									vd($field);
 									error("No validator for $field.", true);
 								}
 							}
