@@ -22,7 +22,7 @@ class PluginRenderer extends aRenderer{
 		// This is a first pass at using a validation file 
 		// Move to aRendere when more developed
 		// Load the files we are to generate
-		$configDefs = Spyc::YAMLLoad(RESOURCE_DIR.$vFile);
+		$configDefs = Spyc::YAMLLoad(RESOURCE_PATH.$vFile);
 		foreach( $configDefs as $config_value=>$config_def ){
 			switch( $config_def['type'] ){
 			case 'string':
@@ -74,7 +74,7 @@ class PluginRenderer extends aRenderer{
 		}
 
 		// prep service-typemap association hash
-		$services = Spyc::YAMLLoad(RESOURCE_DIR.'serviceapi.yaml');
+		$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
 		foreach( $services as $type=>$slist ){
 			switch( $type ){
 			case 'sql':
@@ -106,7 +106,7 @@ class PluginRenderer extends aRenderer{
 		message("Generating plugin :".$config['plugin']);
 
 		// Load the files we are to generate
-		$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'plugin.yaml');
+		$gFiles = Spyc::YAMLLoad(RESOURCE_PATH.'plugin.yaml');
 
 		// Locate all our templates.
 		$this->locateTemplates();

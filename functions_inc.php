@@ -33,7 +33,7 @@ function pkgmkr_setup() {
 
 	// Define where we get some resources from.
 	// Files to be copied will come from here.
-	define("RESOURCE_DIR", PKGMKR_PKG_PATH . "resources/");
+	define("RESOURCE_PATH", PKGMKR_PKG_PATH . "resources/");
 
 	// some convenient programming tools
 	require_once( KERNEL_PKG_PATH.'kernel_lib.php' );

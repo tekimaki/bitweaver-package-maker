@@ -142,7 +142,7 @@ class PackageRenderer extends aRenderer{
 		message("Generating package: ".$config['package']);
 
 		// Load the files we are to generate
-		$gFiles = Spyc::YAMLLoad(RESOURCE_DIR.'package.yaml');
+		$gFiles = Spyc::YAMLLoad(RESOURCE_PATH.'package.yaml');
 
 		// Locate all our templates.
 		$this->locateTemplates();
@@ -231,7 +231,7 @@ class PackageRenderer extends aRenderer{
 
 			message(" ".$filename);
 
-			if (!copy(PKGMKR_PKG_PATH.'/'.RESOURCE_DIR.$file, $filename)) {
+			if (!copy(RESOURCE_PATH.$file, $filename)) {
 				error("Error copying file: $file");
 			}
 		}
