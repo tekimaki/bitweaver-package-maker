@@ -52,7 +52,7 @@
 	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 */
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( &$pParamHash ) ) {
+		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
 			if ( !empty( $pParamHash['{{$typemapName}}_store'] )){
 				$table = '{{$type.name}}_{{$typemapName}}';
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$typemapName}}_store'] );
