@@ -53,7 +53,7 @@ $gBitInstaller->registerUserPermissions( {{$PACKAGE}}_PKG_NAME, array(
 // Service Preferences
 {{* currently passes guid as string - cant assume constants are defined - since they are defined in classes*}}
 {{foreach from=$config.content_types item=ctypes}}
-$gBitInstaller->registerServicePreferences( '{{$config.type}}', array( {{foreach from=$ctypes item=ctype}}'{{$ctype}}',{{/foreach}}) );
+$gBitInstaller->registerServicePreferences( {{$PACKAGE}}_PKG_NAME, '{{$config.type}}', array( {{foreach from=$ctypes item=ctype}}'{{$ctype}}',{{/foreach}}) );
 {{/foreach}}
 
 // Requirements

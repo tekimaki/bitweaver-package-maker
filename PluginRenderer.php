@@ -68,6 +68,11 @@ class PluginRenderer extends aRenderer{
 		if( empty( $config['base_class'] ) )
 			$config['base_class'] = 'LibertyBase'; 
 
+		// prep typemap data - @TODO move to typemap class
+		foreach( $config['typemaps'] as $typemapName=>$typemap ){
+			$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
+		}
+
 		// prep service-typemap association hash
 		$services = Spyc::YAMLLoad(RESOURCE_DIR.'serviceapi.yaml');
 		foreach( $services as $type=>$slist ){
@@ -77,7 +82,16 @@ class PluginRenderer extends aRenderer{
 				foreach( $slist as $func ){
 					foreach( $config['typemaps'] as $typemapName=>$typemap ){
 						if( in_array( $func, $typemap['services'] ) ){
-							$config['services'][$func][] = $typemapName;
+							$config['services']['functions'][$func][] = $typemapName;
+						}
+					}
+				}
+				break;
+			case 'files':
+				foreach( $slist as $file ){
+					foreach( $config['typemaps'] as $typemapName=>$typemap ){
+						if( in_array( $file, $typemap['services'] ) ){
+							$config['services']['files'][$file][] = $typemapName;
 						}
 					}
 				}
@@ -126,7 +140,7 @@ class PluginRenderer extends aRenderer{
 					break;
 				case "section":
 					if ( !empty( $config['sections'] ) ) {
-						SectionRenderer::renderFiles($config, $dir, $files );
+						// SectionRenderer::renderFiles($config, $dir, $files );
 					}
 					break;
 				default:
@@ -142,6 +156,8 @@ class PluginRenderer extends aRenderer{
 		$tmp_file = $file;
 		// rename plugin_schema_inc file to schema_inc
 		$tmp_file = preg_replace("/schema_plugin_inc/", "schema_inc", $tmp_file);
+		// rename service_edit_ tpls to service_edit_plugin_
+		// $tmp_file = preg_replace("/service_edit_/", "service_edit_plugin_", $tmp_file);
 		// swop plugin as keyword
 		if( !empty( $params['plugin'] ) ){
 			$tmp_file = preg_replace("/plugin/", strtolower($params['plugin']), $tmp_file);
@@ -150,16 +166,29 @@ class PluginRenderer extends aRenderer{
 		if( !empty( $config['class_name'] ) ){
 			$tmp_file = preg_replace("/PluginClass/", $config['class_name'], $tmp_file);
 		}
-		return $tmp_file; //preg_replace("/PluginClass/", $params['class_name'], $tmp_file);
+		return $tmp_file;
 	}
 
 	public static function renderFiles( $config, $dir, $files ){ 
 		foreach ($files as $file) {
-			$render_file = PluginRenderer::convertName($file, $config);
-			$template = $file.".tpl";
-			$prefix = PluginRenderer::getTemplatePrefix($file, $config);
-			// Render the file
-			PluginRenderer::renderFile($dir, $render_file, $template, $config, $prefix);
+			$render = TRUE;
+			switch( $file ){
+			case 'service_edit_mini_inc.tpl':
+				$render = in_array( 'content_edit_mini', array_keys($config['services']['files']) );
+				break;
+			case 'service_edit_tab_inc.tpl':
+				$render = in_array( 'content_edit_tab', array_keys($config['services']['files']) );
+				break;
+			default:
+				break;
+			}
+			if( $render ){
+				$render_file = PluginRenderer::convertName($file, $config);
+				$template = $file.".tpl";
+				$prefix = PluginRenderer::getTemplatePrefix($file, $config);
+				// Render the file
+				PluginRenderer::renderFile($dir, $render_file, $template, $config, $prefix);
+			}
 		}
 	}
 

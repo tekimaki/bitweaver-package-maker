@@ -26,6 +26,7 @@ files:
   - content_list_actions
   - content_upload_tab
   - content_edit_mini
+  - content_edit_tab
   - content_view
   - content_nav
   - content_icon

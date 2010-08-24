@@ -1,4 +1,4 @@
-{{foreach from=$config.services key=func item=typemaps}}
+{{foreach from=$config.services.functions key=func item=typemaps}}
 function {{$config.name}}_{{$func}}( $pObject, $pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{if $func eq 'content_load'}}

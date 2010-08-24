@@ -5,8 +5,12 @@ plugin:
     - plugin_inc.php
     - schema_plugin_inc.php
     - admin_plugin_inc.php
+plugin/templates:
+  plugin:
     - admin_plugin_inc.tpl
     - menu_plugin_admin_inc.tpl
+    - service_edit_tab_inc.tpl
+    - service_edit_mini_inc.tpl
   section:
     - display_section.tpl
     - edit_section_inc.tpl
