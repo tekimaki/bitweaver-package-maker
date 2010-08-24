@@ -21,5 +21,13 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 			'description' => '{{$config.description}}'
         )
     );
+
+/* =-=- CUSTOM BEGIN: setup_plugin -=-= */
+{{if !empty($customBlock.setup_plugin)}}
+{{$customBlock.setup_plugin}}
+{{else}}
+
+{{/if}}
+/* =-=- CUSTOM END: setup_plugin -=-= */
 }
 
