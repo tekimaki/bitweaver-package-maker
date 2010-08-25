@@ -10,7 +10,7 @@
 			{formfeedback warning=$errors.{{$fieldName}}}
 			{formlabel label="{{$field.name}}" for="{{$fieldName}}"}
 			{forminput}
-			{{include file="edit_field.tpl" type=$config}}
+			{{include file="edit_field.tpl" namespace=`$config.name`[`$typemapName`]}}
 			{{if $field.validator.required}}{required}{{/if}}
 			{formhelp note="{{$field.help}}"}
 			{/forminput}
