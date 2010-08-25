@@ -22,12 +22,12 @@ function {{$config.name}}_{{$func}}( $pObject, $pParamHash ){
 		{{$config.name}}_content_display( $pObject, $pParamHash );
 {{elseif $func eq 'content_store'}}
 		${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
-		if( !${{$config.name}}->store( $pParamHash ) ){
+		if( !${{$config.name}}->storeTypemaps( $pParamHash, FALSE ) ){
 			$pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
 		}
 {{elseif $func eq 'content_expunge'}}
 		${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
-		if( !${{$config.name}}->expunge() ){
+		if( !${{$config.name}}->expungeTypemaps() ){
 			$pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
 		}
 {{elseif $func eq 'content_load_sql'}}
