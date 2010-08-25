@@ -213,8 +213,10 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$this->mDb->StartTrans();
 			$table = BIT_DB_PREFIX."{{$type.name|lower}}_data";
 			if( $this->m{{$type.name|capitalize}}Id ) {
-				$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_store'], $locId );
+				if( !empty( $pParamHash['{{$type.name|lower}}_store'] ) ){
+					$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_store'], $locId );
+				}
 			} else {
 				$pParamHash['{{$type.name|lower}}_store']['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
 				if( @$this->verifyId( $pParamHash['{{$type.name|lower}}_id'] ) ) {
