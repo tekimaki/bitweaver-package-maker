@@ -148,7 +148,7 @@ $gBitSmarty->assign( 'homeTypes', array(
 // invoke content admin services
 {{foreach from=$config.types key=typeName item=type name=types}}
 ${{$type.class_name}} = new {{$type.class_name}}();
-${{$type.class_name}}->invokeService( 'content_admin_function', $_REQUEST );
+${{$type.class_name}}->invokeServices( 'content_admin_function', $_REQUEST );
 {{/foreach}}
 {{/if}}
 
