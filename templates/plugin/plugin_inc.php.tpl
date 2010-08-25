@@ -28,7 +28,7 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 			'description' => '{{$config.description}}'
         )
     );
-
+}
 /* =-=- CUSTOM BEGIN: setup_plugin -=-= */
 {{if !empty($customBlock.setup_plugin)}}
 {{$customBlock.setup_plugin}}
@@ -36,5 +36,5 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 
 {{/if}}
 /* =-=- CUSTOM END: setup_plugin -=-= */
-}
+
 
