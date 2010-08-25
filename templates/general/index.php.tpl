@@ -88,7 +88,7 @@ if( !empty( $_REQUEST[$requestType.'_name'] ) ||
 		}elseif( !function_exists( 'content_section_'.$_REQUEST['section'].'_func' ) ){
 			$gBitSystem->fatalError( tra('unknown section' ) );
 		}else{
-			$gLibertySystem->invokeService( 'content_section_'.$_REQUEST['section'].'_func', $_REQUEST );
+			$gLibertySystem->invokeServices( 'content_section_'.$_REQUEST['section'].'_func', $_REQUEST );
 
 			// Display the plugin template
 			$gBitSystem->display( 'bitpackage:config/{{$package}}/plugins/templates/content_display_section_'.$_REQUEST['section'].'.tpl', htmlentities($gContent->getField('title', '{{$Package}} '.ucfirst($_REQUEST['section']))) , array( 'display_mode' => 'display' ));
