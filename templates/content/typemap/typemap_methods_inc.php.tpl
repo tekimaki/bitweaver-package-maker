@@ -175,11 +175,21 @@
 	function validate{{$typemapName|ucfirst}}Fields(&$pParamHash) {
 		$this->prep{{$typemapName|ucfirst}}Verify();
 		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
+			LibertyValidator::validate(
+				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
+				$pParamHash['{{$type.name}}']['{{$typemapName}}'],
+				$this, $pParamHash['{{$typemapName}}_store']);
+		}
+	}
+
+	/**
+	 * validate{{$typemapName|ucfirst}}FieldsMixed validates the fields in this type
+	 */
+	function validate{{$typemapName|ucfirst}}FieldsMixed(&$pParamHash) {
+		$this->prep{{$typemapName|ucfirst}}Verify();
+		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
 			foreach($pParamHash['{{$type.name}}']['{{$typemapName}}'] as $key => &$data) {
-				LibertyValidator::validate(
-					$this->mVerification['{{$type.name}}_{{$typemapName}}'],
-					$pParamHash['{{$type.name}}']['{{$typemapName}}'][$key],
-					$this, $pParamHash['{{$typemapName}}_store'][$key]);
+				$this->validate{{$typemapName|ucfirst}}Fields( $pParamHash['{{$type.name}}']['{{$typemapName}}'][$key]);
 			}
 		}
 	}
