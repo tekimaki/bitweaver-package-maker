@@ -48,6 +48,19 @@
 		}
 	}
 {{else}}
+
+	/**
+	 * get{{$typemapName|ucfirst}}ByContentId
+	 */
+	function get{{$typemapName|ucfirst}}ByContentId( $pContentId ){
+		$ret = NULL;
+		if( $this->verifyId( $pContentId ) ){
+			$query = "SELECT * FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
+			$ret = $this->mDb->getOne( $query, array( $pContentId ) );
+		}
+		return $ret;
+	}
+
 	/**
 	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 */
@@ -60,7 +73,19 @@
 		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
 			if ( !empty( $pParamHash['{{$typemapName}}_store'] )){
 				$table = '{{$type.name}}_{{$typemapName}}';
+{{if $typemap.relation eq 'one-to-one' && $typemap.base_table eq 'liberty_content'}}
+				// record already exists, update it
+				if( $this->get{{$typemapName|ucfirst}}ByContentId( $pParamHash['{{$typemapName}}_store']['content_id'] ) ){
+					$locId = array( 'content_id' => $pParamHash['{{$typemapName}}_store']['content_id'] );
+					unset( $pParamHash['{{$typemapName}}_store']['content_id'] );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$typemapName}}_store'], $locId );
+				// create a new record
+				}else{
+					$result = $this->mDb->associateInsert( $table, $pParamHash['{{$typemapName}}_store'] );
+				}
+{{else}}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$typemapName}}_store'] );
+{{/if}}
 			}
 		}
 	}

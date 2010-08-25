@@ -635,7 +635,6 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			// verify {{$typemapName}} fieldset
 			$this->verify{{$typemapName|ucfirst}}($pParamHash);
 {{/foreach}}
-
 			return ( count($this->mErrors) == 0);
 	}
 
@@ -651,6 +650,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			// store {{$typemapName}} fieldset
 			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, TRUE);
 {{/foreach}}
+			return ( count($this->mErrors) == 0);
 	}
 
 	function expungeTypemaps() {
