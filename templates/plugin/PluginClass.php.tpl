@@ -57,7 +57,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 			$this->mSchema['{{$config.name}}_{{$typemapName}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
+				'label' => '{{$field.name|addslashes}}',
 				'help' => '{{$field.help}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}

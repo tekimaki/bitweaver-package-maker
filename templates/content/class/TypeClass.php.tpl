@@ -558,7 +558,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$this->mSchema['{{$type.name}}_data']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
+				'label' => '{{$field.name|addslashes}}',
 				'help' => '{{$field.help}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
@@ -582,7 +582,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$this->mSchema['{{$typeName}}_{{$typemapName}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
+				'label' => '{{$field.name|addslashes}}',
 				'help' => '{{$field.help}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
