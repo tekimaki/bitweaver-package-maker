@@ -23,6 +23,10 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 {{if $file eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
 			'{{$file}}_tpl' => 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}',
 {{/foreach}}
+{{if $config.sections}}
+			'content_section_function' => '{{$config.name}}_content_section',
+			'content_display_section_tpl' => 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl',
+{{/if}}
         ),
         array(
 			'description' => '{{$config.description}}'

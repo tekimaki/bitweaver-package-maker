@@ -85,13 +85,15 @@ if( !empty( $_REQUEST[$requestType.'_name'] ) ||
 		// Someone is trying an attack - piss off
 		if (preg_match("/[a-z_]/", $_REQUEST['section']) != 1) { 
 			$gBitSystem->fatalError( tra('nice try') );
-		}elseif( !function_exists( 'content_section_'.$_REQUEST['section'].'_func' ) ){
-			$gBitSystem->fatalError( tra('unknown section' ) );
 		}else{
-			$gLibertySystem->invokeServices( 'content_section_'.$_REQUEST['section'].'_func', $_REQUEST );
+			$sectionHash = $_REQUEST;
+			$gContent->invokeServices( 'content_section_function', $sectionHash );
+			if( empty( $sectionHash['has_section'] ) ){
+				$gBitSystem->fatalError( tra('unknown section' ) );
+			}
 
 			// Display the plugin template
-			$gBitSystem->display( 'bitpackage:config/{{$package}}/plugins/templates/content_display_section_'.$_REQUEST['section'].'.tpl', htmlentities($gContent->getField('title', '{{$Package}} '.ucfirst($_REQUEST['section']))) , array( 'display_mode' => 'display' ));
+			$gBitSystem->display( 'bitpackage:liberty/service_content_display_section.tpl', htmlentities($gContent->getField('title', '{{$Package}} '.ucfirst($_REQUEST['section']))) , array( 'display_mode' => 'display' ));
 			die;
 		}
 	}

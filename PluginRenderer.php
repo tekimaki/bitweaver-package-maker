@@ -140,7 +140,7 @@ class PluginRenderer extends aRenderer{
 					break;
 				case "section":
 					if ( !empty( $config['sections'] ) ) {
-						// SectionRenderer::renderFiles($config, $dir, $files );
+						SectionRenderer::renderFiles($config, $dir, $files );
 					}
 					break;
 				default:
@@ -156,8 +156,6 @@ class PluginRenderer extends aRenderer{
 		$tmp_file = $file;
 		// rename plugin_schema_inc file to schema_inc
 		$tmp_file = preg_replace("/schema_plugin_inc/", "schema_inc", $tmp_file);
-		// rename service_edit_ tpls to service_edit_plugin_
-		// $tmp_file = preg_replace("/service_edit_/", "service_edit_plugin_", $tmp_file);
 		// swop plugin as keyword
 		if( !empty( $params['plugin'] ) ){
 			$tmp_file = preg_replace("/plugin/", strtolower($params['plugin']), $tmp_file);
@@ -172,6 +170,7 @@ class PluginRenderer extends aRenderer{
 	public static function renderFiles( $config, $dir, $files ){ 
 		foreach ($files as $file) {
 			$render = TRUE;
+			// optional files
 			switch( $file ){
 			case 'service_edit_mini_inc.tpl':
 				$render = in_array( 'content_edit_mini', array_keys($config['services']['files']) );
@@ -182,6 +181,7 @@ class PluginRenderer extends aRenderer{
 			default:
 				break;
 			}
+			// render
 			if( $render ){
 				$render_file = PluginRenderer::convertName($file, $config);
 				$template = $file.".tpl";

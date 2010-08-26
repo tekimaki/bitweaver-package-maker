@@ -52,11 +52,15 @@
 	/**
 	 * get{{$typemapName|ucfirst}}ByContentId
 	 */
-	function get{{$typemapName|ucfirst}}ByContentId( $pContentId ){
+	function get{{$typemapName|ucfirst}}ByContentId( $pContentId = NULL ){
 		$ret = NULL;
-		if( $this->verifyId( $pContentId ) ){
+		$contentId = !empty( $pContentId )?$pContentId:($this->isValid()?$this->mContentId:NULL);
+		if( $this->verifyId( $contentId ) ){
 			$query = "SELECT * FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
-			$ret = $this->mDb->getOne( $query, array( $pContentId ) );
+			$result = $this->mDb->query( $query, array( $contentId ) );
+            if( $result && $result->numRows() ) {
+                $ret = $result->fields;
+            } 
 		}
 		return $ret;
 	}

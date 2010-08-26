@@ -12,7 +12,7 @@ plugin/templates:
     - service_edit_tab_inc.tpl
     - service_edit_mini_inc.tpl
   section:
-    - display_section.tpl
+    - service_display_section.tpl
+    - display_section_inc.tpl
     - edit_section_inc.tpl
-    - edit_section_mini_inc.tpl
     - menu_plugin_inc.tpl

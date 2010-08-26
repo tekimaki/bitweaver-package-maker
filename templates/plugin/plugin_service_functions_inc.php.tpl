@@ -1,5 +1,5 @@
 {{foreach from=$config.services.functions key=func item=typemaps}}
-function {{$config.name}}_{{$func}}( $pObject, $pParamHash ){
+function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{if $func eq 'content_load'}}
 		{{* unknown need a model of behavior *}}
@@ -69,3 +69,21 @@ function {{$config.name}}_{{$func}}( $pObject, $pParamHash ){
 	}
 }
 {{/foreach}}
+{{* section handlers *}}
+{{if $config.sections}}
+function {{$config.name}}_content_section( $pObject, &$pParamHash ){
+	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
+		switch( $pParamHash['section'] ){
+{{foreach from=$config.sections key=sectionName item=section}}
+		case '{{$sectionName}}':
+{{/foreach}}
+			${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
+			$pObject->mInfo['{{$config.name}}']['{{$typemapName}}'] = ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId(); 
+{{/foreach}}
+			$pParamHash['has_section'] = TRUE;
+			break;
+		}
+	}
+}
+{{/if}}
