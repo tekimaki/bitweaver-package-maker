@@ -1,3 +1,9 @@
+{{if $field.input.type != 'parsed'}}
+	{formfeedback warning=$errors.{{$fieldName}}}
+	{formlabel label="{{$field.name}}" for="{{$fieldName}}"}
+	{forminput}
+{{/if}}
+
 {{if !empty($field.input.type)}}
 	{{if !$namespace}}{{assign var=namespace value=$type.name}}{{/if}}
     {{if $field.input.type=="choice"}}
@@ -28,13 +34,24 @@
     	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="string"}}
     	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
-	{{elseif $field.input.type=="textarea"}}
-			<textarea id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" rows="{{$field.input.rows|default:"20"}}">{$gContent->getField("{{$fieldName}}")}</textarea>
+    {{elseif $field.input.type=="textarea"}}
+	    <textarea id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" rows="{{$field.input.rows|default:"20"}}">{$gContent->getField("{{$fieldName}}")}</textarea>
+    {{elseif $field.input.type=="parsed"}}
+            {textarea label="{{$fieldName}}" error=$errors.{{$fieldName}} help="{{$field.help}}" noformat="true" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" rows="{{$field.input.rows|default:"20"}}"}{$gContent->getField("{{$fieldName}}")}{/textarea}
     {{elseif $field.input.type=="select"}}
 	{html_options id="{{$fieldName}}" options=${{$field.input.optionsHashName}} name="{{$namespace}}[{{$fieldName}}]" selected=$gContent->getField('{{$fieldName}}') {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}} }
     {{else}}
+    	    {* Default *}
     	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{/if}}
 {{else}}
+	{* No input type *}
 	<input type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldName}}" />
+{{/if}}
+
+{{if $field.validator.required}}{required}{{/if}}
+
+{{if $field.input.type != 'parsed'}}
+	{formhelp note="{{$field.help}}"}
+	{/forminput}
 {{/if}}

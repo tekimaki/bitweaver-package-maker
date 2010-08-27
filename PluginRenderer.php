@@ -193,9 +193,10 @@ class PluginRenderer extends aRenderer{
 	}
 
 	protected function initSmarty( &$config ){ 
+		global $gBitSmarty;
+
 		parent::initSmarty();
 
-		global $gBitSmarty;
 		// Assign package in various cases to the context for
 		// easier to read templates.
 		$gBitSmarty->assign('plugin', $config['plugin']);

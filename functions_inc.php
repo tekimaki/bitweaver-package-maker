@@ -64,6 +64,7 @@ function check_args($argv) {
 		usage($argv);
 	}
 	if (is_file($argv[1])) {
+		echo "Loading $argv[1]\n";
 		$yaml = Spyc::YAMLLoad($argv[1]);
 		return $yaml;
 	}

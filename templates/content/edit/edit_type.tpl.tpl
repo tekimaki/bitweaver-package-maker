@@ -65,13 +65,7 @@
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $field.validator.type != 'no-input' && $fieldName != 'data' && $fieldName != 'summary' && $fieldName !='title'}}
 						<div class="row" id="row_{{$type.name}}_{{$fieldName}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
-							{formfeedback warning=$errors.{{$fieldName}}}
-							{formlabel label="{{$field.name|capitalize}}" for="{{$fieldName}}"}
-							{forminput}
 							{{include file="edit_field.tpl"}}
-							{{if $field.validator.required}}{required}{{/if}}
-							{formhelp note="{{$field.help}}"}
-							{/forminput}
 						</div>
 {{/if}}
 {{/foreach}}

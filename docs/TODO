@@ -1,4 +1,8 @@
 ---
+typemap one-to-one parse:
+  We should add content_load function to services of plugins that are 
+  one-to-one automgaically.
+
 field set support: >
 
   It would be nice to suppport sub-maps of fields for one to many on

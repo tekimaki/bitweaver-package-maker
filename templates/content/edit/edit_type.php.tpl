@@ -38,10 +38,10 @@ if( isset( $_REQUEST["preview"] ) ) {
 	$gContent->verify( $_REQUEST );
 	// Put all the variables into the object
 	$gContent->preparePreview( $_REQUEST );
-	$gContent->invokeServices( 'content_preview_function' );
+	$gContent->invokeServices( 'content_preview_function', $_REQUEST );
 	$gBitSmarty->assign( 'preview', TRUE );
 } else {
-	$gContent->invokeServices( 'content_edit_function' );
+	$gContent->invokeServices( 'content_edit_function', $_REQUEST );
 }
 
 
@@ -56,9 +56,6 @@ foreach( ${{$field.input.optionsHashName}} as $key=>$value ){
 $gBitSmarty->assign_by_ref( '{{$field.input.optionsHashName}}', ${{$field.input.optionsHashName}}_list );
 {{/if}}
 {{/foreach}}
-
-
-$gContent->invokeServices( 'content_edit_function' );
 
 
 /* =-=- CUSTOM BEGIN: edit -=-= */

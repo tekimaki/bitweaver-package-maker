@@ -15,6 +15,24 @@
  FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.{{$typemapName}}_id = ?";
 			$ret = $this->mDb->getAssoc( $query, $bindVars );
 		}
+{{* Need a LibertyContent context to parse with which sucks. *}}
+{{assign var=parser value=false}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed' && !$parser}}
+		$parser = new LibertyContent($this->mContentId);
+		{{assign var=parser value=true}}
+{{/if}}
+{{/foreach}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed'}}
+		// Parse all the {{$fieldName}}
+		foreach ($ret as $key => &$data) {
+			$parseHash['data'] = $data['{{$fieldName}}'];
+			$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
+			$data['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
+		}
+{{/if}}
+{{/foreach}}
 		return $ret;
 	}
 
@@ -26,7 +44,7 @@
 			$table = '{{$type.name}}_{{$typemapName}}';
 			if( !empty( $pParamHash['{{$typemapName}}_store'] )){
 				foreach ($pParamHash['{{$typemapName}}_store'] as $key => &$data) {
-{{if $type.base_package == "liberty"}}
+{{if $type.base_package == "liberty" || $type.base_table == "liberty_content"}}
 					if (!empty($pParamHash['{{$type.name}}']['content_id'])) {
 						$data['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
 					} else {
@@ -180,6 +198,24 @@
 {{else}}
 		$ret = $this->mDb->getArray( $query, $bindVars );
 {{/if}}
+{{* Need a LibertyContent context to parse with which sucks. *}}
+{{assign var=parser value=false}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed' && !$parser}}
+		$parser = new LibertyContent($this->mContentId);
+		{{assign var=parser value=true}}
+{{/if}}
+{{/foreach}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed'}}
+		// Parse all the {{$fieldName}}
+		foreach ($ret as $key => &$data) {
+			$parseHash['data'] = $data['{{$fieldName}}'];
+			$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
+			$data['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
+		}
+{{/if}}
+{{/foreach}}
 		return $ret;
 	}
 
@@ -188,12 +224,28 @@
 	 */
 	 function preview{{$typemapName|ucfirst}}Fields(&$pParamHash) {
 		$this->prep{{$typemapName|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
-			foreach($pParamHash['{{$type.name}}']['{{$typemapName}}'] as $key => $data) {
+		if (!empty($pParamHash['{{$type.name}}'])) {
+			foreach($pParamHash['{{$type.name}}'] as $key => $data) {
 				LibertyValidator::preview(
-					$this->mVerification['{{$type.name}}_{{$typemapName}}'],
-					$pParamHash['{{$type.name}}']['{{$typemapName}}'][$key],
-					$this, $pParamHash['{{$typemapName}}_store'][$key]);
+					$this->mVerification['{{$type.name}}_'.$key],
+					$pParamHash['{{$type.name}}'][$key],
+					$pParamHash['{{$typemapName}}_store'][$key]);
+{{* Need a LibertyContent context to parse with which sucks. *}}
+{{assign var=parser value=false}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed' && !$parser}}
+		$parser = new LibertyContent($this->mContentId);
+		{{assign var=parser value=true}}
+{{/if}}
+{{/foreach}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed'}}
+				// Parse the {{$fieldName}}
+				$parseHash['data'] = $pParamHash['{{$typemapName}}_store'][$key]['{{$fieldName}}'];
+				$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
+				$pParamHash['{{$typemapName}}_store'][$key]['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
+{{/if}}
+{{/foreach}}
 			}
 		}
 	}

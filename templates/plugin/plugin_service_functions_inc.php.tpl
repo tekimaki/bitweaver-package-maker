@@ -3,6 +3,20 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{if $func eq 'content_load'}}
 		{{* unknown need a model of behavior *}}
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
+{{if $typemap.relation == "one-to-one"}}
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.type == 'parsed'}}
+{{if $typemap.relation == "one-to-one"}}
+		// Parse the {{$fieldName}}
+		$parseHash['data'] = $data['{{$fieldName}}'];
+		$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
+		$pObject->mInfo['parsed_{{$fieldName}}'] = $pObject->parseData($parseHash);
+{{/if}}
+{{/if}}
+{{/foreach}}
+{{/if}}
+{{/foreach}}
 {{elseif $func eq 'content_display'}}
 		if( $pObject->isValid() ) {
 			${{$config.name}} = new {{$config.class_name}}(); 
@@ -16,7 +30,13 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{elseif $func eq 'content_preview'}}
 		${{$config.name}} = new {{$config.class_name}}(); 
 		${{$config.name}}->previewTypemaps( $pParamHash );
-		$pObject->mInfo['{{$config.name}}'] = $pParamHash['{{$config.name}}'];
+		$pObject->mInfo['{{$config.name}}'] = $pParamHash['{{$config.name}}_store'];
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
+{{if $typemap.relation == "one-to-one"}}
+		// Merge one-to-one typemap {{$typemapName}}
+		$pObject->mInfo = array_merge( $pParamHash['{{$config.name}}_store']['{{$typemapName}}'], $pObject->mInfo );
+{{/if}}
+{{/foreach}}
 {{elseif $func eq 'content_edit'}}
 		// pass through to display to load up content data
 		{{$config.name}}_content_display( $pObject, $pParamHash );
