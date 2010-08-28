@@ -56,7 +56,12 @@ foreach( $_REQUEST as $key => $val ) {
 if (empty($requestType)) {
 	// Use the home type and home content
 	$requestType = $gBitSystem->getConfig("{{$package}}_home_type", "{{foreach from=$config.types key=typeName item=type name=types}}{{if $smarty.foreach.types.first}}{{$typeName}}{{/if}}{{/foreach}}");
-	$_REQUEST[$requestType.'_id'] = $gBitSystem->getConfig( "{{$package}}_".$requestType."_home_id" );
+    if( $gBitSystem->getConfig( '{{$package}}_home_format', 'list' ) == 'list' ){
+        include_once( {{$PACKAGE}}_PKG_PATH.'list_'.$requestType.'.php' );
+        die;
+    }else{
+		$_REQUEST[$requestType.'_id'] = $gBitSystem->getConfig( "{{$package}}_".$requestType."_home_id" );
+	}
 }
 {{/if}}
 
