@@ -16,9 +16,9 @@
 {{* @TODO need to run parseData on soem fields *}}
 <div>
 {{if $field.input.type == "parsed"}}
-{$gContent->mInfo['parsed_{{$fieldName}}')]}
+{$gContent->mInfo.parsed_{{$fieldName}}}
 {{else}}
-{$gContent->mInfo['{{$fieldName}}']}
+{$gContent->mInfo.{{$fieldName}}}
 {{/if}}
 </div>
 {{/if}}
