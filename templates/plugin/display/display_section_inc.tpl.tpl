@@ -30,4 +30,3 @@
 {{/if}}
 {* =-=- CUSTOM END: body -=-= *}
 </div>
-</div>
