@@ -110,6 +110,18 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{if $config.sections}}
 function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
+		// Check permissions on the section
+		global $gBitUser;
+		switch( $pParamHash['section'] ){
+{{foreach from=$config.sections key=sectionName item=section}}
+		case '{{$sectionName}}':
+{{foreach from=$section.typemaps item=typemapName}}{{if $typemapName != 'liberty'}}
+			$pObject->verifyUserPermission('p_{{$typemapName}}_service_view');
+{{/if}}{{/foreach}}
+			break;
+{{/foreach}}
+		}
+
 		switch( $pParamHash['section'] ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':

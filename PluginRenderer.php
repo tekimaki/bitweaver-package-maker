@@ -49,6 +49,18 @@ class PluginRenderer extends aRenderer{
 			PackageRenderer::prepFieldsConfig( $typemap, $config['typesmaps'][$typemapName], $excludeFields );
 		}
 
+		// prep sections so we know their typemaps
+		if (!empty($config['sections'])) {
+			foreach ($config['sections'] as &$section) {
+				if (!empty($section['fields'])) {
+					foreach ($section['fields'] as $map => $field) {
+						$typemap = array_keys($field);
+						$section['typemaps'][$typemap[0]] = $typemap[0];
+					}
+				}
+			}
+		}
+
 		// prep service-typemap association hash
 		$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
 		foreach( $services as $type=>$slist ){
@@ -78,7 +90,6 @@ class PluginRenderer extends aRenderer{
 				break;
 			}
 		}
-
 		return $config;
 	}
 

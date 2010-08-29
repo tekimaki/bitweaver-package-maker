@@ -1,4 +1,10 @@
 ---
+custom code blocks in services:
+  All generated service functions should have custom load blocks.
+
+typemap non one-to-one load:
+  We should auto generate the content_load function to query for these.
+
 typemap one-to-one parse:
   We should add content_load function to services of plugins that are 
   one-to-one automgaically.
