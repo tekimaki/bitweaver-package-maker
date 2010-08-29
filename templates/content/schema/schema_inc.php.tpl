@@ -102,7 +102,7 @@ $gBitInstaller->registerPreferences( {{$PACKAGE}}_PKG_NAME, array(
 {{if $config.homeable}}
 	array ( {{$PACKAGE}}_PKG_NAME , '{{$package}}_{{$typeName}}_home_id'               , 0                ),
 {{if $smarty.foreach.types.first}}
-	array ( {{$PACKAGE}}_PKG_NAME , '{{$package}}_home_type'                    , 'bit{{$typeName}}'      ),
+	array ( {{$PACKAGE}}_PKG_NAME , '{{$package}}_home_type'                    , '{{$typeName}}'      ),
 {{/if}}
 {{/if}}
 {{/foreach}}

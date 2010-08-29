@@ -40,7 +40,7 @@ function pkgmkr_setup() {
 	// some convenient debugging tools
 	require_once( KERNEL_PKG_PATH.'bit_error_inc.php' );
 
-	// create autoloader for classes
+	// @TODO create autoloader for classes - this doesnt work with some of the nested static class references
 	/* this just doesnt seem to work for nested classes or something
 	if( !spl_autoload_functions() || !in_array( 'pkgmkr_autoloader', spl_autoload_functions() ) ) {
 		function pkgmkr_autoloader($class) {
@@ -56,6 +56,7 @@ function pkgmkr_setup() {
 	require_once( PKGMKR_PKG_PATH . 'TypeRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'ServiceRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'PluginRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'GraphpluginRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'SectionRenderer.php' );
 }
 

@@ -113,6 +113,7 @@ if( !empty( $_REQUEST['{{$package}}_settings'] ) ){
 	simple_set_int( '{{$package}}_{{$typeName}}_home_id', {{$PACKAGE}}_PKG_NAME );
 {{/foreach}}
 	simple_set_value( '{{$package}}_home_type', {{$PACKAGE}}_PKG_NAME );
+	simple_set_value( '{{$package}}_home_format', {{$PACKAGE}}_PKG_NAME );
 {{/if}}
 }
 
@@ -130,11 +131,15 @@ $obj = new {{$type.class_name}}();
 $obj_data = $obj->getList( $_REQUEST );
 $gBitSmarty->assign_by_ref( '{{$typeName}}_data', $obj_data);
 
+$gBitSmarty->assign( 'homeFormatOptions', array( 'list'=>tra('List Content'), 'item'=>tra('Content Item') ));
+
 $gBitSmarty->assign( '{{$package}}_{{$typeName}}_home_id', 
 	$gBitSystem->getConfig( "{{$package}}_{{$typeName}}_home_id" ));
 
 {{/foreach}}
 
+$gBitSmarty->assign( '{{$package}}_home_format', 
+	$gBitSystem->getConfig( "{{$package}}_home_format" ));
 $gBitSmarty->assign( '{{$package}}_home_type', 
 	$gBitSystem->getConfig( "{{$package}}_home_type" ));
 $gBitSmarty->assign( 'homeTypes', array(
@@ -146,9 +151,7 @@ $gBitSmarty->assign( 'homeTypes', array(
 
 {{if $config.pluggable}}
 // invoke content admin services
-{{foreach from=$config.types key=typeName item=type name=types}}
-${{$type.class_name}} = new {{$type.class_name}}();
-${{$type.class_name}}->invokeServices( 'content_admin_function', $_REQUEST );
-{{/foreach}}
+global $gLibertySystem;
+$gLibertySystem->invokePackageServices( {{$PACKAGE}}_PKG_NAME, 'package_admin_function', $_REQUEST );
 {{/if}}
 

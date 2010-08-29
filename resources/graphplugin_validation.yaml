@@ -1,0 +1,6 @@
+---
+graphplugin: {type: string, error: A graphplugin value is required}
+description: {type: string, error: A description is required}
+package: {type: string, error: The primary package with with to associate the plugin is required}
+graph: {type: array, error: A graph is required}
+type: {type: string, error: A type guid for the plugin is required - it must be unique among the other service guids in use in your site}

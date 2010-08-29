@@ -3,7 +3,13 @@
 		{jstab title="{{$Package}} Home Settings"}
 			{legend legend="{{$Package}} Home Settings"}
 				<div class="row">
-					{formlabel label="{{$Package}} Home Type"}
+					{formlabel label="{{$Package}} Home Format"}
+					{forminput}
+					{html_options name='{{$package}}_home_format' options=$homeFormatOptions id="homeFormat{{$Package}}" selected=${{$package}}_home_format}
+					{/forminput}
+				</div>		
+				<div class="row">
+					{formlabel label="{{$Package}} Home Content Type"}
 					{forminput}
 						<select name="{{$package}}_home_type" id="home{{$Package}}">
 							{section name=ix loop=$homeTypes}
@@ -15,7 +21,7 @@
 {* Output for each type *}
 {{foreach from=$config.types key=typeName item=type name=types}}
 				<div class="row">
-					{formlabel label="Home {{$typeName|capitalize}}" for="home{{$typeName|capitalize}}"}
+					{formlabel label="Home {{$typeName|capitalize}} Content Item" for="home{{$typeName|capitalize}}"}
 					{forminput}
 						<select name="{{$package}}_{{$typeName}}_home_id" id="home{{$typeName|capitalize}}">
 							{section name=ix loop=${{$typeName}}_data}
@@ -24,7 +30,7 @@
 								<option>{tr}No records found{/tr}</option>
 							{/section}
 						</select>
-						{formhelp note="This is the {{$typeName}} that will be displayed when viewing the {{$package}} homepage if {{$Package}} Home Type above is set to {{$typeName}}"}
+						{formhelp note="This is the {{$typeName}} that will be displayed when viewing the {{$package}} homepage if {{$Package}} Home Format above is set to 'Content Item' and {{$Package}} Home Content Type above is set to {{$typeName}}"}
 					{/forminput}
 				</div>
 {* End foreach type *}

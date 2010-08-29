@@ -15,14 +15,23 @@
  * @subpackage functions
  */
 
-class PluginRenderer extends aRenderer{
+class GraphpluginRenderer extends PluginRenderer{
 	public static function validateConfig( $config ){ 
-		$vFile = 'plugin_validation.yaml';
+		$vFile = 'graphplugin_validation.yaml';
 		$errors = array();
-		parent::validateConfig( $config, $vFile, $errors );
+		// @TODO figureout a way to spec this in the validation yaml file
+		if( empty( $config['graph']['tail'] ) ){
+			$errors['graph:tail'] = 'You must specify a tail content id relation';
+		}
+		if( empty( $config['graph']['head'] ) ){
+			$errors['graph:head'] = 'You must specify a head content id relation';
+		}
+		aRenderer::validateConfig( $config, $vFile, $errors );
 	}
 
 	public function prepConfig( &$config ){ 
+		// pass graphplugin value to plugin
+		$config['plugin'] = $config['graphplugin'];
 		// Generate a few capitalization variations
 		$config['plugin'] = $config['name'] = strtolower($config['plugin']);
 		$config['PLUGIN'] = strtoupper($config['plugin']);
@@ -35,65 +44,20 @@ class PluginRenderer extends aRenderer{
 		if( empty( $config['class_name'] ) )
 			$config['class_name'] = ucfirst( $config['plugin'] ).'Plugin'; 
 
-		// set default base package
-		if( empty( $config['base_package'] ) )
-			$config['base_package'] = 'Liberty'; 
+		// force base package
+		$config['base_package'] = 'LibertyGraph'; 
 
-		// set default base class
-		if( empty( $config['base_class'] ) )
-			$config['base_class'] = 'LibertyBase'; 
+		// force base class
+		$config['base_class'] = 'LibertyEdge'; 
 
-		// prep typemap data - @TODO move to typemap class
-		foreach( $config['typemaps'] as $typemapName=>$typemap ){
-			$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-		}
+		// override plugin class
+		$config['templates'] = array( 'PluginClass.php' => 'graph' );
 
-		// prep sections so we know their typemaps
-		if (!empty($config['sections'])) {
-			foreach ($config['sections'] as &$section) {
-				if (!empty($section['fields'])) {
-					foreach ($section['fields'] as $map => $field) {
-						$typemap = array_keys($field);
-						$section['typemaps'][$typemap[0]] = $typemap[0];
-					}
-				}
-			}
-		}
-
-		// prep service-typemap association hash
-		$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
-		foreach( $services as $type=>$slist ){
-			switch( $type ){
-			case 'sql':
-			case 'functions':
-				foreach( $slist as $func ){
-					foreach( $config['typemaps'] as $typemapName=>$typemap ){
-						if( !empty( $typemap['services'] ) ){
-							if( in_array( $func, $typemap['services'] ) ){
-								$config['services']['functions'][$func][] = $typemapName;
-							}
-						}
-					}
-				}
-				break;
-			case 'files':
-				foreach( $slist as $file ){
-					foreach( $config['typemaps'] as $typemapName=>$typemap ){
-						if( !empty( $typemap['services'] ) ){
-							if( in_array( $file, $typemap['services'] ) ){
-								$config['services']['files'][$file][] = $typemapName;
-							}
-						}
-					}
-				}
-				break;
-			}
-		}
 		return $config;
 	}
 
 	public function generate( $config ){
-		message("Generating plugin :".$config['plugin']);
+		message("Generating plugin :".$config['graphplugin']);
 
 		// Load the files we are to generate
 		$gFiles = Spyc::YAMLLoad(RESOURCE_PATH.'plugin.yaml');
@@ -143,20 +107,15 @@ class PluginRenderer extends aRenderer{
 
 
 	public static function convertName( $file, $config, $params = array() ){
-		$tmp_file = $file;
-		// rename plugin_schema_inc file to schema_inc
-		$tmp_file = preg_replace("/schema_plugin_inc/", "schema_inc", $tmp_file);
-		// swop plugin as keyword
-		if( !empty( $params['plugin'] ) ){
-			$tmp_file = preg_replace("/plugin/", strtolower($params['plugin']), $tmp_file);
-		}
+		$tmp_file = parent::convertName( $file, $config, $params );
 		// set plugin Class name
 		if( !empty( $config['class_name'] ) ){
-			$tmp_file = preg_replace("/PluginClass/", $config['class_name'], $tmp_file);
+			$tmp_file = preg_replace("/graph_PluginClass/", $config['class_name'], $tmp_file);
 		}
 		return $tmp_file;
 	}
 
+	/*
 	public static function renderFiles( $config, $dir, $files ){ 
 		foreach ($files as $file) {
 			$render = TRUE;
@@ -174,11 +133,6 @@ class PluginRenderer extends aRenderer{
 					$render = in_array( 'content_edit_tab', array_keys($config['services']['files']) );
 				}
 				break;
-			case 'admin_plugin_inc.php':
-			case 'admin_plugin_inc.tpl':
-			case 'menu_plugin_admin_inc.tpl':
-				$render = !empty( $config['settings'] );
-				break;
 			default:
 				break;
 			}
@@ -192,22 +146,5 @@ class PluginRenderer extends aRenderer{
 			}
 		}
 	}
-
-	protected function initSmarty( &$config ){ 
-		global $gBitSmarty;
-
-		parent::initSmarty();
-
-		// Assign package in various cases to the context for
-		// easier to read templates.
-		$gBitSmarty->assign('plugin', $config['plugin']);
-		$gBitSmarty->assign('PLUGIN', $config['PLUGIN']);
-		$gBitSmarty->assign('Plugin', $config['Plugin']);
-		$gBitSmarty->assign('package', $config['package']);
-		$gBitSmarty->assign('PACKAGE', $config['PACKAGE']);
-		$gBitSmarty->assign('Package', $config['Package']);
-
-		// Assign the configuration to context
-		$gBitSmarty->assign('config', $config);
-	}
+	*/
 }

@@ -5,7 +5,7 @@
 		{jstab title="{{$Plugin}} Plugin Settings"}
 {{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}}
             {legend legend="{{$pkgSettingsName|ucfirst}} Features"}
-                {foreach from=$form{{$pkgSettingsName|ucfirst}} key=item item=output}
+				{foreach from=$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}} key=item item=output}
                     <div class="row">
 						{formlabel label=`$output.label` for=$item}
                         {forminput}

@@ -116,6 +116,20 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 			$pParamHash['has_section'] = TRUE;
 			break;
 		}
+		/* =-=- CUSTOM BEGIN: content_section_function -=-= */
+{{if !empty($customBlock.content_section_function)}}
+{{$customBlock.content_section_function}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: content_section_function -=-= */
 	}
+}
+{{/if}}
+
+{{* admin settings handlers *}}
+{{if $config.settings}}
+function {{$config.name}}_package_admin( &$pParamHash ){
+	include_once( CONFIG_PKG_PATH.'{{$package}}/plugins/{{$config.name}}/admin_plugin_inc.php' );
 }
 {{/if}}

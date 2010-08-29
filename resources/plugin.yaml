@@ -7,7 +7,7 @@ plugin:
     - admin_plugin_inc.php
 plugin/templates:
   plugin:
-    - admin_plugin_inc.tpl
+    - service_admin_inc.tpl
     - menu_plugin_admin_inc.tpl
     - service_edit_tab_inc.tpl
     - service_edit_mini_inc.tpl

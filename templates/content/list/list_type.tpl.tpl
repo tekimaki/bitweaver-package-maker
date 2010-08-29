@@ -21,14 +21,16 @@
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( '{{$type.name}}_list_title' ) eq 'y'}
-						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
+						<th>{smartthnk ititle="{{$type.fields.title.name|default:'Title'}}" isort=title offset=$control.offset}</th>
 					{/if}
 
 
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
-	 		     		{if $gBitSystem->isFeatureActive('{{$type.name}}_list_{{$fieldName}}' ) eq 'y'}
+{{if $fieldName != 'title'}}
+					{if $gBitSystem->isFeatureActive('{{$type.name}}_list_{{$fieldName}}' ) eq 'y'}
 						<th>{smartlink ititle="{{$field.name|capitalize}}" isort={{$fieldName}} offset=$control.offset}</th>
 					{/if}
+{{/if}}
 {{/foreach}}
 
 
