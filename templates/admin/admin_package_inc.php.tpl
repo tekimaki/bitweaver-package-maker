@@ -10,7 +10,7 @@ $form{{$pkgSettingsName|ucfirst}} = array(
 	"{{$package}}_{{$settingName}}" => array(
 		'label' => '{{$settings.label}}',
 		'note' => '{{$settings.note}}',
-		'type' => '{{if $settings.type eq numeric}}numeric{{elseif $settings.type eq string}}input{{else}}toggle{{/if}}',
+		'type' => '{{if $settings.type eq string}}input{{else}}{{$settings.type|default:'toggle'}}{{/if}}',
 		{{if $settings.default}}'default' => '{{if $settings.type eq boolean}}y{{else}}{{$settings.default}}{{/if}}',{{/if}}
 	),
 {{/foreach}}

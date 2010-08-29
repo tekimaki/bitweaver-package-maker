@@ -11,6 +11,8 @@
                                 <input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
                             {elseif $output.type == 'input'}
                                 <input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
+							{elseif $output.type=="hexcolor"}
+								<input size="6" type="text" name="{$item}" id="{{$item}}" value="{$gBitSystem->getConfig($item,$output.default)}" />
                             {else}
                                 {html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item,$output.default) labels=false id=$item}
                             {/if}

@@ -11,7 +11,7 @@ $form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}} = array(
 	"{{$config.plugin}}_{{$settingName}}" => array(
 		'label' => '{{$settings.label}}',
 		'note' => '{{$settings.note}}',
-		'type' => '{{if $settings.type eq numeric}}numeric{{elseif $settings.type eq string}}input{{else}}toggle{{/if}}',
+		'type' => '{{if $settings.type eq string}}input{{else}}{{$settings.type|default:'toggle'}}{{/if}}',
 		{{if $settings.default}}'default' => '{{if $settings.type eq boolean}}y{{else}}{{$settings.default}}{{/if}}',{{/if}}
 	),
 {{/foreach}}
@@ -27,4 +27,15 @@ if( !empty( $_REQUEST['{{$config.plugin}}_settings'] ) ){
 }
 {{/if}}
 {{* End Plugin Settings *}}
+
+{{* hexcolor *}}
+{{assign var=jsColorIncluded value=false}}
+{{foreach from=$typemap.fields item=data key=field name=fields}}
+{{if !empty($data.validator.type) && $data.validator.type == 'hexcolor' && !$jsColorIncluded}}
+{{assign var=jsColorIncluded value=true}}
+// hexcolor library
+global $gBitThemes;
+$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
+{{/if}}
+{{/foreach}}
 
