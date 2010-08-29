@@ -4,25 +4,7 @@
 {{if $config.settings}}
 		{jstab title="{{$Plugin}} Plugin Settings"}
 {{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}}
-            {legend legend="{{$pkgSettingsName|ucfirst}} Features"}
-				{foreach from=$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}} key=item item=output}
-                    <div class="row">
-						{formlabel label=`$output.label` for=$item}
-                        {forminput}
-                            {if $output.type == 'numeric'}
-                                <input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
-                            {elseif $output.type == 'input'}
-                                <input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
-							{elseif $output.type=="hexcolor"}
-								<input size="6" type="text" name="{$item}" id="{{$item}}" class="color" value="{$gBitSystem->getConfig($item,$output.default)}" />
-                            {else}
-                                {html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item,$output.default) labels=false id=$item}
-                            {/if}
-                            {formhelp note=`$output.note` page=`$output.page`}
-                        {/forminput}
-                    </div>
-                {/foreach}
-            {/legend}
+			{include file="bitpackage:kernel/config_options_inc.tpl" legend="{{$pkgSettingsName|ucfirst}} Features" options=$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}}}
 {{/foreach}}
 			<div class="row submit">
 				<input type="submit" name="{{$plugin}}_settings" value="{tr}Change preferences{/tr}" />
