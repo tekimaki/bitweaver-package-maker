@@ -54,8 +54,8 @@ class PluginRenderer extends aRenderer{
 			foreach ($config['sections'] as &$section) {
 				if (!empty($section['fields'])) {
 					foreach ($section['fields'] as $map => $field) {
-						$typemap = array_keys($field);
-						$section['typemaps'][$typemap[0]] = $typemap[0];
+						$typemapName = array_keys($field);
+						$section['typemaps'][$typemapName[0]] = $typemapName[0];
 					}
 				}
 			}
