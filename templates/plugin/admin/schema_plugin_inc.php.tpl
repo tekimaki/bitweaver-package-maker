@@ -1,6 +1,8 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 {{include file="php_file_header.tpl"}}
 
+global $gBitInstaller;
+
 $tables = array(
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
     {{include file="typemap_schema_inc.php.tpl" tablePrefix=$config.name}}
@@ -10,10 +12,10 @@ $tables = array(
 {{/foreach}}
 );
 
-global $gBitInstaller;
-
-foreach( array_keys( $tables ) AS $tableName ) {
-	$gBitInstaller->registerSchemaTable( {{$PACKAGE}}_PKG_NAME, $tableName, $tables[$tableName] );
+if (count($tables) > 0) {
+	foreach( array_keys( $tables ) AS $tableName ) {
+		$gBitInstaller->registerSchemaTable( {{$PACKAGE}}_PKG_NAME, $tableName, $tables[$tableName] );
+	}
 }
 
 // $indices = array();

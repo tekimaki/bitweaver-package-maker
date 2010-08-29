@@ -4,7 +4,7 @@
 {{* Plugin Settings *}}
 {{if $config.settings}}
 {{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}}
-$form{{$pkgSettingsName|ucfirst}} = array(
+$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}} = array(
 {{foreach from=$pkgSettingGroup key=settingName item=settings name=settingsGroup}}
 	"{{$config.plugin}}_{{$settingName}}" => array(
 		'label' => '{{$settings.label}}',
@@ -14,7 +14,7 @@ $form{{$pkgSettingsName|ucfirst}} = array(
 	),
 {{/foreach}}
 );
-$gBitSmarty->assign( 'form{{$pkgSettingsName|ucfirst}}', $form{{$pkgSettingsName|ucfirst}} );
+$gBitSmarty->assign( 'form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}}', $form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}} );
 {{/foreach}}
 {{/if}}
 {{* End Plugin Settings *}}

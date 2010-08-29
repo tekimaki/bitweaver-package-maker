@@ -16,7 +16,6 @@
  */
 
 abstract class aRenderer{
-	abstract public static function validateConfig( $config ); 
 	abstract public function prepConfig( &$config ); 
 	abstract public function generate( $config );
 	abstract public static function convertName( $file, $config, $params = array() );
@@ -38,6 +37,34 @@ abstract class aRenderer{
 		$gBitSmarty->right_delimiter = "}}";
 
 		$gBitSmarty->default_template_handler_func = "find_pkgmkr_template";
+	}
+
+	public static function validateConfig( $config, $vFile, &$errors = array() ){ 
+		// This is a first pass at using a validation file 
+		// Load the files we are to generate
+		$configDefs = Spyc::YAMLLoad(RESOURCE_PATH.$vFile);
+		foreach( $configDefs as $config_value=>$config_def ){
+			switch( $config_def['type'] ){
+			case 'string':
+				if( empty($config[$config_value]) || !is_string($config[$config_value]) )
+					$errors[$config_value] = $config_def['error'];
+				break;
+			case 'array':
+				if( empty($config[$config_value]) || !is_array($config[$config_value]) )
+					$errors[$config_value] = $config_def['error'];
+				break;
+			default:
+				error( 'unknown config type '.$config_def['type'].' in validation requirements for config value '.$config_value.' in file '.$vFile);
+				die;
+			}
+		}
+		// Output any errors
+		if( !empty( $errors ) ){ 
+			foreach ( $errors as $error_type=>$msg ){
+				error( 'Config error:'.$error_type." - ".$msg, FALSE );
+			}
+			die;
+		}
 	}
 
 	/**

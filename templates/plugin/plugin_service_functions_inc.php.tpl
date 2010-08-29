@@ -104,6 +104,13 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 			$pParamHash['has_section'] = TRUE;
 			break;
 		}
+		/* =-=- CUSTOM BEGIN: content_section_function -=-= */
+{{if !empty($customBlock.content_section_function)}}
+{{$customBlock.content_section_function}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: content_section_function -=-= */
 	}
 }
 {{/if}}
