@@ -44,8 +44,9 @@ class PluginRenderer extends aRenderer{
 			$config['base_class'] = 'LibertyBase'; 
 
 		// prep typemap data - @TODO move to typemap class
-		foreach( $config['typemaps'] as $typemapName=>$typemap ){
+		foreach( $config['typemaps'] as $typemapName=>&$typemap ){
 			$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
+			PackageRenderer::prepFieldsConfig( $typemap, $config['typesmaps'][$typemapName], $excludeFields );
 		}
 
 		// prep service-typemap association hash
@@ -164,7 +165,7 @@ class PluginRenderer extends aRenderer{
 				}
 				break;
 			case 'admin_plugin_inc.php':
-			case 'admin_plugin_inc.tpl':
+			case 'service_admin_inc.tpl':
 			case 'menu_plugin_admin_inc.tpl':
 				$render = !empty( $config['settings'] );
 				break;
