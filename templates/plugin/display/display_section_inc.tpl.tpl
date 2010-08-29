@@ -14,14 +14,20 @@
 {{if $typemapName != 'liberty' && $fieldName != 'title'}}
 {{* @TODO may need to namespace plugin fields *}}
 {{* @TODO need to run parseData on soem fields *}}
-<div>
 {{if $field.input.type == "parsed"}}
 {$gContent->mInfo.parsed_{{$fieldName}}}
 {{else}}
 {$gContent->mInfo.{{$fieldName}}}
 {{/if}}
-</div>
 {{/if}}
 {{/foreach}}
 {{/foreach}}
+{* =-=- CUSTOM BEGIN: body -=-= *}
+{{if !empty($customBlock.body)}}
+{{$customBlock.body}}
+{{else}}
+
+{{/if}}
+{* =-=- CUSTOM END: body -=-= *}
+</div>
 </div>
