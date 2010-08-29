@@ -27,6 +27,10 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 			'content_section_function' => '{{$config.name}}_content_section',
 			'content_display_section_tpl' => 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl',
 {{/if}}
+{{if $config.settings}}
+			'package_admin_function' => '{{$config.name}}_package_admin',
+			'package_admin_tpl' => 'bitpackage:{{$config.package}}/{{$config.name}}/service_admin_inc.tpl',
+{{/if}}
         ),
         array(
 			'description' => '{{$config.description}}'

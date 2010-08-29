@@ -13,14 +13,13 @@ functions:
   - content_expunge
   - content_user_perms
   - content_verify_access
-  - content_admin
   - content_schema_inc
   - comment_store
   - user_register
   - commerce_pre_purchase
   - commerce_post_purchase
+  - package_admin
 files:
-  - content_edit_tab
   - content_list_options
   - content_list_sort
   - content_list_actions
@@ -31,4 +30,6 @@ files:
   - content_nav
   - content_icon
   - content_list
+  - content_display_section
   - user_register_inc
+  - package_admin

@@ -151,9 +151,7 @@ $gBitSmarty->assign( 'homeTypes', array(
 
 {{if $config.pluggable}}
 // invoke content admin services
-{{foreach from=$config.types key=typeName item=type name=types}}
-${{$type.class_name}} = new {{$type.class_name}}();
-${{$type.class_name}}->invokeServices( 'content_admin_function', $_REQUEST );
-{{/foreach}}
+global $gLibertySystem;
+$gLibertySystem->invokePackageServices( {{$PACKAGE}}_PKG_NAME, 'package_admin_function', $_REQUEST );
 {{/if}}
 
