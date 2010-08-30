@@ -78,7 +78,7 @@ if (count($defaults) > 0) {
 // User Permissions
 $gBitInstaller->registerUserPermissions( {{$PACKAGE}}_PKG_NAME, array(
 	array ( 'p_{{$package}}_admin'  , 'Can admin the {{$package}} package', 'admin'      , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$package}}_view'  , 'Can view the {{$package}} package', 'admin'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$package}}_view'  , 'Can view the {{$package}} package', 'basic'      , {{$PACKAGE}}_PKG_NAME ),
 {{foreach from=$config.types key=typeName item=type name=types}}
 	array ( 'p_{{$typeName}}_create' , 'Can create a {{$typeName}} entry'   , '{{$type.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
 	array ( 'p_{{$typeName}}_view'   , 'Can view {{$typeName}} entries'     , '{{$type.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
