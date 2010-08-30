@@ -12,6 +12,7 @@
 {{foreach from=$section.fields item=field}}
 {{foreach from=$field key=typemapName item=fieldName}}
 {{if $typemapName != 'liberty' && $fieldName != 'title'}}
+<div>
 {{* @TODO may need to namespace plugin fields *}}
 {{* @TODO need to run parseData on soem fields *}}
 {{if $field.input.type == "parsed"}}
@@ -19,6 +20,7 @@
 {{else}}
 {$gContent->mInfo.{{$fieldName}}}
 {{/if}}
+</div>
 {{/if}}
 {{/foreach}}
 {{/foreach}}
