@@ -46,7 +46,7 @@ foreach( $_REQUEST as $key => $val ) {
         break;
     }
     elseif (in_array($key, $typeContentIds)) {
-        $requestType = substr($key, 0, -10);
+        $requestType = substr($key, 0, -11);
         $requestKeyType = 'content_id';
         break;
     }
