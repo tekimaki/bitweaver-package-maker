@@ -16,10 +16,9 @@
  */
 
 class PluginRenderer extends aRenderer{
-	public static function validateConfig( $config ){ 
-		$vFile = 'plugin_validation.yaml';
-		$errors = array();
-		parent::validateConfig( $config, $vFile, $errors );
+        public static function validateConfig( $config ) {
+	        $vFile = 'plugin_validation.yaml';
+		parent::validateConfigImpl( $config, $vFile, $errors );
 	}
 
 	public function prepConfig( &$config ){ 
@@ -197,7 +196,7 @@ class PluginRenderer extends aRenderer{
 	protected function initSmarty( &$config ){ 
 		global $gBitSmarty;
 
-		parent::initSmarty();
+		parent::initSmarty( $config );
 
 		// Assign package in various cases to the context for
 		// easier to read templates.

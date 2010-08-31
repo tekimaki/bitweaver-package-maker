@@ -16,17 +16,6 @@
  */
 
 class TypeRenderer extends aRenderer{
-	public static function validateConfig( $config ){ 
-		return FALSE;
-	}
-
-	public function prepConfig( &$config ){ 
-		return $config;
-	}
-
-	public function generate( $config ){
-		return FALSE;
-	}
 
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = preg_replace("/type/", strtolower($params['type']), $file);

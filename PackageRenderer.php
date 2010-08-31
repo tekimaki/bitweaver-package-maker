@@ -16,7 +16,10 @@
  */
 
 class PackageRenderer extends aRenderer{
-	public static function validateConfig( $config ){
+
+        public static function validateConfig( $config ) {
+	        // TODO: Refactor to use validateConfigImpl
+
 		// TODO: Would be nice to genericize these checks
 		// so that you would just modify a file in resources
 		// to modify what is validated instead of writing code

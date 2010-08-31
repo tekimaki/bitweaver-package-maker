@@ -1,4 +1,4 @@
-<?php /* -*- Mode: php{} tab-width: 4{} indent-tabs-mode: t{} c-basic-offset: 4{} -*- */
+]<?php /* -*- Mode: php{} tab-width: 4{} indent-tabs-mode: t{} c-basic-offset: 4{} -*- */
 /* vim: :set fdm=marker : */
 /**
  * $Header: $
@@ -16,17 +16,6 @@
  */
 
 class SectionRenderer extends aRenderer{
-	public static function validateConfig( $config ){ 
-		return FALSE;
-	}
-
-	public function prepConfig( &$config ){ 
-		return $config;
-	}
-
-	public function generate( $config ){
-		return FALSE;
-	}
 
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = $file;
@@ -47,19 +36,19 @@ class SectionRenderer extends aRenderer{
 						global $gBitSmarty;
 						$params['name'] = $params['section'] = $section;
 						$gBitSmarty->assign('section', $params);
-						SectionRenderer::renderFile( $config, $dir, $file, $params );
+						SectionRenderer::renderSectionFile( $config, $dir, $file, $params );
 					}
 					break;
 				// common section files
 				default:
-					SectionRenderer::renderFile( $config, $dir, $file );
+					SectionRenderer::renderSectionFile( $config, $dir, $file );
 					break;
 				}
 			}
 		}
 	}
 
-	public static function renderFile( $config, $dir, $file, $params = array() ){
+	public static function renderSectionFile( $config, $dir, $file, $params = array() ){
 		$render_file = PluginRenderer::convertName(SectionRenderer::convertName($file, $config, $params), NULL, $config);
 		$template = $file.".tpl";
 		$prefix = SectionRenderer::getTemplatePrefix($file, $params);

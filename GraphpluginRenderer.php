@@ -16,9 +16,8 @@
  */
 
 class GraphpluginRenderer extends PluginRenderer{
-	public static function validateConfig( $config ){ 
-		$vFile = 'graphplugin_validation.yaml';
-		$errors = array();
+        public static function validateConfig( $config ) {
+	        $vFile = 'graphplugin_validation.yaml';
 		// @TODO figureout a way to spec this in the validation yaml file
 		if( empty( $config['graph']['tail'] ) ){
 			$errors['graph:tail'] = 'You must specify a tail content id relation';
@@ -26,7 +25,7 @@ class GraphpluginRenderer extends PluginRenderer{
 		if( empty( $config['graph']['head'] ) ){
 			$errors['graph:head'] = 'You must specify a head content id relation';
 		}
-		aRenderer::validateConfig( $config, $vFile, $errors );
+		super::validateConfigImpl( $config, $vFile, $errors );
 	}
 
 	public function prepConfig( &$config ){ 

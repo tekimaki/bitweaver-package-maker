@@ -16,12 +16,25 @@
  */
 
 abstract class aRenderer{
-	abstract public function prepConfig( &$config ); 
-	abstract public function generate( $config );
-	abstract public static function convertName( $file, $config, $params = array() );
-	abstract public static function renderFiles( $config, $dir, $files ); 
+	public function prepConfig( &$config ) {
+		return $config;
+	}
 
-	protected function initSmarty(){
+	public function generate( $config ) {
+		return FALSE;
+	}
+
+	public static function convertName( $file, $config, $params = array() ) {
+		bt();
+		error("convertName Not Implemented by Subclass!");
+	}
+
+	public static function renderFiles( $config, $dir, $files ) {
+		bt();
+		error("renderFiles Not Implemented by Subclass!");
+	}
+
+	protected function initSmarty( &$config ){
 		global $gBitSmarty;
 
 		require_once(BIT_ROOT_PATH . "util/smarty/libs/Smarty.class.php");
@@ -39,7 +52,10 @@ abstract class aRenderer{
 		$gBitSmarty->default_template_handler_func = "find_pkgmkr_template";
 	}
 
-	public static function validateConfig( $config, $vFile, &$errors = array() ){ 
+	protected static final function validateConfigImpl( $config, $vFile, &$errors = array() ){ 
+		if ($vFile == NULL) {
+			return false;
+		}
 		// This is a first pass at using a validation file 
 		// Load the files we are to generate
 		$configDefs = Spyc::YAMLLoad(RESOURCE_PATH.$vFile);
