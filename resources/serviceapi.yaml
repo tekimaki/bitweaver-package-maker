@@ -19,6 +19,7 @@ functions:
   - commerce_pre_purchase
   - commerce_post_purchase
   - package_admin
+  - upload_store
 files:
   - content_list_options
   - content_list_sort

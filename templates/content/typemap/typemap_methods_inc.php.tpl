@@ -189,6 +189,9 @@
 		}
 
 		$query = "SELECT {{if $typemap.sequence}}`{{$typemapName}}_id` as hash_key, `{{$typemapName}}_id`,{{/if}}
+{{foreach from=$typemap.attachments item=attachment name=attachments}}
+ `{{$typemapName}}_{{$attachment}}_id`{{if !empty($typemap.fields) || !$smarty.foreach.fields.last}},{{/if}}
+{{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
  `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
@@ -305,5 +308,27 @@
 
 		}
 	}
+
+{{foreach from=$typemap.attachments item=attachment}}
+	/**
+	 * store{{$attachment|ucfirst}}Attachment stores the attachment id
+	 */
+	function store{{$attachment|ucfirst}}Attachment($pObject, $pStoreHash) {
+		if (!empty($pStoreHash['attachment_id']) && 
+		    !empty($pStoreHash['content_id'])) {
+			// Figure out if we have one at all and if it has an old value
+			$old_id = $this->mDb->getAssoc("SELECT `content_id`, `{{$typemapName}}_{{$attachment}}_id` FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?", array('content_id' => $pStoreHash['content_id']));
+			if (empty($old_id)) {
+				$this->mDb->associateInsert("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => $pStoreHash['attachment_id'], 'content_id' => $pStoreHash['content_id']));
+			} else {
+				$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => $pStoreHash['attachment_id']), array('content_id' => $pStoreHash['content_id']));
+			}
+			if (!empty($old_id) && !empty($old_id[$pStoreHash['content_id']])) {
+				$pObject->expungeAttachment($old_id[$pStoreHash['content_id']]);
+			}
+
+		}
+	}
+{{/foreach}}
 
 	// {{literal}}}}}{{/literal}}

@@ -17,6 +17,16 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{/foreach}}
 {{/if}}
 {{/foreach}}
+{{elseif $func eq 'upload_store'}}
+{{if !empty($typemap.attachments)}}
+{{foreach from=$typemap.attachments item=attachment}}
+		// Store the {{$attachment}} attachment
+		if ( !empty($pParamHash['upload_store']['files']['{{$typemapName}}_{{$attachment}}']) ) {
+			${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId );
+			${{$config.name}}->store{{$attachment|ucfirst}}Attachment($pObject, $pParamHash['upload_store']['files']['{{$typemapName}}_{{$attachment}}']);
+		}
+{{/foreach}}
+{{/if}}
 {{elseif $func eq 'content_display'}}
 		if( $pObject->isValid() ) {
 			${{$config.name}} = new {{$config.class_name}}(); 
@@ -29,7 +39,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 		{{* unknown need a model of behavior *}}
 {{elseif $func eq 'content_preview'}}
 		// call edit service which loads any data necessary for form
-		{{$config.name}}_content_edit( $pObject, &$pParamHash );
+		{{$config.name}}_content_edit( $pObject, $pParamHash );
 		// write form data on top of content hash
 		${{$config.name}} = new {{$config.class_name}}(); 
 		${{$config.name}}->previewTypemaps( $pParamHash );
@@ -82,7 +92,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 		$ret['select_sql'] = $ret['join_sql'] = $ret['where_sql'] = "";
 {{foreach from=$typemaps item=typemap}}
 {{if $config.typemaps.$typemap.relation eq 'one-to-one'}}
-		$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}}.`{{$fieldName}}`{{/foreach}}";
+		$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.attachments item=attachment name=attachments}}, {{$config.name}}_{{$typemap}}.`{{$typemap}}_{{$attachment}}_id`{{/foreach}} {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}}.`{{$fieldName}}`{{/foreach}}";
 		$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."{{$config.name}}_{{$typemap}}` {{$config.name}}_{{$typemap}} {{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}} ON ( lc.`content_id`={{$config.name}}_{{$typemap}}.`content_id` )";
 {{*		$ret['where_sql'] .= ""; *}}
 {{/if}}
@@ -94,7 +104,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 		$ret['select_sql'] = $ret['join_sql'] = $ret['where_sql'] = "";
 {{foreach from=$typemaps item=typemap}}
 {{if $config.typemaps.$typemap.relation eq 'one-to-one'}}
-		$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty"}}liberty_content{{/if}}.`{{$fieldName}}`{{/foreach}}";
+		$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.attachments item=attachment name=attachments}}, {{$config.name}}_{{$typemap}}.`{{$typemap}}_{{$attachment}}_id`{{/foreach}} {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty"}}liberty_content{{/if}}.`{{$fieldName}}`{{/foreach}}";
 		$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."{{$config.name}}_{{$typemap}}` {{$config.name}}_{{$typemap}} {{if $config.typemaps.typemap.base_table == "liberty"}}liberty_content{{/if}} ON ( lc.`content_id`={{$config.name}}_{{$typemap}}.`content_id` )";
 {{*		$ret['where_sql'] .= ""; *}}
 {{/if}}
