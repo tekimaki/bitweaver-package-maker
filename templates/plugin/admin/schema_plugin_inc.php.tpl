@@ -44,11 +44,11 @@ if (count($defaults) > 0) {
 // User Permissions
 $gBitInstaller->registerUserPermissions( {{$PACKAGE}}_PKG_NAME, array(
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
-	array ( 'p_{{$typemapName}}_service_create' , 'Can create a {{$typemapName}} entry'   , '{{$typemap.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typemapName}}_service_view'   , 'Can view {{$typemapName}} entries'     , '{{$typemap.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typemapName}}_service_update' , 'Can update any {{$typemapName}} entry' , '{{$typemap.permissions.default.update|default:editors}}'    , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typemapName}}_service_expunge', 'Can delete any {{$typemapName}} entry' , '{{$typemap.permissions.default.expunge|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
-	array ( 'p_{{$typemapName}}_service_admin'  , 'Can admin any {{$typemapName}} entry'  , '{{$typemap.permissions.default.admin|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$typemapName}}_service_create' , 'Can create a {{$typemapName}} entry'   , '{{$typemap.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$typemapName}}_service_view'   , 'Can view {{$typemapName}} entries'     , '{{$typemap.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$typemapName}}_service_update' , 'Can update any {{$typemapName}} entry' , '{{$typemap.permissions.default.update|default:editors}}'    , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$typemapName}}_service_expunge', 'Can delete any {{$typemapName}} entry' , '{{$typemap.permissions.default.expunge|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$typemapName}}_service_admin'  , 'Can admin any {{$typemapName}} entry'  , '{{$typemap.permissions.default.admin|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
 {{/foreach}}
 ));
 
