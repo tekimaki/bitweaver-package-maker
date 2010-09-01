@@ -25,7 +25,7 @@ class GraphpluginRenderer extends PluginRenderer{
 		if( empty( $config['graph']['head'] ) ){
 			$errors['graph:head'] = 'You must specify a head content id relation';
 		}
-		super::validateConfigImpl( $config, $vFile, $errors );
+		aRenderer::validateConfigImpl( $config, $vFile, $errors );
 	}
 
 	public function prepConfig( &$config ){ 
