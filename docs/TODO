@@ -11,6 +11,11 @@ typemap one-to-one parse:
   We should add content_load function to services of plugins that are 
   one-to-one automgaically.
 
+typemap textfield format: >
+
+  Currently textfields with 'parse' specified inherit the format from the parent
+  content. Would be nice to be able to force other formats - multi infact would be best 
+
 field set support: >
 
   It would be nice to suppport sub-maps of fields for one to many on
