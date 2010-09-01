@@ -56,6 +56,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 		// pass through to display to load up content data
 		// {{$config.name}}_content_display( $pObject, $pParamHash );
 {{assign var=jsColorIncluded value=false}}
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{* hexcolor lib *}}
 {{if !empty($field.validator.type) && $field.validator.type == 'hexcolor' && !$jsColorIncluded}}
@@ -75,6 +76,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{/if}}
 {{/if}}
 {{/if}}
+{{/foreach}}
 {{/foreach}}
 {{elseif $func eq 'content_store'}}
 		${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
