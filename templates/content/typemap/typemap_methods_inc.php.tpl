@@ -143,6 +143,9 @@
 	function verify{{$typemapName|ucfirst}}( &$pParamHash ){
 		// Use $pParamHash here since it handles validation right
 		$this->validate{{$typemapName|ucfirst}}Fields($pParamHash);
+{{if !empty($typemap.attachments)}}
+		$this->validate{{$typemapName|ucfirst}}Attachments();
+{{/if}}
 		return( count( $this->mErrors )== 0 );
 	}
 
@@ -189,7 +192,7 @@
 		}
 
 		$query = "SELECT {{if $typemap.sequence}}`{{$typemapName}}_id` as hash_key, `{{$typemapName}}_id`,{{/if}}
-{{foreach from=$typemap.attachments item=attachment name=attachments}}
+{{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
  `{{$typemapName}}_{{$attachment}}_id`{{if !empty($typemap.fields) || !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
@@ -253,6 +256,26 @@
 		}
 	}
 
+{{if !empty($typemap.attachments)}}
+	/**
+	 * validate{{$typemapName|ucfirst}}Attachments validates the attachments in this type
+	 */
+	function validate{{$typemapName|ucfirst}}Attachments() {
+{{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
+		// Validate {{$attachment}}
+{{if !empty($prefs.validator.format)}}
+		LibertyValidator::validateAttachment("{{$typemapName}}_{{$attachment}}", 
+			array( 
+				"name" => "{{$prefs.name}}",
+				"format" => array({{foreach from=$prefs.validator.format item=format name=format}}"{{$format}}"{{if !$smarty.foreach.format.last}},{{/if}}{{/foreach}})
+			),
+			$this
+		);
+{{/if}}
+{{/foreach}}	
+	}
+{{/if}}
+
 	/**
 	 * validate{{$typemapName|ucfirst}}Fields validates the fields in this type
 	 */
@@ -309,7 +332,7 @@
 		}
 	}
 
-{{foreach from=$typemap.attachments item=attachment}}
+{{foreach from=$typemap.attachments key=attachment item=prefs}}
 	/**
 	 * store{{$attachment|ucfirst}}Attachment stores the attachment id
 	 */

@@ -11,14 +11,14 @@
 		</div>
 {{/if}}
 {{/foreach}}
-{{foreach from=$typemap.attachments item=attachment name=attachments}}
+{{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 			<div class="row {{$typemapName}}_{{$attachment}}">
 				{if !empty($gContent->mInfo.{{$typemapName}}_{{$attachment}}_id)}
 					{assign var={{$typemapName}}_{{$attachment}}_id value=$gContent->mInfo.{{$typemapName}}_{{$attachment}}_id}
 					{assign var=storage value=$gContent->mStorage.${{$typemapName}}_{{$attachment}}_id}
 					{if !empty($storage)}
-					{formlabel label="{{$attachment|ucfirst}}"}
+					{formlabel label="{{$prefs.name|ucfirst}}"}
 					{forminput}
 						{if $storage.is_mime}
 							{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small preferences=$gContent->mStoragePrefs.$attachmentId attachment=$storage}
@@ -33,7 +33,7 @@
 					{/if}
 				{/if}
 
-				{include file="bitpackage:liberty/edit_upload.tpl" upload_name="{{$typemapName}}_{{$attachment}}" upload_type="New {{$attachment|ucfirst}}"}
+				{include file="bitpackage:liberty/edit_upload.tpl" upload_name="{{$typemapName}}_{{$attachment}}" upload_type="New {{$prefs.name|ucfirst}}"}
 			</div>
 		{/if}
 {{/foreach}}

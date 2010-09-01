@@ -75,7 +75,7 @@
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
-{{if $type.attachments}}
+{{if !empty($type.attachments)}}
 
 						{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 							<div class=row>
