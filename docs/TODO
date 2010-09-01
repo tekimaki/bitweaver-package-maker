@@ -40,6 +40,10 @@ validation messages: >
   It would nice to be able to customize the error messages given back
   by the validators.
 
+prepconfig not null required: >
+
+  prepConfig should force a required setting if the field is specified as not null
+
 client side validation: >
 
   It would be nice if the generator output client side javascript validation
