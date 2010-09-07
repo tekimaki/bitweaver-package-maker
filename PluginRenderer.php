@@ -43,9 +43,9 @@ class PluginRenderer extends aRenderer{
 			$config['base_class'] = 'LibertyBase'; 
 
 		// prep typemap data - @TODO move to typemap class
-		foreach( $config['typemaps'] as $typemapName=>&$typemap ){
+		foreach( $config['typemaps'] as $typemapName=>$typemap ){
 			$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-			PackageRenderer::prepFieldsConfig( $typemap, $config['typesmaps'][$typemapName], $excludeFields );
+			PackageRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $config['typemaps'][$typemapName], $excludeFields );
 		}
 
 		// prep sections so we know their typemaps
@@ -62,6 +62,7 @@ class PluginRenderer extends aRenderer{
 
 		// prep service-typemap association hash
 		$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
+
 		foreach( $services as $type=>$slist ){
 			switch( $type ){
 			case 'sql':
@@ -89,6 +90,7 @@ class PluginRenderer extends aRenderer{
 				break;
 			}
 		}
+
 		return $config;
 	}
 
