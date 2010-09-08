@@ -12,6 +12,14 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{{$package}}' );
 
+/* =-=- CUSTOM BEGIN: security -=-= */
+{{if !empty($customBlock.security)}}
+{{$customBlock.security}}
+{{else}}
+
+{{/if}}
+/* =-=- CUSTOM END: security -=-= */
+
 // Define content lookup keys
 $typeNames = array(
 {{foreach from=$config.types key=typeName item=type name=types}}

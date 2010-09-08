@@ -20,7 +20,13 @@ if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 
 	// otherwise create new object
 	} else {
+/* =-=- CUSTOM BEGIN: create -=-= */
+{{if !empty($customBlock.create)}}
+{{$customBlock.create}}
+{{else}}
 		$gContent = new {{$type.class_name}}();
+{{/if}}
+/* =-=- CUSTOM END: create -=-= */
 	}
 
 	$gContent->load();

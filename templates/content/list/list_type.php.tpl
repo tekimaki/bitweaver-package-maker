@@ -6,6 +6,14 @@ require_once( '../kernel/setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{{$package}}' );
 
+/* =-=- CUSTOM BEGIN: security -=-= */
+{{if !empty($customBlock.security)}}
+{{$customBlock.security}}
+{{else}}
+
+{{/if}}
+/* =-=- CUSTOM END: security -=-= */
+
 // Look up the content
 require_once( {{$PACKAGE}}_PKG_PATH.'lookup_{{$type.name}}_inc.php' );
 

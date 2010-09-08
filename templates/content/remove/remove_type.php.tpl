@@ -5,6 +5,15 @@
  * required setup
  */
 require_once( '../kernel/setup_inc.php' );
+
+/* =-=- CUSTOM BEGIN: security -=-= */
+{{if !empty($customBlock.security)}}
+{{$customBlock.security}}
+{{else}}
+
+{{/if}}
+/* =-=- CUSTOM END: security -=-= */
+
 include_once( {{$PACKAGE}}_PKG_PATH.'lookup_{{$type.name}}_inc.php' );
 
 $gBitSystem->verifyPackage( '{{$package}}' );
