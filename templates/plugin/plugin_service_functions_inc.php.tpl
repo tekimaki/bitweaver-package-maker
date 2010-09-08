@@ -47,7 +47,9 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.relation == "one-to-one"}}
 		// Merge one-to-one typemap {{$typemapName}}
-		$pObject->mInfo = array_merge( $pObject->mInfo, $pParamHash['{{$config.name}}_store']['{{$typemapName}}'] );
+		if (!empty($pParamHash['{{$config.name}}_store']['{{$typemapName}}'] )) {
+			$pObject->mInfo = array_merge( $pObject->mInfo, $pParamHash['{{$config.name}}_store']['{{$typemapName}}'] );
+		}
 {{/if}}
 {{/foreach}}
 {{elseif $func eq 'content_edit'}}
