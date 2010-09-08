@@ -228,7 +228,7 @@ class PackageRenderer extends aRenderer{
 	}
 
 	protected function initSmarty( &$config ){ 
-		parent::initSmarty();
+		parent::initSmarty( $config );
 
 		global $gBitSmarty;
 		// Assign package in various cases to the context for
