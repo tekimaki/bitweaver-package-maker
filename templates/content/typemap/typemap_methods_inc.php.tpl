@@ -246,7 +246,7 @@
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $field.input.type == 'parsed'}}
 			// Parse the {{$fieldName}}
-			$parseHash['data'] = $pParamHash['{{$type.name}}_store'][{{$typemapName}}']['{{$fieldName}}'];
+			$parseHash['data'] = $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$fieldName}}'];
 			$parseHash['cache_extension'] = "{{$type.name}}_{{$typemapName}}_{{$fieldName}}";
 			$pParamHash['{{$typemapName}}_store']['{{$typemapName}}']['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
 {{/if}}
