@@ -42,8 +42,8 @@
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
 		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
 			$table = '{{$type.name}}_{{$typemapName}}';
-			if( !empty( $pParamHash['{{$typemapName}}_store'] )){
-				foreach ($pParamHash['{{$typemapName}}_store'] as $key => &$data) {
+			if( !empty( $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] )){
+				foreach ($pParamHash['{{$type.name}}_store']['{{$typemapName}}'] as $key => &$data) {
 {{if $type.base_package == "liberty" || $type.base_table == "liberty_content"}}
 					if (!empty($pParamHash['{{$type.name}}']['content_id'])) {
 						$data['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
@@ -93,20 +93,20 @@
 		}
 {{/if}}
 		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
-			if ( !empty( $pParamHash['{{$typemapName}}_store'] )){
+			if ( !empty( $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] )){
 				$table = '{{$type.name}}_{{$typemapName}}';
 {{if $typemap.relation eq 'one-to-one' && $typemap.base_table eq 'liberty_content'}}
 				// record already exists, update it
-				if( $this->get{{$typemapName|ucfirst}}ByContentId( $pParamHash['{{$typemapName}}_store']['content_id'] ) ){
-					$locId = array( 'content_id' => $pParamHash['{{$typemapName}}_store']['content_id'] );
-					unset( $pParamHash['{{$typemapName}}_store']['content_id'] );
-					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$typemapName}}_store'], $locId );
+				if( $this->get{{$typemapName|ucfirst}}ByContentId( $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] ) ){
+					$locId = array( 'content_id' => $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] );
+					unset( $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'], $locId );
 				// create a new record
 				}else{
-					$result = $this->mDb->associateInsert( $table, $pParamHash['{{$typemapName}}_store'] );
+					$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] );
 				}
 {{else}}
-				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$typemapName}}_store'] );
+				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] );
 {{/if}}
 			}
 		}
@@ -138,7 +138,7 @@
 
 	/** 
 	 * verifies a data set for storage in the {{$type.name}}_{{$typemapName|ucfirst}} table
-	 * data is put into $pParamHash['{{$typemapName}}_store'] for storage
+	 * data is put into $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] for storage
 	 */
 	function verify{{$typemapName|ucfirst}}( &$pParamHash ){
 		// Use $pParamHash here since it handles validation right
@@ -246,8 +246,8 @@
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $field.input.type == 'parsed'}}
 			// Parse the {{$fieldName}}
-			$parseHash['data'] = $pParamHash['{{$typemapName}}_store'][$key]['{{$fieldName}}'];
-			$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
+			$parseHash['data'] = $pParamHash['{{$type.name}}_store'][{{$typemapName}}']['{{$fieldName}}'];
+			$parseHash['cache_extension'] = "{{$type.name}}_{{$typemapName}}_{{$fieldName}}";
 			$pParamHash['{{$typemapName}}_store']['{{$typemapName}}']['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
 {{/if}}
 {{/foreach}}
@@ -283,7 +283,7 @@
 			LibertyValidator::validate(
 				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
 				$pParamHash['{{$type.name}}']['{{$typemapName}}'],
-				$this, $pParamHash['{{$typemapName}}_store']);
+				$this, $pParamHash['{{$type.name}}_store']['{{$typemapName}}']);
 		}
 	}
 
@@ -309,7 +309,7 @@
 	 		/* Validation for {{$fieldName}} */
 {{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
 			$this->mVerification['{{$type.name}}_{{$typemapName}}']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
-				'name' => '{{$fieldName}}',
+				'name' => '{{$field.name|default:$fieldName}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(
