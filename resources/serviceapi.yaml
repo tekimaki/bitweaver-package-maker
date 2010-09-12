@@ -20,6 +20,7 @@ functions:
   - commerce_post_purchase
   - package_admin
   - upload_store
+  - upload_expunge
 files:
   - content_list_options
   - content_list_sort

@@ -90,6 +90,14 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 		if( !${{$config.name}}->expungeTypemaps() ){
 			$pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
 		}
+{{elseif $func eq 'upload_expunge'}}
+{{if !empty($typemap.attachments)}}
+		// expunge the {{$attachment}} attachment
+		${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId );
+{{foreach from=$typemap.attachments key=attachment item=prefs}}
+		${{$config.name}}->expunge{{$attachment|ucfirst}}Attachment( $pObject );
+{{/foreach}}
+{{/if}}
 {{elseif $func eq 'content_load_sql'}}
 		global $gBitSystem;
 		$ret = array();
