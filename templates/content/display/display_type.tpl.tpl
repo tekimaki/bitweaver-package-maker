@@ -47,7 +47,7 @@
 			{* =-=- CUSTOM END: body -=-= *}
 
 
-{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $fieldName != 'data'}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $fieldName != 'title' && $fieldName != 'summary' && $fieldName != 'data'}}
 			<div class="row {{$fieldName}}">
 				<label>{{$field.name|capitalize}}:</label>&nbsp;{$gContent->getField('{{$fieldName}}')|escape}
 			</div>
