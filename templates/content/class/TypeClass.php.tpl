@@ -479,16 +479,46 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	 * @access public
 	 * @return string URL to the {{$type.name|lower}} page
 	 */
-	function getDisplayUrl() {
+	function getDisplayUrl($pSection = NULL) {
 		global $gBitSystem;
 		$ret = NULL;
-		if( @$this->isValid() ) {
-			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
-				$ret = {{$PACKAGE}}_PKG_URL.'{{if empty($type.rewrite_path)}}{{$type.name}}{{else}}{{$type.rewrite_path}}{{/if}}/'.$this->m{{$type.name|capitalize}}Id;
-			} else {
-				$ret = {{$PACKAGE}}_PKG_URL."index.php?{{$type.name|lower}}_id=".$this->m{{$type.name|capitalize}}Id;
+
+		/* =-=- CUSTOM BEGIN: getDisplayUrl -=-= */
+{{if !empty($customBlock.getDisplayUrl)}}
+{{$customBlock.getDisplayUrl}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: getDisplayUrl -=-= */		
+
+		// Did the custom code block give us a URL?
+		if ($ret == NULL) {
+			if( @$this->isValid() ) {
+				if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
+					$ret = {{$PACKAGE}}_PKG_URL.'{{if empty($type.rewrite_path)}}{{$type.name}}{{else}}{{$type.rewrite_path}}{{/if}}/'.$this->m{{$type.name|capitalize}}Id;
+				} else {
+					$ret = {{$PACKAGE}}_PKG_URL."index.php?{{$type.name|lower}}_id=".$this->m{{$type.name|capitalize}}Id;
+				}
 			}
 		}
+
+		// Do we have a section request
+		if (!empty($pSection)) {
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
+				if ( substr($ret, -1, 1) != "/" ) {
+					$ret .= "/";
+				}
+				$ret .= $pSection;
+			} else {
+				if (preg_match('|\?|', $ret)) {
+					$ret .= '&';
+				} else {
+					$ret .= '?';
+				}
+				$ret .= "section=".$pSection;
+			}
+		}
+
 		return $ret;
 	}
 
