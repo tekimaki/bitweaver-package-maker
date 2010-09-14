@@ -146,9 +146,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 		switch( $pParamHash['section'] ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':
-{{foreach from=$section.typemaps item=typemapName}}{{if $typemapName != 'liberty'}}
-			$pObject->verifyUserPermission('p_{{$typemapName}}_service_view');
-{{/if}}{{/foreach}}
+			$pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_view');
 			break;
 {{/foreach}}
 		}

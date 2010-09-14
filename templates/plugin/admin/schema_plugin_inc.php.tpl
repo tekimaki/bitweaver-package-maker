@@ -43,6 +43,13 @@ if (count($defaults) > 0) {
 
 // User Permissions
 $gBitInstaller->registerUserPermissions( {{$PACKAGE}}_PKG_NAME, array(
+{{foreach from=$config.sections key=sectionName item=section name=sections}}
+	array ( 'p_{{$config.name}}_{{$sectionName}}_section_create' , 'Can create a {{$sectionName}} section'   , '{{$section.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$sectionName}}_section_view'   , 'Can view {{$sectionName}} sections'     , '{{$section.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$sectionName}}_section_update' , 'Can update any {{$sectionName}} section' , '{{$section.permissions.default.update|default:editors}}'    , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$sectionName}}_section_expunge', 'Can delete any {{$sectionName}} section' , '{{$section.permissions.default.expunge|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+	array ( 'p_{{$config.name}}_{{$sectionName}}_section_admin'  , 'Can admin any {{$sectionName}} section'  , '{{$section.permissions.default.admin|default:admin}}'      , {{$PACKAGE}}_PKG_NAME ),
+{{/foreach}}
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 	array ( 'p_{{$config.name}}_{{$typemapName}}_service_create' , 'Can create a {{$typemapName}} entry'   , '{{$typemap.permissions.default.create|default:registered}}' , {{$PACKAGE}}_PKG_NAME ),
 	array ( 'p_{{$config.name}}_{{$typemapName}}_service_view'   , 'Can view {{$typemapName}} entries'     , '{{$typemap.permissions.default.view|default:basic}}'      , {{$PACKAGE}}_PKG_NAME ),
