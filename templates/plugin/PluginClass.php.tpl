@@ -173,3 +173,20 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 }
 
 {{include file="plugin_service_functions_inc.php.tpl"}}
+
+{{literal}}
+// {{{ =================== Custom Helper Functions  ====================
+{{/literal}}
+
+/* This section is for any helper functions you wish to create */
+/* =-=- CUSTOM BEGIN: functions -=-= */
+{{if !empty($customBlock.functions)}}
+{{$customBlock.functions}}
+{{else}}
+
+{{/if}}
+/* =-=- CUSTOM END: functions -=-= */
+
+{{literal}}
+// }}} -- end of Custom Helper Methods
+{{/literal}}
