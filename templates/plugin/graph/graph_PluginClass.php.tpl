@@ -42,9 +42,9 @@ class {{$config.class_name}} extends {{$config.base_class}} {
         $this->expunge( $pParamHash );
 
         if( $this->isValid() ){
-            // must have a gmap content id 
+            // must have a tail content id 
             $pParamHash['liberty_edge']['tail_content_id'] = $this->mContentId;
-            // must have a dbview content ids to store
+            // must have a head content id to store
             if( !empty( $pParamHash['{{$config.graph.head.field}}'] ) ){
                 $pParamHash['liberty_edge']['head_content_id'] = $pParamHash['{{$config.graph.head.field}}'];
                 parent::store( $pParamHash );
