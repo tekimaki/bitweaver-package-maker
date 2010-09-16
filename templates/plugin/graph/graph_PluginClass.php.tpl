@@ -37,7 +37,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 		$this->mContentId = $pContentId;
 	}
 
-	function store(){
+	function store( &$pParamHash ){
         // expunge first then we repopulate the record
         $this->expunge( $pParamHash );
 
