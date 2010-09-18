@@ -105,10 +105,30 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 */
 	function store( &$pParamHash ){
 		if( $this->verify( $pParamHash ) ) {
-			if ( !empty( $pParamHash['{{$service.name}}_store'] ) && !$this->getOne( $pParamHash['{{$service.name}}'] ) ){
+			if ( !empty( $pParamHash['{{$service.name}}_store'] ) ){
 				$table = '{{$service.name}}';
 				$this->mDb->StartTrans();
+{{if $service.relation == 'one-to-many' || $service.relation == 'many-to-many'}}
+				foreach ($pParamHash['{{$service.name}}_store'] as $key => $data) {
+{{if $service.base_package == "liberty"}}
+					if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
+						$data['content_id'] = $pParamHash['{{$service.name}}']['content_id'];
+					} else {
+						$data['content_id'] = $this->mContentId;
+					}
+{{/if}}
+					$result = $this->mDb->associateInsert( $table, $data );
+				}
+{{else}}
+{{if $service.base_package == "liberty"}}
+				if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
+					$pParamHash['{{$service.name}}_store']['content_id'] = $pParamHash['{{$service.name}}']['content_id'];
+				} else {
+					$pParamHash['{{$service.name}}_store']['content_id'] = $this->mContentId;
+				}
+{{/if}}
 				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
+{{/if}}
 			}
 
 			/* =-=- CUSTOM BEGIN: store -=-= */
@@ -223,7 +243,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
 			$whereSql = " AND `{{$service.name}}`.content_id = ?";
-		} elseif ( $this->isValid() ) ) {
+		} elseif ( $this->isValid() ) {
 			$bindVars[] = $this->mContentId;
 			$whereSql = " AND `{{$service.name}}`.content_id = ?";
 		}
@@ -251,12 +271,12 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
 		}
 
-		$query = "SELECT {{if $service.sequence}}`{{$service.name}}_id` as hash_key, `{{$service.name}}_id`,{{/if}}
+		$query = "SELECT {{if $service.load_association}}`{{$service.load_association}}` as load_key,{{/if}}{{if $service.sequence}}`{{$service.name}}_id` as hash_key, `{{$service.name}}_id`,{{/if}}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
  `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
  FROM `{{$service.name}}`".$whereSql;
-{{if $service.sequence}}
+{{if $service.sequence || $service.load_association}}
 		$ret = $this->mDb->getAssoc( $query, $bindVars );
 {{else}}
 		$ret = $this->mDb->getArray( $query, $bindVars );

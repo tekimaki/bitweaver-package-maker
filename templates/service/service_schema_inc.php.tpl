@@ -7,7 +7,7 @@
 {{/if}}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $field.validator.type == "reference"}}{{assign var=field_has_reference value=1}}{{/if}}
-        {{$fieldName}} {{$field.schema.type}}{{if !empty($field.schema.notnull)}} NOTNULL{{/if}}{{if !empty($field.schema.default)}} DEFAULT '{{$field.schema.default}}'{{/if}}{{if !empty($field.schema.unique)}} UNIQUE{{/if}}{{if !$smarty.foreach.fields.last}},{{/if}}
+        {{$fieldName}} {{$field.schema.type}}{{if !empty($field.schema.notnull)}} NOTNULL{{/if}}{{if !empty($field.schema.default)}} DEFAULT '{{$field.schema.default}}'{{/if}}{{if !empty($field.schema.unique)}} UNIQUE{{/if}}{{if !empty($field.schema.primary)}} PRIMARY{{/if}}{{if !$smarty.foreach.fields.last}},{{/if}}
 
 {{/foreach}}{{if $field_has_reference || !empty($service.constraints) || $service.base_package == "liberty"}}
         CONSTRAINT '
