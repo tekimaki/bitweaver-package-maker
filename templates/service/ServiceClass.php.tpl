@@ -104,7 +104,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 * stores a single record in the {{$service.name}} table
 	 */
 	function store( &$pParamHash ){
-		if( $this->verify( &$pParamHash ) ) {
+		if( $this->verify( $pParamHash ) ) {
 			if ( !empty( $pParamHash['{{$service.name}}_store'] ) && !$this->getOne( $pParamHash['{{$service.name}}'] ) ){
 				$table = '{{$service.name}}';
 				$this->mDb->StartTrans();
