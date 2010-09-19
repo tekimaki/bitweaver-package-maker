@@ -51,7 +51,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$query = "SELECT `{{$service.name}}_id` as hash_key, `{{$service.name}}_id`,{{foreach from=$service.fields key=fieldName item=field name=fields}}
  `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
- FROM `{{$service.name}}` WHERE `{{$service.name}}`.{{$service.name}}_id = ?";
+ FROM `{{$service.name}}_data` WHERE `{{$service.name}}_data`.{{$service.name}}_id = ?";
 			$ret = $this->mDb->getAssoc( $query, $bindVars );
 		}
 		return $ret;
@@ -242,10 +242,10 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
-			$whereSql = " AND `{{$service.name}}`.content_id = ?";
+			$whereSql = " AND `{{$service.name}}_data`.content_id = ?";
 		} elseif ( $this->isValid() ) {
 			$bindVars[] = $this->mContentId;
-			$whereSql = " AND `{{$service.name}}`.content_id = ?";
+			$whereSql = " AND `{{$service.name}}_data`.content_id = ?";
 		}
 
 {{/if}}
@@ -275,7 +275,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
  `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
- FROM `{{$service.name}}`".$whereSql;
+ FROM `{{$service.name}}_data`".$whereSql;
 {{if $service.sequence || $service.load_association}}
 		$ret = $this->mDb->getAssoc( $query, $bindVars );
 {{else}}
