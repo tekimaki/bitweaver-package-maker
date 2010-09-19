@@ -176,6 +176,8 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 
 			$this->mDb->CompleteTrans();
 		}
+
+		return (count($this->mErrors) == 0);
 	}
 {{/if}}
 
