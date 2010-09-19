@@ -69,8 +69,8 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 				$this->mDb->StartTrans();
 				foreach ($pParamHash['{{$service.name}}_store'] as $key => &$data) {
 {{if $service.base_package == "liberty"}}
-					if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
-						$data['content_id'] = $pParamHash['{{$service.name}}']['content_id'];
+					if (!empty($pParamHash['content_store']['content_id'])) {
+						$data['content_id'] = $pParamHash['content_store']['content_id'];
 					} else {
 						$data['content_id'] = $this->mContentId;
 					}
@@ -106,19 +106,36 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	function store( &$pParamHash ){
 		if( $this->verify( $pParamHash ) ) {
 			if ( !empty( $pParamHash['{{$service.name}}_store'] ) ){
-				$table = '{{$service.name}}';
+				$table = '{{$service.name}}_data';
 				$this->mDb->StartTrans();
 {{if $service.relation == 'one-to-many' || $service.relation == 'many-to-many'}}
 				foreach ($pParamHash['{{$service.name}}_store'] as $key => $data) {
 {{if $service.base_package == "liberty"}}
-					if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
-						$data['content_id'] = $pParamHash['{{$service.name}}']['content_id'];
+					if (!empty($pParamHash['content_store']['content_id'])) {
+						$data['content_id'] = $pParamHash['content_store']['content_id'];
 					} else {
 						$data['content_id'] = $this->mContentId;
 					}
 {{/if}}
-					$result = $this->mDb->associateInsert( $table, $data );
-				}
+					if ($this->mDb->getOne("SELECT * from ".$table." WHERE `content_id` = ?"
+{{if !empty($service.load_association)}}
+										   . " AND {{$service.load_association}} = ?" 
+{{/if}}
+										   , array($data['content_id']
+{{if !empty($service.load_association)}}
+												 , $data['{{$service.load_association}}']
+{{/if}}
+												 ))) {
+						$locId = array( "content_id" => $data['content_id']
+{{if !empty($service.load_association)}}
+										,"{{$service.load_association}}" => $data['{{$service.load_association}}']
+{{/if}}
+										);
+						$result = $this->mDb->associateUpdate( $table, $data, $locId );
+					} else {
+						$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
+					}
+			}
 {{else}}
 {{if $service.base_package == "liberty"}}
 				if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
@@ -127,7 +144,25 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 					$pParamHash['{{$service.name}}_store']['content_id'] = $this->mContentId;
 				}
 {{/if}}
-				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
+				if ($this->mDb->getOne("SELECT * from ".$table." WHERE `content_id` = ?"
+{{if !empty($service.load_association)}}
+									   . " AND {{$service.load_association}} = ?" 
+{{/if}}
+									   , array($data['content_id']
+{{if !empty($service.load_association)}}
+											 , $data['{{$service.load_association}}']
+{{/if}}
+											 ))) {
+					$locId = array( "content_id" => $data['content_id']
+{{if !empty($service.load_association)}}
+									,"{{$service.load_association}}" => $data['{{$service.load_association}}']
+{{/if}}
+									);
+					$result = $this->mDb->associateUpdate( $table, $data, $locId );
+				} else {
+					$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
+				}
+
 {{/if}}
 			}
 
