@@ -354,10 +354,13 @@
 	/**
 	 * expunge{{$attachment|ucfirst}}Attachment expunges the attachment id only from the typemap record
 	 */
-	function expunge{{$attachment|ucfirst}}Attachment($pObject, $storeHash = array() ) {
+	function expunge{{$attachment|ucfirst}}Attachment($pObject, $pAttachmentId = NULL ) {
 		if( $pObject->isValid() ){
-			$pStoreHash['content_id'] = $pObject->mContentId;
-			$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => NULL), array('content_id' => $pStoreHash['content_id']));
+			$locId['content_id'] = $pObject->mContentId;
+			if (!empty($pAttachmentId)) {
+				$locId['{{$typemapName}}_{{$attachment}}_id'] = $pAttachmentId;
+			}
+			$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => NULL), $locId);
 		}
 	}
 {{/foreach}}

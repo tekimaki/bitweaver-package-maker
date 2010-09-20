@@ -21,6 +21,7 @@ functions:
   - package_admin
   - upload_store
   - upload_expunge
+  - upload_expunge_attachment
 files:
   - content_list_options
   - content_list_sort

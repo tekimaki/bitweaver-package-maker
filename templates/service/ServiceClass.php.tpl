@@ -133,9 +133,9 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 										);
 						$result = $this->mDb->associateUpdate( $table, $data, $locId );
 					} else {
-						$result = $this->mDb->associateInsert( $table, $pParamHash['{{$service.name}}_store'] );
+						$result = $this->mDb->associateInsert( $table, $data );
 					}
-			}
+				}
 {{else}}
 {{if $service.base_package == "liberty"}}
 				if (!empty($pParamHash['{{$service.name}}']['content_id'])) {
