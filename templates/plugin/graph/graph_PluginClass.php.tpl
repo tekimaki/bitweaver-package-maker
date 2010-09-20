@@ -39,21 +39,20 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 	function store( &$pParamHash ){
         // expunge first then we repopulate the record
-        $this->expunge( $pParamHash );
+		if( !empty( $pParamHash['{{$config.graph.head.field}}'] ) && $this->isValid() ){
+			$expungeHash = array( 'expunge_{{$config.graph.head.field}}' => $pParamHash['{{$config.graph.head.field}}'] );
+        	$this->expunge( $expungeHash );
 
-        if( $this->isValid() ){
-            // must have a tail content id 
-            $pParamHash['liberty_edge']['tail_content_id'] = $this->mContentId;
-            // must have a head content id to store
-            if( !empty( $pParamHash['{{$config.graph.head.field}}'] ) ){
-                $pParamHash['liberty_edge']['head_content_id'] = $pParamHash['{{$config.graph.head.field}}'];
-                parent::store( $pParamHash );
-            }
-        }
+			// must have a tail content id 
+			$pParamHash['liberty_edge']['tail_content_id'] = $this->mContentId;
+			// must have a head content id to store
+			$pParamHash['liberty_edge']['head_content_id'] = $pParamHash['{{$config.graph.head.field}}'];
+			parent::store( $pParamHash );
+		}
         return count( $this->getErrors() == 0 );
 	}
 
-	function expunge(){
+	function expunge( &$pParamHash ){
         /* =-=- CUSTOM BEGIN: expunge -=-= */
 {{if !empty($customBlock.expunge)}}
 {{$customBlock.expunge}}
