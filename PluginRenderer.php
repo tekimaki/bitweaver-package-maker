@@ -42,52 +42,55 @@ class PluginRenderer extends aRenderer{
 		if( empty( $config['base_class'] ) )
 			$config['base_class'] = 'LibertyBase'; 
 
-		// prep typemap data - @TODO move to typemap class
-		foreach( $config['typemaps'] as $typemapName=>$typemap ){
-			$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-			PackageRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $config['typemaps'][$typemapName], $excludeFields );
-		}
+		// @TODO move to typemap class
+		if( !empty( $config['typemaps'] ) ){
+			// prep typemap data 
+			foreach( $config['typemaps'] as $typemapName=>$typemap ){
+				$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
+				PackageRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $config['typemaps'][$typemapName], $excludeFields );
+			}
 
-		// prep sections so we know their typemaps
-		if (!empty($config['sections'])) {
-			foreach ($config['sections'] as &$section) {
-				if (!empty($section['fields'])) {
-					foreach ($section['fields'] as $map => $field) {
-						$typemapName = array_keys($field);
-						$section['typemaps'][$typemapName[0]] = $typemapName[0];
+			// prep sections so we know their typemaps
+			if (!empty($config['sections'])) {
+				foreach ($config['sections'] as &$section) {
+					if (!empty($section['fields'])) {
+						foreach ($section['fields'] as $map => $field) {
+							$typemapName = array_keys($field);
+							$section['typemaps'][$typemapName[0]] = $typemapName[0];
+						}
 					}
 				}
 			}
-		}
 
-		// prep service-typemap association hash
-		$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
+			// prep service-typemap association hash
+			$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
 
-		foreach( $services as $type=>$slist ){
-			switch( $type ){
-			case 'sql':
-			case 'functions':
-				foreach( $slist as $func ){
-					foreach( $config['typemaps'] as $typemapName=>$typemap ){
-						if( !empty( $typemap['services'] ) ){
-							if( in_array( $func, $typemap['services'] ) ){
-								$config['services']['functions'][$func][] = $typemapName;
+			foreach( $services as $type=>$slist ){
+				switch( $type ){
+				case 'sql':
+				case 'functions':
+					foreach( $slist as $func ){
+						foreach( $config['typemaps'] as $typemapName=>$typemap ){
+							if( !empty( $typemap['services'] ) ){
+								if( in_array( $func, $typemap['services'] ) ){
+									$config['services']['functions'][$func][] = $typemapName;
+								}
 							}
 						}
 					}
-				}
-				break;
-			case 'files':
-				foreach( $slist as $file ){
-					foreach( $config['typemaps'] as $typemapName=>$typemap ){
-						if( !empty( $typemap['services'] ) ){
-							if( in_array( $file, $typemap['services'] ) ){
-								$config['services']['files'][$file][] = $typemapName;
+					break;
+				case 'files':
+					foreach( $slist as $file ){
+						foreach( $config['typemaps'] as $typemapName=>$typemap ){
+							if( !empty( $typemap['services'] ) ){
+								if( in_array( $file, $typemap['services'] ) ){
+									$config['services']['files'][$file][] = $typemapName;
+								}
 							}
 						}
 					}
+					break;
 				}
-				break;
 			}
 		}
 

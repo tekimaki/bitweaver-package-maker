@@ -12,13 +12,7 @@
 require_once( {{$config.base_package|upper}}_PKG_PATH.'{{$config.base_class}}.php' );
 require_once( LIBERTY_PKG_PATH . 'LibertyValidator.php' );
 
-/* =-=- CUSTOM BEGIN: require -=-= */
-{{if !empty($customBlock.require)}}
-{{$customBlock.require}}
-{{else}}
-
-{{/if}}
-/* =-=- CUSTOM END: require -=-= */
+{{include file="custom_require_inc.php.tpl"}}
 
 
 class {{$config.class_name}} extends {{$config.base_class}} {
@@ -98,95 +92,11 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 {{/if}}{{/foreach}}
 
+{{include file="typemaps_methods_inc.php.tpl"}}
 
-
-{{if count($config.typemaps) > 0}}
-{{literal}}
-	// {{{ =================== TypeMap Functions for FieldSets ====================
-{{/literal}}
-
-	function verifyTypemaps( &$pParamHash ) {
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// verify {{$typemapName}} fieldset
-			$this->verify{{$typemapName|ucfirst}}($pParamHash);
-{{/foreach}}
-			return ( count($this->mErrors) == 0);
-	}
-
-	function previewTypemaps( &$pParamHash ) {
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// verify {{$typemapName}} fieldset
-			$this->preview{{$typemapName|ucfirst}}Fields($pParamHash);
-{{/foreach}}
-	}
-
-	function storeTypemaps( &$pParamHash, $skipVerify = TRUE ) {
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// store {{$typemapName}} fieldset
-			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, $skipVerify);
-{{/foreach}}
-			return ( count($this->mErrors) == 0);
-	}
-
-	function expungeTypemaps() {
-		if ($this->isValid() ) {
-			$paramHash = array('content_id' => $this->mContentId);
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// expunge {{$typemapName}} fieldset
-			$this->expunge{{$typemapName|ucfirst}}($paramHash);
-{{/foreach}}
-		}
-	}
-
-	function loadTypemaps() {
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// load {{$typemapName}} list from sub map
-			$this->mInfo['{{$typemapName}}'] = $this->list{{$typemapName|ucfirst}}();
-{{/foreach}}
-	}
-
-{{literal}}
-	// }}} -- end of TypeMap function for fieldsets
-{{/literal}}
-
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-{{include file="typemap_methods_inc.php.tpl" type=$config}}
-
-{{/foreach}}
-{{/if}}
-{{literal}}
-	// {{{ =================== Custom Helper Mthods  ====================
-{{/literal}}
-
-	/* This section is for any helper methods you wish to create */
-	/* =-=- CUSTOM BEGIN: methods -=-= */
-{{if !empty($customBlock.methods)}}
-{{$customBlock.methods}}
-{{else}}
-
-{{/if}}
-	/* =-=- CUSTOM END: methods -=-= */
-
-{{literal}}
-	// }}} -- end of Custom Helper Methods
-{{/literal}}
+{{include file="custom_methods_inc.php.tpl"}}
 }
 
 {{include file="plugin_service_functions_inc.php.tpl"}}
 
-{{literal}}
-// {{{ =================== Custom Helper Functions  ====================
-{{/literal}}
-
-/* This section is for any helper functions you wish to create */
-/* =-=- CUSTOM BEGIN: functions -=-= */
-{{if !empty($customBlock.functions)}}
-{{$customBlock.functions}}
-{{else}}
-
-{{/if}}
-/* =-=- CUSTOM END: functions -=-= */
-
-{{literal}}
-// }}} -- end of Custom Helper Methods
-{{/literal}}
+{{include file="custom_functions_inc.php.tpl"}}

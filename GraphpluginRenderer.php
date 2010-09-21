@@ -31,6 +31,9 @@ class GraphpluginRenderer extends PluginRenderer{
 	public function prepConfig( &$config ){ 
 		// pass graphplugin value to plugin
 		$config['plugin'] = $config['graphplugin'];
+
+		parent::prepConfig( $config );
+		/*
 		// Generate a few capitalization variations
 		$config['plugin'] = $config['name'] = strtolower($config['plugin']);
 		$config['PLUGIN'] = strtoupper($config['plugin']);
@@ -42,6 +45,7 @@ class GraphpluginRenderer extends PluginRenderer{
 		// set default class name
 		if( empty( $config['class_name'] ) )
 			$config['class_name'] = ucfirst( $config['plugin'] ).'Plugin'; 
+		 */
 
 		// force base package
 		$config['base_package'] = 'LibertyGraph'; 

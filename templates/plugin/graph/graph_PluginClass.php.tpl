@@ -12,13 +12,7 @@
 require_once( {{$config.base_package|upper}}_PKG_PATH.'{{$config.base_class}}.php' );
 require_once( LIBERTY_PKG_PATH . 'LibertyValidator.php' );
 
-/* =-=- CUSTOM BEGIN: require -=-= */
-{{if !empty($customBlock.require)}}
-{{$customBlock.require}}
-{{else}}
-
-{{/if}}
-/* =-=- CUSTOM END: require -=-= */
+{{include file="custom_require_inc.php.tpl"}}
 
 
 class {{$config.class_name}} extends {{$config.base_class}} {
@@ -53,13 +47,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 	}
 
 	function expunge( &$pParamHash ){
-        /* =-=- CUSTOM BEGIN: expunge -=-= */
-{{if !empty($customBlock.expunge)}}
-{{$customBlock.expunge}}
-{{else}}
-
-{{/if}}
-        /* =-=- CUSTOM END: expunge -=-= */
+{{include file="custom_expunge_inc.php.tpl"}}
 
         if( $this->isValid() ){
             $expungeHash = array();
@@ -95,13 +83,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 			$listHash['head_content_id'] = $pParamHash['{{$config.graph.head.field}}'];
         }
 
-        /* =-=- CUSTOM BEGIN: getList -=-= */
-{{if !empty($customBlock.getList)}}
-{{$customBlock.getList}}
-{{else}}
-
-{{/if}}
-        /* =-=- CUSTOM END: getList -=-= */
+{{include file="custom_getlist_inc.php.tpl"}}
 
         return parent::getList( $listHash );
     }
@@ -158,39 +140,11 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 {{/if}}{{/foreach}}
 
-{{literal}}
-	// {{{ =================== Custom Helper Mthods  ====================
-{{/literal}}
+{{include file="typemaps_methods_inc.php.tpl"}}
 
-	/* This section is for any helper methods you wish to create */
-	/* =-=- CUSTOM BEGIN: methods -=-= */
-{{if !empty($customBlock.methods)}}
-{{$customBlock.methods}}
-{{else}}
-
-{{/if}}
-	/* =-=- CUSTOM END: methods -=-= */
-
-{{literal}}
-	// }}} -- end of Custom Helper Methods
-{{/literal}}
+{{include file="custom_methods_inc.php.tpl"}}
 }
 
 {{include file="plugin_service_functions_inc.php.tpl"}}
 
-{{literal}}
-// {{{ =================== Custom Helper Functions  ====================
-{{/literal}}
-
-/* This section is for any helper functions you wish to create */
-/* =-=- CUSTOM BEGIN: functions -=-= */
-{{if !empty($customBlock.functions)}}
-{{$customBlock.functions}}
-{{else}}
-
-{{/if}}
-/* =-=- CUSTOM END: functions -=-= */
-
-{{literal}}
-// }}} -- end of Custom Helper Methods
-{{/literal}}
+{{include file="custom_functions_inc.php.tpl"}}

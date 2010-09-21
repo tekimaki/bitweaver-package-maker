@@ -17,6 +17,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{/foreach}}
 {{/if}}
 {{/foreach}}
+{{include file="custom_content_load_inc.php.tpl"}}
 {{elseif $func eq 'upload_store'}}
 {{if !empty($typemap.attachments)}}
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
