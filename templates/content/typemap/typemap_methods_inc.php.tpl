@@ -110,6 +110,7 @@
 {{/if}}
 			}
 		}
+		return count( $this->mErrors ) == 0;
 	}
 {{/if}}
 
@@ -134,6 +135,7 @@
 				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
 			}
 		}
+		return count( $this->mErrors ) == 0;
 	}
 
 	/** 
