@@ -1,6 +1,9 @@
 ---
 typemap:attachments should add upload_store to the services functions automatically, and pkgmkr should validate that name and validator: format exists.
 
+custom code blocks in own tpls:
+  this has been started but complete template set needs to be process
+
 custom code blocks in services:
   All generated service functions should have custom load blocks.
 
