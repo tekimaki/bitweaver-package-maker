@@ -16,8 +16,8 @@
  */
 
 class PluginRenderer extends aRenderer{
-        public static function validateConfig( $config ) {
-	        $vFile = 'plugin_validation.yaml';
+    public static function validateConfig( $config ) {
+		$vFile = 'plugin_validation.yaml';
 		parent::validateConfigImpl( $config, $vFile, $errors );
 	}
 
