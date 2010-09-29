@@ -158,6 +158,39 @@ abstract class aRenderer{
 		$filename = $dir."/".$file;
 		message(" ".$filename);
 
+		self::extractCustomBlocks( $filename );
+
+		// Get the contents of the file from smarty
+		$content = $gBitSmarty->fetch($prefix . $template);
+		if (!empty($content)) {
+			if (!$handle = fopen($filename, 'w+')) {
+				error("Cannot open file ($filename)");
+			}
+
+			// Write $content to our opened file.
+			if (fwrite($handle, $content) === FALSE) {
+				error("Cannot write to file ($filename)");
+			}
+
+			fclose($handle);
+
+			if (preg_match("/.php$/", $filename)) {
+				aRenderer::lintFile($filename);
+			}
+		} else {
+			error("Error generating file: $filename");
+		}
+	}
+
+	/**
+	 * extactCustomBlock
+	 *
+	 * identifies custom code blocks and assigns them to smarty 
+	 * so they can be rewritten into the generated template
+	 */
+	public static function extractCustomBlocks( $filename ){
+		global $gBitSmarty;
+
 		if (file_exists($filename)) {
 			if (is_file($filename)) {
 				if (is_readable($filename)) {
@@ -195,28 +228,8 @@ abstract class aRenderer{
 		} else {
 			echo "$filename is new.\n";
 		}
-
-		// Get the contents of the file from smarty
-		$content = $gBitSmarty->fetch($prefix . $template);
-		if (!empty($content)) {
-			if (!$handle = fopen($filename, 'w+')) {
-				error("Cannot open file ($filename)");
-			}
-
-			// Write $content to our opened file.
-			if (fwrite($handle, $content) === FALSE) {
-				error("Cannot write to file ($filename)");
-			}
-
-			fclose($handle);
-
-			if (preg_match("/.php$/", $filename)) {
-				aRenderer::lintFile($filename);
-			}
-		} else {
-			error("Error generating file: $filename");
-		}
 	}
+
 
 	/**
 	 * listFile
