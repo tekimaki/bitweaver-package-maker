@@ -10,10 +10,10 @@ functions:
   - content_preview
   - content_edit
   - content_store
+  - content_section
   - content_expunge
   - content_user_perms
   - content_verify_access
-  - content_schema_inc
   - comment_store
   - user_register
   - commerce_pre_purchase
