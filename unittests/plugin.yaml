@@ -16,7 +16,7 @@ plugin:
   content_types: [bitblogpost]
   typemaps:    
     utplugin:
-      services: [content_preview, content_edit, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_load]
+      services: [content_preview, content_edit, content_display, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_load]
       base_table: liberty_content
       maintainer_url: http://tekimaki.com
       permissions:

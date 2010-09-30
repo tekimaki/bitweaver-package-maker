@@ -1,4 +1,4 @@
-        ${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId );
-        if( !${{$config.name}}->storeTypemaps( $pParamHash, FALSE ) ){
-            $pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
+        ${{$serviceName}} = new {{$service.class_name}}( $pObject->mContentId );
+        if( !${{$serviceName}}->store( $pParamHash ) ){
+            $pObject->setError( '{{$serviceName}}', ${{$serviceName}}->mErrors );
         }

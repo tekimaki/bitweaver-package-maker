@@ -1,4 +1,4 @@
-        ${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
-        if( !${{$config.name}}->expungeTypemaps() ){
-            $pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
+        ${{$serviceName}} = new {{$service.class_name}}( $pObject->mContentId );
+        if( !${{$serviceName}}->expunge() ){
+            $pObject->setError( '{{$serviceName}}', ${{$serviceName}}->mErrors );
         }
