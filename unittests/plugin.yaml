@@ -1,0 +1,43 @@
+---
+plugin:
+  plugin: utplugin
+  package: blogs
+  copyright:
+    - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+    - {year: 2010, name: Will James, contact: will@tekimaki.com}
+  description: A unittest of the package maker plugin render - adds utplugin as plugin to blogs 
+  version: 0.1
+  requirements:
+    liberty: {min: 2.1.5}
+    acounts: {min: 0.0.0}
+  type: blog_utplugin    # the service guid
+  base_class: LibertyBase
+  base_package: liberty
+  content_types: [bitblogpost]
+  typemaps:    
+    utplugin:
+      services: [content_preview, content_edit, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_load]
+      base_table: liberty_content
+      maintainer_url: http://tekimaki.com
+      permissions:
+        default: {create: owner, view: basic, update: owner}
+      edit_loc: tab
+      relation: one-to-one     # options: one-to-one, one-to-many, many-to-many
+      fields:
+        content_id:
+          schema: {primary: true}
+          validator: {type: int}
+        field_a:
+          name: Field A
+          schema: {type: C(128), notnull: true}
+          validator: {type: string, required: true}
+        field_b:
+          name: Field B
+          schema: {type: C(128), notnull: true}
+          validator: {type: email, required: true}
+  sections:
+    plugininfo:
+      permissions:
+        default: {create: owner, view: owner, update: owner}
+      title: 'Example Infomation'
+      bodyfields: [{plugin: field_a}, {plugin: field_b}]

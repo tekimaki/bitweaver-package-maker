@@ -1,0 +1,36 @@
+---
+package:
+  package: pkgmkr_service
+  description: Package maker unittest\: Service.
+  copyright:
+    - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+    - {year: 2010, name: Will James, contact: will@tekimaki.com}
+  license:
+    name: LGPL
+    description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
+    url: http://www.gnu.org/copyleft/lesser.html
+  version: 0.1
+  requirements:
+    liberty: {min: 2.1.5}
+  maintainer_url: http://www.tekimaki.com
+  services:
+    utservice:
+      class_name: UTService
+      description: A unittest class of the package maker service class feature.
+      base_class: BitBase
+      base_package: kernel
+      type: ut_service
+      functions: [content_display, content_preview, content_edit, content_store, content_expunge, content_list_sql]
+      fields:
+        ref_content_id:
+          name: Liberty Content Reference
+          schema: {type: I4, notnull: true, primary: true}
+          validator: {type: reference, table: liberty_content, column: content_id, required: true}
+        field_a:
+          name: Field A
+          chema: {type: C(160)}
+          validator: {type: string}
+        field_b:
+          name: Field B
+          chema: {type: C(160)}
+          validator: {type: string}
