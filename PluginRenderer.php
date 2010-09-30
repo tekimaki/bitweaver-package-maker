@@ -100,6 +100,8 @@ class PluginRenderer extends aRenderer{
 	public function generate( $config ){
 		message("Generating plugin :".$config['plugin']);
 
+		$plugin_path = CONFIG_PKG_PATH.$config['package'].'/plugins/';
+
 		// Load the files we are to generate
 		$gFiles = Spyc::YAMLLoad(RESOURCE_PATH.'plugin.yaml');
 
@@ -112,21 +114,23 @@ class PluginRenderer extends aRenderer{
 		// Initialize smarty
 		$this->initSmarty($config);
 
-		// Now change directory to CONFIG_PKG_PATH to generate the package in
-		// the root of this install.
-		chdir( CONFIG_PKG_PATH.$config['package'].'/plugins/' );
-
 		// Now figure out the real directory and file names
 		foreach ($gFiles as $file_dir => $actions) {
 			$dir = $this->convertName($file_dir, NULL, $config);
+			$dir_path = $plugin_path.$dir;
 
 			// Does the directory exist
-			if (!is_dir($dir)) {
-				echo " ".$dir."\n";
-				if (!mkdir($dir)) {
+			if (!is_dir($dir_path)) {
+				echo " ".$dir_path."\n";
+				// if (!mkdir($dir)) {
+				if( !mkdir( $dir_path, 0755, TRUE ) ){
 					error("Could not create directory!");
 				}
 			}
+
+			// Now change directory to CONFIG_PKG_PATH to generate the package in
+			// the root of this install.
+			chdir( $plugin_path );
 
 			foreach ($actions as $action => $files) {
 				switch( $action ){
