@@ -15,13 +15,7 @@
 require_once( {{$service.base_package|upper}}_PKG_PATH.'{{$service.base_class}}.php' );
 require_once( LIBERTY_PKG_PATH . 'LibertyValidator.php' );
 
-/* =-=- CUSTOM BEGIN: require -=-= */
-{{if !empty($customBlock.require)}}
-{{$customBlock.require}}
-{{else}}
-
-{{/if}}
-/* =-=- CUSTOM END: require -=-= */
+{{include file="custom_require_inc.php.tpl"}}
 
 
 class {{$service.class_name}} extends {{$service.base_class}} {
