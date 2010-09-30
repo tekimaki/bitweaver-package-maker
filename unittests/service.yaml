@@ -1,6 +1,6 @@
 ---
 package:
-  package: pkgmkr_service
+  package: utservice
   description: Package maker unittest\: Service.
   copyright:
     - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
