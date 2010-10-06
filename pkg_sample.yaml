@@ -1,120 +1,121 @@
 ---
-package: sample
-description: An example package to show the power of the pkgmkr package.
-copyright:
-  - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
-  - {year: 2010, name: Nick Palmer, contact: palmer@overtsolutions.com}
-  - {year: 2010, name: Will James, contact: will@tekimaki.com}
-license:
-  name: LGPL
-  description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
-  url: http://www.gnu.org/copyleft/lesser.html 
-version: 0.1
-requirements:
-	liberty: {min: 2.1.5}
-homeable: true
-maintainer_url: http://www.tekimaki.com
-settings:
-  group:
-    boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
-    string: {label: A String Value, type: string, note: Enter a value }
-    numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value, default: 100 }
-types:
-  sample:
-    content_name: Sample Data Type
-    content_name_plural: Samples
-    description: A sample class which shows the power of the pkgmkr package.
-    base_class: LibertyMime
-    base_package: liberty
-    attachments: true
-    templates:
-      list_type.tpl: ulli
-    fields:
-      field_var_char:
-        name: A Var Char Field
-        schema: {type: C(128), notnull: true, default: varchar, unique: true}
-        validator: {type: string, required: true, max_length: 10}
-        smarty: {start_year: +1}
-      field_var_char2:
-        name: Another Var Char Field
-        schema: {type: C(128), notnull: true, default: varchar}
-        validator: {type: choice, choices: [First Choice, Second Choice], multiple: false}
-      field_large_var_char: 
-        name: A large var char field
-        schema: {type: X}
-        validator: {type: regex, pattern: .*@.*, match_required: true}
-      field_mb_var_char: 
-        name: Multibyte Var Char Field
-        schema: {type: C2(128)}
-        validator: {type: url}
-      field_large_mb_var_char: 
-        name: Large Multibyte Var Char Field
-        schema: {type: X2}
-        validator: {type: email}
-      field_blob: 
-        name: Blob Field
-        schema: {type: B}
-        validator: {type: no-input}
-      field_date: 
-        name: Date Field
-        schema: {type: D}
-        validator: {type: date}
-      field_timestamp: 
-        name: Timestamp Field
-        schema: {type: T}
-        validator: {type: timestamp}
-      field_boolean: 
-        name: Boolean Field
-        schema: {type: L}
-        validator: {type: boolean} 
-      field_int: 
-        name: Int Field
-        schema: {type: I}
-        validator: {type: int, min: 1, max: 10}
-      field_byte: 
-        name: Byte Field
-        schema: {type: I1}
-        validator: {type: no-input}
-      field_word: 
-        name: Word Field
-        schema:    {type: I2}
-        validator: {type: no-input}
-      field_int4: 
-        name: Another Int Field
-        schema: {type: I4}
-        validator: {type: time}
-      field_long: 
-        name: Long Field
-        schema: {type: I8}
-        validator: {type: long}
-      field_float:
-        name: Float Field
-        schema: {type: F}
-        validator: {type: float}
-      field_double: 
-        name: Double Field
-        schema: {type: N(6.2) }
-        validator: {type: double}
-      input_select: 
-        name: Input Select 
-        schema: {type: C(128), notnull: true, default: varchar, unique: true}
-        validator: {type: reference, required: true, table: liberty_content_types, column: content_type_guid, input: select, desc_column: content_name}
-    constraints:
-      - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample_data (sample_id)
-      - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
-    defaults:
-      - "(field_long) VALUES ('1000')"
-    settings:
-      group:
-        boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
-        string: {label: A String Value, type: string, note: Enter a value }
-        numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value default: 100 }
-tables:
-  sample_map:
-    description: A map table for mapping samples to each other
-    fields:
-      sample_left: {type: I, notnull: true}
-      sample_right: {type: I, notnull: true}
-    constraints:
-      - FOREIGN KEY (sample_left) REFERENCES sample (sample_id)
-      - FOREIGN KEY (sample_right) REFERENCES sample (sample_id)
+package:
+  package: sample
+  description: An example package to show the power of the pkgmkr package.
+  copyright:
+    - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+    - {year: 2010, name: Nick Palmer, contact: palmer@overtsolutions.com}
+    - {year: 2010, name: Will James, contact: will@tekimaki.com}
+  license:
+    name: LGPL
+    description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
+    url: http://www.gnu.org/copyleft/lesser.html 
+  version: 0.1
+  requirements:
+      liberty: {min: 2.1.5}
+  homeable: true
+  maintainer_url: http://www.tekimaki.com
+  settings:
+    group:
+      boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
+      string: {label: A String Value, type: string, note: Enter a value }
+      numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value, default: 100 }
+  types:
+    sample:
+      content_name: Sample Data Type
+      content_name_plural: Samples
+      description: A sample class which shows the power of the pkgmkr package.
+      base_class: LibertyMime
+      base_package: liberty
+      attachments: true
+      templates:
+        list_type.tpl: ulli
+      fields:
+        field_var_char:
+          name: A Var Char Field
+          schema: {type: C(128), notnull: true, default: varchar, unique: true}
+          validator: {type: string, required: true, max_length: 10}
+          smarty: {start_year: +1}
+        field_var_char2:
+          name: Another Var Char Field
+          schema: {type: C(128), notnull: true, default: varchar}
+          validator: {type: choice, choices: [First Choice, Second Choice], multiple: false}
+        field_large_var_char: 
+          name: A large var char field
+          schema: {type: X}
+          validator: {type: regex, pattern: .*@.*, match_required: true}
+        field_mb_var_char: 
+          name: Multibyte Var Char Field
+          schema: {type: C2(128)}
+          validator: {type: url}
+        field_large_mb_var_char: 
+          name: Large Multibyte Var Char Field
+          schema: {type: X2}
+          validator: {type: email}
+        field_blob: 
+          name: Blob Field
+          schema: {type: B}
+          validator: {type: no-input}
+        field_date: 
+          name: Date Field
+          schema: {type: D}
+          validator: {type: date}
+        field_timestamp: 
+          name: Timestamp Field
+          schema: {type: T}
+          validator: {type: timestamp}
+        field_boolean: 
+          name: Boolean Field
+          schema: {type: L}
+          validator: {type: boolean} 
+        field_int: 
+          name: Int Field
+          schema: {type: I}
+          validator: {type: int, min: 1, max: 10}
+        field_byte: 
+          name: Byte Field
+          schema: {type: I1}
+          validator: {type: no-input}
+        field_word: 
+          name: Word Field
+          schema:    {type: I2}
+          validator: {type: no-input}
+        field_int4: 
+          name: Another Int Field
+          schema: {type: I4}
+          validator: {type: time}
+        field_long: 
+          name: Long Field
+          schema: {type: I8}
+          validator: {type: long}
+        field_float:
+          name: Float Field
+          schema: {type: F}
+          validator: {type: float}
+        field_double: 
+          name: Double Field
+          schema: {type: N(6.2) }
+          validator: {type: double}
+        input_select: 
+          name: Input Select 
+          schema: {type: C(128), notnull: true, default: varchar, unique: true}
+          validator: {type: reference, required: true, table: liberty_content_types, column: content_type_guid, input: select, desc_column: content_name}
+      constraints:
+        - field_int4_ref FOREIGN KEY (field_int4) REFERENCES sample_data (sample_id)
+        - field_int_ref FOREIGN KEY (field_int) REFERENCES sample_data (sample_id)
+      defaults:
+        - "(field_long) VALUES ('1000')"
+      settings:
+        group:
+          boolean: {label: A Boolean Value, type: boolean, default: y, note: Check to set } 
+          string: {label: A String Value, type: string, note: Enter a value }
+          numeric: {label: A Numeric Value, type: numeric, note: Enter a numeric value default: 100 }
+  tables:
+    sample_map:
+      description: A map table for mapping samples to each other
+      fields:
+        sample_left: {type: I, notnull: true}
+        sample_right: {type: I, notnull: true}
+      constraints:
+        - FOREIGN KEY (sample_left) REFERENCES sample (sample_id)
+        - FOREIGN KEY (sample_right) REFERENCES sample (sample_id)
