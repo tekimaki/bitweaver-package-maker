@@ -23,7 +23,7 @@ $gBitSystem->verifyPackage( '{{$package}}' );
 // Define content lookup keys
 $typeNames = array(
 {{foreach from=$config.types key=typeName item=type name=types}}
-{{if in_array('title',$type.lookup_by)}}
+{{if $type.lookup_by && in_array('title',$type.lookup_by)}}
 		"{{$typeName}}_name"{{if !$smarty.foreach.types.last}},{{/if}}
 {{/if}}
 {{/foreach}}
