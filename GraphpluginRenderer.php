@@ -28,7 +28,7 @@ class GraphpluginRenderer extends PluginRenderer{
 		aRenderer::validateConfigImpl( $config, $vFile, $errors );
 	}
 
-	public function prepConfig( &$config ){ 
+	public static function prepConfig( &$config ){ 
 		// pass graphplugin value to plugin
 		$config['plugin'] = $config['graphplugin'];
 

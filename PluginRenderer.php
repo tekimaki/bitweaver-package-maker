@@ -21,7 +21,7 @@ class PluginRenderer extends aRenderer{
 		parent::validateConfigImpl( $config, $vFile, $errors );
 	}
 
-	public function prepConfig( &$config ){ 
+	public static function prepConfig( &$config ){ 
 		// Generate a few capitalization variations
 		$config['plugin'] = $config['name'] = strtolower($config['plugin']);
 		$config['PLUGIN'] = strtoupper($config['plugin']);
@@ -47,7 +47,7 @@ class PluginRenderer extends aRenderer{
 			// prep typemap data 
 			foreach( $config['typemaps'] as $typemapName=>$typemap ){
 				$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-				PackageRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $config['typemaps'][$typemapName], $excludeFields );
+				TypeRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $excludeFields );
 			}
 
 			// prep sections so we know their typemaps

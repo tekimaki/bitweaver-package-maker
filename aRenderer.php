@@ -16,12 +16,12 @@
  */
 
 abstract class aRenderer{
-	public function prepConfig( &$config ) {
-		return $config;
-	}
-
 	public function generate( $config ) {
 		return FALSE;
+	}
+
+	public static function prepConfig( &$config ) {
+		return $config;
 	}
 
 	public static function convertName( $file, $config, $params = array() ) {
