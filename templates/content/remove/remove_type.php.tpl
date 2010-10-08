@@ -26,7 +26,7 @@ $gContent->verifyExpungePermission();
 
 if( isset( $_REQUEST["confirm"] ) ) {
 	if( $gContent->expunge()  ) {
-		header ("location: ".BIT_ROOT_URL );
+		header ("location: ".{{$PACKAGE}}_PKG_URL."list_{{$type.name}}.php" );
 		die;
 	} else {
 		$gBitSystem->fatalError( "Error while deleting: " + $gContent->mErrors );
