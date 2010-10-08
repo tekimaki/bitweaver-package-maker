@@ -21,7 +21,7 @@
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( '{{$type.name}}_list_title' ) eq 'y'}
-						<th>{smartthnk ititle="{{$type.fields.title.name|default:'Title'}}" isort=title offset=$control.offset}</th>
+						<th>{smartlink ititle="{{$type.fields.title.name|default:'Title'}}" isort=title offset=$control.offset}</th>
 					{/if}
 
 
