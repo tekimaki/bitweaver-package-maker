@@ -5,7 +5,7 @@ plugin:
     - plugin_inc.php
     - schema_plugin_inc.php
     - admin_plugin_inc.php
-    - schema.yaml
+    - schema_plugin.yaml
 plugin/templates:
   plugin:
     - service_admin_inc.tpl
