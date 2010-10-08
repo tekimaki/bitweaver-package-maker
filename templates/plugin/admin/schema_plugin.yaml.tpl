@@ -81,3 +81,6 @@
       description: Can admin any {{$typemapName}} entry
       level: {{$typemap.permissions.default.admin|default:admin}}
 {{/foreach}}
+  service_guid: {{$config.type}}
+  content_types:
+{{foreach from=$ctypes item=ctype}}    - {{$ctype}}{{/foreach}}
