@@ -40,19 +40,19 @@ $typeContentIds = array(
 	);
 $typeFields = array(
 {{foreach from=$config.types key=typeName item=type name=types}}
-{{foreach from=$type.fields key=field_key item=field name=fields}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $field.look_up}}
-	"{{$typeName}}_{{$field.look_up_key|default:$field_key}}",
+	"{{$typeName}}_{{$field.look_up_key|default:$fieldName}}",
 {{/if}}
 {{/foreach}}
 {{/foreach}}
 	);	
 
 {{foreach from=$config.types key=typeName item=type name=types}}
-{{foreach from=$type.fields key=field_key item=field name=fields}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $field.look_up}}
-if(!empty($_REQUEST['{{$field_key}}'])){
-	$_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$field_key}}'] = $_REQUEST['{{$field_key}}'];
+if(!empty($_REQUEST['{{$fieldName}}'])){
+	$_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$fieldName}}'] = $_REQUEST['{{$fieldName}}'];
 }
 {{/if}}
 {{/foreach}}
@@ -98,7 +98,7 @@ if (empty($requestType)) {
 {{/if}}
 
 // If there is an id to get, specified or default, then attempt to get it and display
-if( {{foreach from=$config.types key=typeName item=type name=types}}{{foreach from=$type.fields key=field_key item=field name=fields}}{{if $field.look_up}}!empty( $_REQUEST[$requestType.'_{{$field.look_up_key|default:$field_key}}'] ) || 
+if( {{foreach from=$config.types key=typeName item=type name=types}}{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $field.look_up}}!empty( $_REQUEST[$requestType.'_{{$field.look_up_key|default:$fieldName}}'] ) || 
 {{/if}}{{/foreach}}{{/foreach}}
 	!empty( $_REQUEST[$requestType.'_name'] ) ||
     !empty( $_REQUEST[$requestType.'_id'] ) ||

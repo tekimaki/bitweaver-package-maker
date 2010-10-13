@@ -7,14 +7,12 @@ require_once( {{$PACKAGE}}_PKG_PATH.'{{$type.class_name}}.php');
 
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.
 if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
-{{foreach from=$type.fields key=field_key item=field name=fields}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $field.look_up}}
-	// if someone gives us a {{$field.look_up_key|default:$field_key}} we try to find it
-	if( !empty( $_REQUEST['{{$field.look_up_key|default:$field_key}}'] ) ){
-		$gContent = new {{$type.class_name}}();
-		$_REQUEST['{{$type.name}}_id'] = $gContent->getIdByLookUp( array('{{$field.look_up_key|default:$field_key}}'=>$_REQUEST['{{$field.look_up_key|default:$field_key}}']));//$gBitDb->getOne( "SELECT {{$type.name}}_id FROM `".BIT_DB_PREFIX."{{$type.name}}_data` {{$type.name|lower}} LEFT JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ({{$type.name|lower}}.`content_id` = lc.`content_id`) WHERE {{$type.name|lower}}.`{{$field.look_up_key|default:$field_key}}` = ?", array($_REQUEST['{{$field.look_up_key|default:$field_key}}']) );
-		if( empty( $_REQUEST['{{$type.name}}_id'] ) ) {
-		  $gBitSystem->fatalError(tra('No {{$type.name}} found with the name: ').$_REQUEST['{{$field.look_up_key|default:$field_key}}']);
+	// if someone gives us a {{$field.look_up_key|default:$fieldName}} we try to find it
+	if( !empty( $_REQUEST['{{$field.look_up_key|default:$fieldName}}'] ) ){
+		if( !($_REQUEST['{{$type.name}}_id'] = {{$type.class_name}}::getIdByLookUp( {{$fieldName}}, $_REQUEST['{{$field.look_up_key|default:$fieldName}}'] ))){
+			$gBitSystem->fatalError(tra('No {{$type.name}} found with the name: ').$_REQUEST['{{$field.look_up_key|default:$fieldName}}']);
 		}
 	}
 {{/if}}
