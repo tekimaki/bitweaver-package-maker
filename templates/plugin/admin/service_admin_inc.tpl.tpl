@@ -7,7 +7,7 @@
 			{include file="bitpackage:kernel/config_options_inc.tpl" legend="{{$pkgSettingsName|ucfirst}} Features" options=$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}}}
 {{/foreach}}
 			<div class="row submit">
-				<input type="submit" name="{{$plugin}}_settings" value="{tr}Change preferences{/tr}" />
+				<input class="button" type="submit" name="{{$plugin}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/jstab}
 {{/if}}

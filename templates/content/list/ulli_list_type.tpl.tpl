@@ -109,7 +109,7 @@
 						<option value="remove_{{$type.name}}_data">{tr}remove{/tr}</option>
 					</select>
 
-					<noscript><div><input type="submit" value="{tr}Submit{/tr}" /></div></noscript>
+					<noscript><div><input class="button" type="submit" value="{tr}Submit{/tr}" /></div></noscript>
 				</div>
 			{/if}
 		{/form}

@@ -37,7 +37,7 @@
 {{/foreach}}
 			{/legend}
 			<div class="row submit">
-				<input type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
+				<input class="button" type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/jstab}
 {* End homeable section *}
