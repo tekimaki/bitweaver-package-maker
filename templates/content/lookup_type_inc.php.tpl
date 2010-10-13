@@ -10,9 +10,9 @@ if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $field.look_up}}
 	// if someone gives us a {{$field.look_up_key|default:$fieldName}} we try to find it
-	if( !empty( $_REQUEST['{{$field.look_up_key|default:$fieldName}}'] ) ){
-		if( !($_REQUEST['{{$type.name}}_id'] = {{$type.class_name}}::getIdByLookUp( {{$fieldName}}, $_REQUEST['{{$field.look_up_key|default:$fieldName}}'] ))){
-			$gBitSystem->fatalError(tra('No {{$type.name}} found with the name: ').$_REQUEST['{{$field.look_up_key|default:$fieldName}}']);
+	if( !empty( $_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$fieldName}}'] ) ){
+		if( !($_REQUEST['{{$type.name}}_id'] = {{$type.class_name}}::getIdByField( '{{$fieldName}}', $_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$fieldName}}'] ))){
+			$gBitSystem->fatalError(tra('No {{$type.name}} found with the name: ').$_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$fieldName}}']);
 		}
 	}
 {{/if}}

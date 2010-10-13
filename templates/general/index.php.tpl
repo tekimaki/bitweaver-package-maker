@@ -50,9 +50,9 @@ $typeFields = array(
 
 {{foreach from=$config.types key=typeName item=type name=types}}
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
-{{if $field.look_up}}
+{{if $field.look_up_key}}
 if(!empty($_REQUEST['{{$fieldName}}'])){
-	$_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$fieldName}}'] = $_REQUEST['{{$fieldName}}'];
+	$_REQUEST['{{$typeName}}_{{$fieldName}}'] = $_REQUEST['{{$field.look_up_key}}'];
 }
 {{/if}}
 {{/foreach}}
