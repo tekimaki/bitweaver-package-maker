@@ -1,12 +1,10 @@
-'{{$tablePrefix}}_{{$typemapName}}' => "
+{{$tablePrefix}}_{{$typemapName}}: |
 {{if $typemap.sequence}}
-        {{$typemapName}}_id I4 PRIMARY,
-{{/if}}
+        {{$typemapName}}_id I4 PRIMARY,{{/if}}
 {{if $type.base_package == "liberty" || $typemap.base_table == 'liberty_content'}}
-		content_id I4 NOTNULL{{if $typemap.fields.content_id.schema.primary}} PRIMARY{{/if}},
-{{/if}}
+        content_id I4 NOTNULL{{if $typemap.fields.content_id.schema.primary}} PRIMARY{{/if}},{{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
-		{{$typemapName}}_{{$attachment}}_id I4{{if !$smarty.foreach.attachments.last || !empty($typemap.fields)}},{{/if}}
+        {{$typemapName}}_{{$attachment}}_id I4{{if !$smarty.foreach.attachments.last || !empty($typemap.fields)}},{{/if}}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
@@ -25,5 +23,4 @@
 {{/foreach}}
         '
 {{/if}}
-    ",
 
