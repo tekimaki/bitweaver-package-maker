@@ -637,7 +637,14 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 
 		return $this->mSchema;
 	}
-
+	
+	/**
+	 * gets id by look up fields
+	 */
+	function getIdByLookUp( $pParamHash ) {
+		return $this->mDb->getOne( "SELECT {{$type.name|lower}}_id FROM `".BIT_DB_PREFIX."{{$type.name|lower}}_data` {{$type.name|lower}} LEFT JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ({{$type.name|lower}}.`content_id` = lc.`content_id`) WHERE {{$type.name|lower}}.`".key($pParamHash)."` = ?", array($pParamHash) );
+	}
+	
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
 {{foreach from=$type.fields key=fieldName item=field}}
 {{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
