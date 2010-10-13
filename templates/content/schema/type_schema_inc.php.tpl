@@ -1,4 +1,4 @@
-'{{$typeName}}_data' => "
+{{$typeName}}_data: |
 {{if $type.base_package == "liberty"}}
 		{{$typeName}}_id I4 PRIMARY,
 		content_id I4 NOTNULL{{if $type.fields}},{{/if}} 
@@ -16,5 +16,4 @@
 {{/foreach}}
 		'
 {{/if}}
-	",
 
