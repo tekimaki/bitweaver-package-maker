@@ -38,7 +38,26 @@ $typeContentIds = array(
 		"{{$typeName}}_content_id"{{if !$smarty.foreach.types.last}},{{/if}}
 {{/foreach}}
 	);
+$typeFields = array(
+{{foreach from=$config.types key=typeName item=type name=types}}
+{{foreach from=$type.fields key=field_key item=field name=fields}}
+{{if $field.look_up}}
+	"{{$typeName}}_{{$field.look_up_key|default:$field_key}}",
+{{/if}}
+{{/foreach}}
+{{/foreach}}
+	);	
 
+{{foreach from=$config.types key=typeName item=type name=types}}
+{{foreach from=$type.fields key=field_key item=field name=fields}}
+{{if $field.look_up}}
+if(!empty($_REQUEST['{{$field_key}}'])){
+	$_REQUEST['{{$typeName}}_{{$field.look_up_key|default:$field_key}}'] = $_REQUEST['{{$field_key}}'];
+}
+{{/if}}
+{{/foreach}}
+{{/foreach}}	
+	
 // If a content type key id is requested load it up
 $requestType = NULL;
 $requestKeyType = NULL;
@@ -58,6 +77,11 @@ foreach( $_REQUEST as $key => $val ) {
         $requestKeyType = 'content_id';
         break;
     }
+	elseif (in_array($key, $typeFields)) {
+        $requestType = substr($key, 0, strpos($key, "_"));
+        $requestKeyType = 'field';
+        break;
+    }
 }
 
 {{if $config.homeable}}
@@ -74,7 +98,9 @@ if (empty($requestType)) {
 {{/if}}
 
 // If there is an id to get, specified or default, then attempt to get it and display
-if( !empty( $_REQUEST[$requestType.'_name'] ) ||
+if( {{foreach from=$config.types key=typeName item=type name=types}}{{foreach from=$type.fields key=field_key item=field name=fields}}{{if $field.look_up}}!empty( $_REQUEST[$requestType.'_{{$field.look_up_key|default:$field_key}}'] ) || 
+{{/if}}{{/foreach}}{{/foreach}}
+	!empty( $_REQUEST[$requestType.'_name'] ) ||
     !empty( $_REQUEST[$requestType.'_id'] ) ||
     !empty( $_REQUEST[$requestType.'_content_id'] ) ) {
 	// Look up the content
