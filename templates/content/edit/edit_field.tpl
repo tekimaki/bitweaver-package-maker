@@ -12,6 +12,16 @@
 		<option>{{$choice}}</option>
 		{{/foreach}}
 	    </select>
+    {{elseif $field.input.type=="radio"}}
+		{{foreach from=$field.validator.choices item=choice}}
+		<input type="radio" name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" value="{{$choice}}" /><br />
+		<label>
+			<small>
+		</label>
+		{{/foreach}}
+	    </select>
+    {{elseif $field.input.type=="hexcolor"}}
+    	    <input type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="hexcolor"}}
     	    <input type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="date"}}
