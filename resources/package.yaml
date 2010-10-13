@@ -25,7 +25,6 @@ package/templates:
 package/admin: 
   package: 
     - admin_package_inc.php
-    - schema_inc.php
     - schema.yaml
 package/scripts:
   type:

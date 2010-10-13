@@ -2,5 +2,4 @@
 plugin: {type: string, error: A plugin value is required}
 description: {type: string, error: A description is required}
 package: {type: string, error: The primary package with with to associate the plugin is required}
-typemaps: {type: array, error: At least one typemap is required}
 type: {type: string, error: A type guid for the plugin is required - it must be unique among the other service guids in use in your site}

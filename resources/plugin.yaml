@@ -3,7 +3,6 @@ plugin:
   plugin:
     - PluginClass.php
     - plugin_inc.php
-    - schema_plugin_inc.php
     - admin_plugin_inc.php
     - schema_plugin.yaml
 plugin/templates:
