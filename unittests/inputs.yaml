@@ -51,7 +51,7 @@ package:
           name: Boolean
           schema: {type: L}
           validator: {type: boolean} 
-        int: 
+        intgr: 
           name: Integer
           schema: {type: I}
           validator: {type: int, min: 1, max: 10}
