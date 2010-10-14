@@ -1,0 +1,67 @@
+---
+package:
+  package: inputs
+  description: 'Package maker unittest\: Inputs.'
+  copyright:
+    - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
+    - {year: 2010, name: Will James, contact: will@tekimaki.com}
+  license:
+    name: LGPL
+    description: Licensed under the GNU LESSER GENERAL PUBLIC LICENSE.
+    url: http://www.gnu.org/copyleft/lesser.html 
+  version: 0.0.0
+  requirements:
+    liberty: {min: 2.1.6}
+  homeable: false
+  maintainer_url: http://www.tekimaki.com
+  types:
+    inputs:
+      content_name: Inputs 
+      content_name_plural: Inputs
+      description: An inputs class
+      base_class: LibertyMime
+      base_package: liberty
+      attachments: true
+      fields:
+        title:
+          name: Text
+        data:
+          name: Textarea
+        password:
+          name: Password 
+          schema: {type: C(128)}
+          validator: {type: password, max_length: 128}
+        radio:
+          name: Radio Button 
+          schema: {type: C(128)}
+          validator: {type: radio, choices: [First Choice, Second Choice, Third Choice], multiple: false}
+        checkbox:
+          name: Checkbox 
+          schema: {type: C(128)}
+          validator: {type: checkbox, choices: [First Choice, Second Choice, Third Choice], multiple: false}
+        date: 
+          name: Date
+          schema: {type: D}
+          validator: {type: date}
+        timestamp: 
+          name: Timestamp
+          schema: {type: T}
+          validator: {type: timestamp}
+        boolean: 
+          name: Boolean
+          schema: {type: L}
+          validator: {type: boolean} 
+        int: 
+          name: Integer
+          schema: {type: I}
+          validator: {type: int, min: 1, max: 10}
+        choice_single: 
+          name: Select (single) 
+          schema: {type: C(128)}
+          validator: {type: choice, choices: [First Choice, Second Choice, Third Choice], multiple: false}
+        choice_multi: 
+          name: Select (multi) 
+          schema: {type: C(128)}
+          validator: {type: choice, choices: [First Choice, Second Choice, Third Choice, Fourth Choice, Fifth Choice], multiple: true}
+      defaults:
+      settings:
