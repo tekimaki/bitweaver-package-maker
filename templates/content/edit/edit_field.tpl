@@ -7,17 +7,19 @@
 {{if !empty($field.input.type)}}
 	{{if !$namespace}}{{assign var=namespace value=$type.name}}{{/if}}
     {{if $field.input.type=="choice"}}
-	    <select name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" {{if $field.validator.muliple}}multiple="multiple" {{/if}}>
+	    <select name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" {{if $field.validator.multiple}}multiple="multiple" size=3{{/if}}>
 		{{foreach from=$field.validator.choices item=choice}}
 		<option>{{$choice}}</option>
 		{{/foreach}}
 	    </select>
     {{elseif $field.input.type=="radio"}}
 		{{foreach from=$field.validator.choices item=choice}}
-		<input type="radio" name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" value="{{$choice}}" /><br />
-		<label>
-			<small>
-		</label>
+		<input type="radio" name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>{{$choice}}<br />
+		{{/foreach}}
+	    </select>
+    {{elseif $field.input.type=="checkbox"}}
+		{{foreach from=$field.validator.choices item=choice}}
+		<input type="checkbox" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>{{$choice}}<br />
 		{{/foreach}}
 	    </select>
     {{elseif $field.input.type=="hexcolor"}}
