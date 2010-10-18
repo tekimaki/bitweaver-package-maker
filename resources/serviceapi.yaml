@@ -13,15 +13,17 @@ functions:
   - content_section
   - content_expunge
   - content_user_perms
+  - content_verify
   - content_verify_access
   - comment_store
-  - user_register
   - commerce_pre_purchase
   - commerce_post_purchase
+  - module_display
   - package_admin
   - upload_store
   - upload_expunge
   - upload_expunge_attachment
+  - user_register
 files:
   - content_list_options
   - content_list_sort
@@ -30,9 +32,11 @@ files:
   - content_edit_mini
   - content_edit_tab
   - content_view
+  - content_body
   - content_nav
   - content_icon
   - content_list
+  - content_search
   - content_display_section
   - user_register_inc
   - package_admin
