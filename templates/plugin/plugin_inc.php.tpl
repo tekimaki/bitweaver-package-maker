@@ -11,6 +11,7 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 
 	define( 'LIBERTY_SERVICE_{{$config.name|strtoupper}}', '{{$config.type}}' );
 
+	/*
     $gLibertySystem->registerService(
 		LIBERTY_SERVICE_{{$config.name|strtoupper}},
 		{{$PACKAGE}}_PKG_NAME,
@@ -36,6 +37,7 @@ if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermi
 			'description' => '{{$config.description}}'
         )
     );
+	*/
 }
 /* =-=- CUSTOM BEGIN: setup_plugin -=-= */
 {{if !empty($customBlock.setup_plugin)}}

@@ -76,5 +76,36 @@
       level: {{$typemap.permissions.default.admin|default:admin}}
 {{/foreach}}
   service_guid: {{$config.type}}
+{{foreach from=$config.content_types item=ctypes}}
+{{if $ctypes}}
   content_types:
-{{foreach from=$ctypes item=ctype}}    - {{$ctype}}{{/foreach}}
+{{foreach from=$ctypes item=ctype}}    - {{$ctype}}{{/foreach}} 
+{{/if}}
+{{/foreach}}
+  api_handlers:
+    sql:
+{{foreach from=$config.services.functions key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
+{{if $func eq 'content_load_sql' || $func eq 'content_list_sql'}}
+      {{$func}}: {{$config.name}}_{{$func}}
+{{/if}}
+{{/foreach}}
+    function:
+{{foreach from=$config.services.functions key=func item=typemaps}}
+{{if $func != 'content_load_sql' && $func != 'content_list_sql'}}
+      {{$func}}: {{$config.name}}_{{$func}}
+{{/if}}
+{{/foreach}}
+{{if $config.sections}}{{* this should be handled in prepConfig *}}
+      content_section: {{$config.name}}_content_section
+      package_admin: {{$config.name}}_package_admin
+{{/if}}
+    tpl:
+{{foreach from=$config.services.files key=file item=typemaps}}
+{{if $file eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
+{{if $file eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
+      {{$file}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
+{{/foreach}}
+{{if $config.sections}}{{* this should be handled in prepConfig *}}
+      content_display_section: 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl'
+      package_admin: 'bitpackage:{{$config.package}}/{{$config.name}}/service_admin_inc.tpl'
+{{/if}}
