@@ -97,6 +97,8 @@
 {{/foreach}}
 {{if $config.sections}}{{* this should be handled in prepConfig *}}
       content_section: {{$config.name}}_content_section
+{{/if}}
+{{if $config.settings}}
       package_admin: {{$config.name}}_package_admin
 {{/if}}
     tpl:
@@ -107,5 +109,7 @@
 {{/foreach}}
 {{if $config.sections}}{{* this should be handled in prepConfig *}}
       content_display_section: 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl'
+{{/if}}
+{{if $config.settings}}
       package_admin: 'bitpackage:{{$config.package}}/{{$config.name}}/service_admin_inc.tpl'
 {{/if}}
