@@ -39,7 +39,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{include file="plugin_content_load_sql.php.tpl"}}
 {{elseif $func eq 'content_list_sql'}}
 {{include file="plugin_content_list_sql.php.tpl"}}
-{{/if}}
+{{/if}} 
 	}
 }
 {{/foreach}}
