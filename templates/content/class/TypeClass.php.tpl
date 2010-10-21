@@ -298,7 +298,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		if( !empty( $pParamHash['{{$type.name}}']['title'] ) ) {
 			$pParamHash['{{$type.name}}']['content_store']['title'] = substr( $pParamHash['{{$type.name}}']['title'], 0, 160 );
 		} else if( empty( $pParamHash['{{$type.name}}']['title'] ) ) { // else is error as must have title
-			$this->mErrors['title'] = tra('You must enter a title for this ').$this->getContentTypeName();
+			$this->mErrors['title'] = tra('You must enter a title for this '.$this->getContentTypeName());
 		}
 {{/if}}
 
