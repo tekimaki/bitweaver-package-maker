@@ -9,6 +9,7 @@
 * @class {{$config.class_name}}
 */
 
+require_once( CONFIG_PKG_PATH.'{{$config.package}}/plugins/{{$config.name}}/plugin_inc.php' );
 require_once( {{$config.base_package|upper}}_PKG_PATH.'{{$config.base_class}}.php' );
 require_once( LIBERTY_PKG_PATH . 'LibertyValidator.php' );
 

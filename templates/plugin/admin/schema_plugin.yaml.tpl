@@ -82,6 +82,7 @@
 {{foreach from=$ctypes item=ctype}}    - {{$ctype}}{{/foreach}} 
 {{/if}}
 {{/foreach}}
+  handler_file: {{$config.class_name}}.php
   api_handlers:
     sql:
 {{foreach from=$config.services.functions key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}

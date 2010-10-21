@@ -4,8 +4,10 @@
 
 global $gBitSystem, $gBitUser, $gLibertySystem;
 
+define( 'LIBERTY_SERVICE_{{$config.name|strtoupper}}', '{{$config.type}}' );
+
 // If package is active and the user has view auth then register the package menu
-if( $gBitSystem->isPackageActive( '{{$config.package}}' ) && $gBitUser->hasPermission( 'p_{{$config.package}}_view' ) ) {
+if( $gBitSystem->isPackageActive( '{{$config.package}}' ) ){ //&& $gBitUser->hasPermission( 'p_{{$config.package}}_view' ) ) {
 	/* DEPRECATED
 	// service functions
 	require_once( CONFIG_PKG_PATH.'{{$config.package}}/plugins/{{$config.plugin}}/{{$config.class_name}}.php' );
