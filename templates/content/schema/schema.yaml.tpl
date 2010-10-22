@@ -9,6 +9,7 @@
 {{else}}{{foreach from=$config.requirements key=pkg item=reqs name=reqs}}
     {{$pkg}}:
       {{foreach from=$reqs key=k item=v name=values}}{{$k}}: {{$v}}{{/foreach}}
+
 {{/foreach}}
 {{/if}} 
   description: {{$config.description}}

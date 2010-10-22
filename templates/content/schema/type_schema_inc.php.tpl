@@ -1,9 +1,12 @@
+{{assign var=need_comma value=false}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if !empty($field.schema)}}{{assign var=need_comma value=true}}{{/if}}{{/foreach}}
 {{$typeName}}_data: |
 {{if $type.base_package == "liberty"}}
         {{$typeName}}_id I4 PRIMARY,
-        content_id I4 NOTNULL{{if $type.fields}},{{/if}} 
+        content_id I4 NOTNULL{{if $need_comma}},{{/if}}
+
 {{/if}}
-{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if $field.schema}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}{{if !empty($field.schema)}}
         {{$fieldName}} {{$field.schema.type}}{{if !empty($field.schema.notnull)}} NOTNULL{{/if}}{{if !empty($field.schema.default)}} DEFAULT '{{$field.schema.default}}'{{/if}}{{if !empty($field.schema.unique)}} UNIQUE{{/if}}{{if !$smarty.foreach.fields.last}},{{/if}}
 
 {{/if}}{{/foreach}}{{if !empty($type.constraints) || $type.base_package == "liberty"}}
