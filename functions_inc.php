@@ -81,7 +81,9 @@ function generate( $spec ){
 			$baseClass = 'aRenderer';
 			$targetClass = ucfirst($key).'Renderer';
 			if (!class_exists($targetClass) || !is_subclass_of($targetClass, $baseClass)){
-				error( $key." is an invalid config type.");
+				error( $key." is an invalid config type.", false);
+				print_r($spec);
+				error( "Aborting.", true);
 			}
 			$Renderer = new $targetClass;
 			$Renderer->validateConfig($config);
