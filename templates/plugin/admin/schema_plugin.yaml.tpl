@@ -3,7 +3,6 @@
   version: 0.0.0
   required: false
   package: {{$package}}
-  service_guid: {{$config.type}}
   requirements: 
 {{if empty($config.requirements)}}
     liberty:
@@ -75,7 +74,6 @@
       description: Can admin any {{$typemapName}} entry
       level: {{$typemap.permissions.default.admin|default:admin}}
 {{/foreach}}
-  service_guid: {{$config.type}}
 {{foreach from=$config.content_types item=ctypes}}
 {{if $ctypes}}
   content_types:

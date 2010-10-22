@@ -1,5 +1,5 @@
 {strip}
-{if $gContent->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} )} 
+{if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$config.name|strtoupper}})} 
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 {{if $typemap.services && in_array('content_edit_mini',$typemap.services)}}
 	{if $gContent->isValid() && $gBitUser->hasPermission('p_{{$typemapName}}_service_update') ||
