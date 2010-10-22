@@ -99,4 +99,6 @@
       level: {{$type.permissions.default.admin|default:admin}}
 {{/foreach}}
   contenttypes:
+{{foreach from=$config.types key=typeName item=type name=types}}
     {{$type.class_name}}: {{$type.class_name}}.php
+{{/foreach}}
