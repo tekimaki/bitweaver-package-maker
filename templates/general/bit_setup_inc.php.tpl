@@ -14,7 +14,7 @@ $registerHash = array(
 $gBitSystem->registerPackage( $registerHash );
 
 // If package is active and the user has view auth then register the package menu
-if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 'p_{{$package}}_view' ) ) {
+if( $gBitSystem->isPackageActive( '{{$package}}' ) ){ //&& $gBitUser->hasPermission( 'p_{{$package}}_view' ) ) {
 	$menuHash = array(
 		'package_name'  => {{$PACKAGE}}_PKG_NAME,
 		'index_url'     => {{$PACKAGE}}_PKG_URL.'index.php',
@@ -29,6 +29,7 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
 {{foreach from=$config.services key=serviceName item=service}}
 	require_once( {{$PACKAGE}}_PKG_PATH.'{{$service.class_name}}.php' );
 
+	/*
     $gLibertySystem->registerService(
 		LIBERTY_SERVICE_{{$serviceName|strtoupper}},
 		{{$PACKAGE}}_PKG_NAME,
@@ -41,6 +42,7 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) && $gBitUser->hasPermission( 
 			'description' => '{{$service.description}}'
         )
     );
+	*/
 {{/foreach}}
 {{/if}}
 

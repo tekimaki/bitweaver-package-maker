@@ -1,6 +1,6 @@
 {{if $field.input.type != 'parsed'}}
 	{formfeedback warning=$errors.{{$fieldName}}}
-	{formlabel label="{{$field.name}}" for="{{$fieldName}}"}
+	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
 {{/if}}
 
@@ -23,9 +23,9 @@
 		{{/foreach}}
 	    </select>
     {{elseif $field.input.type=="hexcolor"}}
-    	    <input type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="hexcolor"}}
-    	    <input type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="date"}}
     	    {html_select_date field_array="{{$namespace}}[{{$fieldName}}]" prefix="" time=$gContent->getField("{{$fieldName}}") {{foreach from=$field.smarty key=sk item=sv}}{{$sk}}="{{$sv}}" {{/foreach}} }
     {{elseif $field.input.type=="time"}}
@@ -35,17 +35,17 @@
     {{elseif $field.input.type=="boolean"}}
     	    <input type="checkbox" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>
     {{elseif $field.input.type=="int" || $field.input.type=="long"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="float" || $field.input.type=="double"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="email"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="url"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="regex"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="string"}}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="textarea"}}
 	    	<textarea id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" rows="{{$field.input.rows|default:"20"}}">{$gContent->getField("{{$fieldName}}")}</textarea>
     {{elseif $field.input.type=="parsed"}}
@@ -54,14 +54,12 @@
 	{html_options id="{{$fieldName}}" options=${{$field.input.optionsHashName}} name="{{$namespace}}[{{$fieldName}}]" selected=$gContent->getField('{{$fieldName}}') {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}} }
     {{else}}
     	    {* Default *}
-    	    <input type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
+    	    <input class="textInput" type="text" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{/if}}
 {{else}}
 	{* No input type *}
-	<input type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldName}}" />
+	<input class="textInput" type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldName}}" />
 {{/if}}
-
-{{if $field.validator.required}}{required}{{/if}}
 
 {{if $field.input.type != 'parsed'}}
 	{formhelp note="{{$field.help}}"}

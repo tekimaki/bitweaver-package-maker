@@ -49,7 +49,7 @@
 					{/jstab}
 				{/if}
 				{jstab title="Edit"}
-				{legend legend=$gContent->getContentTypeName()}
+				{legend legend=$gContent->getContentTypeName() class="inlineLabels"}
 						<input type="hidden" name="{{$type.name}}[{{$type.name}}_id]" value="{$gContent->mInfo.{{$type.name}}_id}" />
 						{formfeedback warning=$errors.store}
 
@@ -58,7 +58,7 @@
 							{formfeedback warning=$errors.title}
 							{formlabel label="{{$type.fields.title.name|default:'Title'}}" for="title"}
 							{forminput}
-								<input type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
+								<input class="textInput" type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
 {{/if}}
@@ -69,7 +69,7 @@
 						</div>
 {{/if}}
 {{/foreach}}
-{{if $type.data}}
+{{if $type.data}} 
 						{textarea label="{{$type.fields.data.name}}" name="{{$type.name}}[edit]" help="{{$type.fields.data.help}}"}{$gContent->mInfo.data}{/textarea}
 {{/if}}
 						{* any simple service edit options *}
@@ -78,7 +78,7 @@
 {{if !empty($type.attachments)}}
 
 						{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
-							<div class=row>
+							<div class="row">
 							{legend legend="Attachments"}
 								{include file="bitpackage:liberty/edit_storage.tpl"}
 							{/legend}
@@ -87,7 +87,7 @@
 
 {{/if}}
 
-						<div class="row submit">
+						<div class="buttonHolder row submit">
 							<input class="button" type="submit" name="preview" value="{tr}Preview{/tr}" />
 							<input class="button" type="submit" name="save_{{$type.name}}" value="{tr}Save{/tr}" />
 						</div>
