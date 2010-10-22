@@ -6,7 +6,9 @@
 
 {{if !empty($field.input.type)}}
 	{{if !$namespace}}{{assign var=namespace value=$type.name}}{{/if}}
-    {{if $field.input.type=="choice"}}
+    {{if $field.input.type=="none"}}
+	{* No input for {{$field.name}} *}
+    {{elseif $field.input.type=="choice"}}
 	    <select name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" {{if $field.validator.multiple}}multiple="multiple" size=3{{/if}}>
 		{{foreach from=$field.validator.choices item=choice}}
 		<option>{{$choice}}</option>
