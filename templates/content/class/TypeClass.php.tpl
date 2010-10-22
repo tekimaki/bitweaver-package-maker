@@ -571,7 +571,9 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{/foreach}}
 			);
 {{elseif empty($field.validator.type)}}
-	$this->mVerification['{{$type.name}}_data']['null']['{{$fieldName}}'] = TRUE;
+	$this->mVerification['{{$type.name}}_data']['null']['{{$fieldName}}'] = array(
+		'name' => '{{$field.name|default:$fieldName|addslashes}}',
+);
 {{/if}}
 {{/foreach}}
 
