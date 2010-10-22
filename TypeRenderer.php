@@ -57,7 +57,9 @@ class TypeRenderer extends aRenderer{
 						if (!empty($field['validator']['type'])) {
 							$field['input']['type'] = $field['validator']['type'];
 						} else {
-							error("No validator for $field.", true);
+							error("Missing validator for: " . $field['name'], false);
+							print_r($field);
+							error("Aborting.", true);
 						}
 					}
 
