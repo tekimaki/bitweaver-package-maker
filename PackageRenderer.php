@@ -117,6 +117,7 @@ class PackageRenderer extends aRenderer{
 					break;
 				case "service":
 					if ( !empty( $config['services'] ) ) {
+					  	ServiceRenderer::prepConfig($config['services']);
 						ServiceRenderer::renderFiles($config, $dir, $files);
 					}
 					break;
@@ -157,7 +158,7 @@ class PackageRenderer extends aRenderer{
 		$gBitSmarty->assign('Package', $config['Package']);
 
 		// Assign the configuration to context
-		$gBitSmarty->assign('config', $config);
+		$gBitSmarty->assign_by_ref('config', $config);
 	}
 
 	public function copyFiles($config, $dir, $files) {

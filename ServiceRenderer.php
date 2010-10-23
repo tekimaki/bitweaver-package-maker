@@ -18,6 +18,11 @@
 class ServiceRenderer extends aRenderer{
 
 	public static function prepConfig( &$config ) {
+		$excludeFields = array( 'title', 'data', 'summary' );			// yaml may specify settings for auto generated fields in the field list, so we exclude them from requirements checks
+		foreach ($config as $serviceName => $service) {
+			// prep form fields
+			aRenderer::prepFieldsConfig( $config[$serviceName], $excludeFields );
+		}
 		return $config;
 	}
 

@@ -134,7 +134,7 @@ overloading the one functions key*}}
 {{/foreach}}
 {{/if}}
 {{if !empty($service.functions) }}
-        functions:
+        function:
 {{foreach from=$service.functions item=api_item key=api_key name=serviceapis}}
           {{$api_item}}: {{$serviceName}}_{{$api_item}}
 {{/foreach}}

@@ -231,6 +231,79 @@ abstract class aRenderer{
 		}
 	}
 
+	public static function prepFieldsConfig( &$schema, &$excludeFields = array() ){
+		if( !empty( $schema['fields'] ) ){
+			foreach ($schema['fields'] as $fieldName => &$field) {
+				if( empty( $excludeFields ) || !in_array( $fieldName, $excludeFields ) ){
+					// prep input hash
+
+					// default type inherited from validator settings
+					if( empty( $field['input']['type'] ) ){
+						if (!empty($field['validator']['type'])) {
+							$field['input']['type'] = $field['validator']['type'];
+						} else {
+							error("Missing validator for: " . $field['name'], false);
+							print_r($field);
+							error("Aborting.", true);
+						}
+					}
+
+					// convenience
+					$input = &$field['input'];
+					$validator = &$field['validator'];
+
+					switch( $input['type'] ){
+					case 'select':
+						// default select from a table
+						$input['source'] = !empty( $input['source'] )?$input['source']:'table';
+						switch( $input['source'] ){
+						case 'table':
+							// create select menu building blocks
+							// a hash name
+							$optionsHashName = $fieldName.'_options';
+
+							// list sql
+							$tableBPrefix = !empty( $input['desc_column'] )?'b':'a';
+							$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
+
+							// create sql for loading up a select list of options
+							$optionsHashQuery = "SELECT a.".$validator['column'].", ".$tableBPrefix.".".$input['desc_column']." FROM ".$validator['table']." a"; 
+							$optionsHashQuery .= !empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
+
+							// set references to the hash name and the query
+							$input['optionsHashName'] = $optionsHashName;
+							$input['optionsHashQuery'] = $optionsHashQuery; 
+							break;
+						case 'dataset':
+							// set reference to the hash name
+							$input['optionsHashName'] = $input['dataset'].'Options';
+							break;
+						}
+						break;
+					}
+
+					// prep js
+					if( !empty($input['js']) ){
+						// make mixedCase js handler function names
+						// assembled from two parts: the js handler name e.g. onclick etc, and the field name e.g. myfield_id => onClickMyfieldId
+						foreach( $input['js'] as $handler ){
+							preg_match( '/(^on)(.*)/', $handler, $hmatches ); 
+							$fmatches = explode( '_', $fieldName );
+							$suffix = "";
+							while (list($key, $val) = each($fmatches)) {
+								$suffix .= ucfirst($val);
+							}
+							$funcName = $hmatches[1].ucfirst($hmatches[2]).$suffix;
+
+							// set references to the handler name for tpls to use
+							$schema['js']['funcs'][] = $funcName;
+							$input['jshandlers'][$handler] = $schema['class_name'].'.'.$funcName;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * listFile

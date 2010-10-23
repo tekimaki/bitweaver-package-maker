@@ -437,6 +437,27 @@ class {{$service.class_name}} extends {{$service.base_class}} {
     }
 
 
+	// Getters for reference column options - return associative arrays formatted for generating html select inputs
+{{foreach from=$service.fields key=fieldName item=field}}
+{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+	function get{{$field.name|replace:" ":""}}Options( &$pParamHash=array() ){
+		$bindVars = array();
+		$joinSql = $whereSql = "";
+{{assign var=customlabel value="`$fieldName`_options"}}
+		/* =-=- CUSTOM BEGIN: {{$customlabel}} -=-= */
+{{if !empty($customBlock.$customlabel)}}
+{{$customBlock.$customlabel}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: {{$customlabel}} -=-= */
+		$query = "{{$field.input.optionsHashQuery}} $joinSql $whereSql";
+		return $this->mDb->getAssoc( $query, $bindVars );
+	}
+
+{{/if}}{{/foreach}}
+
+
 {{literal}}
 	// {{{ =================== Custom Helper Mthods  ====================
 {{/literal}}
