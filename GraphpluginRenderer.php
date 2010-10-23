@@ -117,37 +117,4 @@ class GraphpluginRenderer extends PluginRenderer{
 		}
 		return $tmp_file;
 	}
-
-	/*
-	public static function renderFiles( $config, $dir, $files ){ 
-		foreach ($files as $file) {
-			$render = TRUE;
-			// optional files
-			switch( $file ){
-			case 'service_edit_mini_inc.tpl':
-				$render = FALSE;
-				if( !empty( $config['services'] ) ){
-					$render = in_array( 'content_edit_mini', array_keys($config['services']['files']) );
-				}
-				break;
-			case 'service_edit_tab_inc.tpl':
-				$render = FALSE;
-				if( !empty( $config['services'] ) ){
-					$render = in_array( 'content_edit_tab', array_keys($config['services']['files']) );
-				}
-				break;
-			default:
-				break;
-			}
-			// render
-			if( $render ){
-				$render_file = self::convertName($file, $config);
-				$template = $file.".tpl";
-				$prefix = self::getTemplatePrefix($file, $config);
-				// Render the file
-				self::renderFile($dir, $render_file, $template, $config, $prefix);
-			}
-		}
-	}
-	*/
 }
