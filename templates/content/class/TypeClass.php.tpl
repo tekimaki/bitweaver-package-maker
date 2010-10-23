@@ -554,6 +554,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		if (empty($this->mVerification['{{$type.name}}_data'])) {
 
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
+{{if !empty($field.schema)}}
 	 		/* Validation for {{$fieldName}} */
 {{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
 			$this->mVerification['{{$type.name}}_data']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
@@ -574,6 +575,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	$this->mVerification['{{$type.name}}_data']['null']['{{$fieldName}}'] = array(
 		'name' => '{{$field.name|default:$fieldName|addslashes}}',
 );
+{{/if}}
 {{/if}}
 {{/foreach}}
 
