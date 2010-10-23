@@ -98,7 +98,52 @@
       description: Can admin any {{$typeName}} entry
       level: {{$type.permissions.default.admin|default:admin}}
 {{/foreach}}
+{{foreach from=$config.services key=serviceName item=service name=services}}
+    p_{{$serviceName}}_create:
+      description:  Can create a {{$serviceName}} entry
+      level: {{$service.permissions.default.create|default:registered}}
+    p_{{$serviceName}}_view:
+      description:  Can view {{$serviceName}} entries
+      level: {{$service.permissions.default.view|default:basic}}
+    p_{{$serviceName}}_update:
+      description: Can update any {{$serviceName}} entry
+      level: {{$service.permissions.default.update|default:editors}}
+    p_{{$serviceName}}_expunge:
+      description: Can delete any {{$serviceName}} entry
+      level: {{$service.permissions.default.expunge|default:admin}}
+    p_{{$serviceName}}_admin:
+      description: Can admin any {{$serviceName}} entry
+      level: {{$service.permissions.default.admin|default:admin}}
+{{/foreach}}
   contenttypes:
 {{foreach from=$config.types key=typeName item=type name=types}}
     {{$type.class_name}}: {{$type.class_name}}.php
 {{/foreach}}
+{{if !empty($config.services) }}
+  plugins:
+{{* TODO: add plugins here and refactor plugin yaml to use three keys instead of
+overloading the one functions key*}}
+{{foreach from=$config.services item=service key=serviceName name=services}}
+    {{$serviceName}}:
+      handler_file: {{$service.class_name}}.php
+        api_handlers:
+{{if !empty($service.sql) }}
+          sql:
+{{foreach from=$service.sql item=api_item key=api_key name=serviceapis}}
+            {{$api_item}}: {{$serviceName}}_{{$api_item}}
+{{/foreach}}
+{{/if}}
+{{if !empty($service.functions) }}
+          functions:
+{{foreach from=$service.functions item=api_item key=api_key name=serviceapis}}
+            {{$api_item}}: {{$serviceName}}_{{$api_item}}
+{{/foreach}}
+{{/if}}
+{{if !empty($service.templates) }}
+          tpl:
+{{foreach from=$service.templates item=api_item key=api_key name=serviceapis}}
+            {{$api_item}}: "bitpackage:{{$package}}/{{$serviceName}}_{{$api_item}}_inc.tpl"
+{{/foreach}}
+{{/if}}
+{{/foreach}}
+{{/if}}

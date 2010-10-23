@@ -79,12 +79,12 @@ class PluginRenderer extends aRenderer{
 						}
 					}
 					break;
-				case 'files':
+				case 'templates':
 					foreach( $slist as $file ){
 						foreach( $config['typemaps'] as $typemapName=>$typemap ){
 							if( !empty( $typemap['services'] ) ){
 								if( in_array( $file, $typemap['services'] ) ){
-									$config['services']['files'][$file][] = $typemapName;
+									$config['services']['templates'][$file][] = $typemapName;
 								}
 							}
 						}
@@ -174,13 +174,13 @@ class PluginRenderer extends aRenderer{
 			case 'service_edit_mini_inc.tpl':
 				$render = FALSE;
 				if( !empty( $config['services'] ) ){
-					$render = in_array( 'content_edit_mini', array_keys($config['services']['files']) );
+					$render = in_array( 'content_edit_mini', array_keys($config['services']['templates']) );
 				}
 				break;
 			case 'service_edit_tab_inc.tpl':
 				$render = FALSE;
 				if( !empty( $config['services'] ) ){
-					$render = in_array( 'content_edit_tab', array_keys($config['services']['files']) );
+					$render = in_array( 'content_edit_tab', array_keys($config['services']['templates']) );
 				}
 				break;
 			case 'admin_plugin_inc.php':

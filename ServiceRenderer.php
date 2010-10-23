@@ -17,6 +17,10 @@
 
 class ServiceRenderer extends aRenderer{
 
+	public static function prepConfig( &$config ) {
+		return $config;
+	}
+
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = preg_replace("/service/", strtolower($params['service']), $file);
 		return preg_replace("/ServiceClass/", $params['class_name'], $tmp_file);
@@ -28,7 +32,7 @@ class ServiceRenderer extends aRenderer{
 				global $gBitSmarty;
 				$params['name'] = $service;
 				$gBitSmarty->assign('service', $params);
-				foreach ($files as $file) {
+				foreach ($files as $file) {				  
 					$render_file = PackageRenderer::convertName(ServiceRenderer::convertName($file, $service, $params), $config);
 					$template = $file.".tpl";
 					$prefix = ServiceRenderer::getTemplatePrefix($file, $params);
