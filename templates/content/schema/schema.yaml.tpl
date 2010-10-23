@@ -126,23 +126,23 @@ overloading the one functions key*}}
 {{foreach from=$config.services item=service key=serviceName name=services}}
     {{$serviceName}}:
       handler_file: {{$service.class_name}}.php
-        api_handlers:
+      api_handlers:
 {{if !empty($service.sql) }}
-          sql:
+        sql:
 {{foreach from=$service.sql item=api_item key=api_key name=serviceapis}}
-            {{$api_item}}: {{$serviceName}}_{{$api_item}}
+          {{$api_item}}: {{$serviceName}}_{{$api_item}}
 {{/foreach}}
 {{/if}}
 {{if !empty($service.functions) }}
-          functions:
+        functions:
 {{foreach from=$service.functions item=api_item key=api_key name=serviceapis}}
-            {{$api_item}}: {{$serviceName}}_{{$api_item}}
+          {{$api_item}}: {{$serviceName}}_{{$api_item}}
 {{/foreach}}
 {{/if}}
 {{if !empty($service.templates) }}
-          tpl:
+        tpl:
 {{foreach from=$service.templates item=api_item key=api_key name=serviceapis}}
-            {{$api_item}}: "bitpackage:{{$package}}/{{$serviceName}}_{{$api_item}}_inc.tpl"
+          {{$api_item}}: "bitpackage:{{$package}}/{{$serviceName}}_{{$api_item}}_inc.tpl"
 {{/foreach}}
 {{/if}}
 {{/foreach}}

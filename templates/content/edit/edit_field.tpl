@@ -56,7 +56,7 @@
     {{if empty($field.input.multiple) }}{html_options id="{{$fieldName}}" options=${{$field.input.optionsHashName}} name="{{$namespace}}[{{$fieldName}}]" selected=$gContent->getField('{{$fieldName}}') {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}} }
     {{else}}<select name="{{$namespace}}[{{$fieldName}}][]" id="{{$fieldName}}" {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}} multiple="multiple" >
          {foreach from=${{$field.input.optionsHashName}} key=itemKey item=itemValue}
-             <option value="{$itemKey}" {if in_array($itemKey, `$gContent->mInfo.{{$namespace}}.{{$fieldName}}`}selected='selected'{/if}>
+             <option value="{$itemKey}" {if in_array($itemKey, $gContent->mInfo.{{$namespace}}.{{$fieldName}})}selected='selected'{/if}>
                {$itemValue|escape:html}
              </option>
          {/foreach}

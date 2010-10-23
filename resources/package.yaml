@@ -23,8 +23,8 @@ package/templates:
     - edit_type.tpl
     - list_type.tpl
   service:
-    - service_edit_tab_inc.tpl
-    - service_edit_mini_inc.tpl
+    - service_content_edit_tab_inc.tpl
+    - service_content_edit_mini_inc.tpl
 package/admin: 
   package: 
     - admin_package_inc.php
