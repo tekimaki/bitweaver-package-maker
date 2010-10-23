@@ -22,21 +22,21 @@
   tables: 
 {{* content types *}}
 {{foreach from=$config.types key=typeName item=type}}
-    {{include file="type_schema_inc.php.tpl"}}
+    {{include file="type_schema_inc.yaml.tpl"}}
 {{foreach from=$type.typemaps key=typemapName item=typemap}}
-    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$typeName}}
+    {{include file="typemap_schema_inc.yaml.tpl" tablePrefix=$typeName}}
 {{/foreach}}
 {{/foreach}}
 {{* services *}}
 {{foreach from=$config.services key=serviceName item=service}}
-    {{include file="service_schema_inc.php.tpl"}}
+    {{include file="service_schema_inc.yaml.tpl"}}
 {{foreach from=$service.typemaps key=typemapName item=typemap}}
-    {{include file="typemap_schema_inc.php.tpl" tablePrefix=$serviceName}}
+    {{include file="typemap_schema_inc.yaml.tpl" tablePrefix=$serviceName}}
 {{/foreach}}
 {{/foreach}}
 {{* tables *}}
 {{foreach from=$config.tables key=tableName item=table}}
-    {{include file="table_schema_inc.php.tpl" tableName=$tableName table=$table}}
+    {{include file="table_schema_inc.yaml.tpl" tableName=$tableName table=$table}}
 {{/foreach}}
   constraints: 
 {{* @TODO *}}

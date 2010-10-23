@@ -1,4 +1,4 @@
-'{{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}}' => "
+{{$serviceName}}{{if $service.base_package == "liberty"}}_data{{/if}}: |
 {{if $service.sequence}}
         {{$serviceName}}_id I4 PRIMARY,
 {{/if}}
@@ -27,5 +27,5 @@
 {{/foreach}}
         '
 {{/if}}
-    ",
+
 

@@ -227,6 +227,7 @@ abstract class aRenderer{
 			}
 		} else {
 			echo "$filename is new.\n";
+			$gBitSmarty->assign('customBlock', array() );
 		}
 	}
 
