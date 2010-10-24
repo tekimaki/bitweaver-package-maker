@@ -55,7 +55,7 @@
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
 		<div class="row" id="row_{{$serviceName}}_{{$fieldName}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
-{{include file="edit_field.tpl" namespace=`$serviceName`}}
+{{include file="edit_field.tpl" namespace=`$serviceName`_data }}
 		</div>
 {{/if}}
 {{/foreach}}

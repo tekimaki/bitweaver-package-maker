@@ -333,12 +333,25 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 */
 	function validateFields( &$pParamHash ) {
 		$this->prepVerify();
+{{if $service.relation == 'one-to-many' || $service.relation == 'many-to-many'}}
+		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
+			foreach ($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'] as $key => $data) {
+				$pParamHash['{{$service.name}}_store'][$key] = array();
+				$store[$key] = array();
+				LibertyValidator::validate(
+					$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
+					$data,
+					$this, $pParamHash['{{$service.name}}_store'][$key]);
+			}
+		}
+{{else}}
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 			LibertyValidator::validate(
 				$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
 				$pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
 				$this, $pParamHash['{{$service.name}}_store']);
 		}
+{{/if}}
 	}
 
 	/**
