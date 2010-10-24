@@ -17,7 +17,7 @@
 {{if $field_has_reference}}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $field.validator.type == "reference"}}
-		, CONSTRAINT `{{$serviceName}}_{{$fieldName}}_{{$field.validator.column}}_ref` FOREIGN KEY (`{{$fieldName}}`) REFERENCES `{{$field.validator.table}}` (`{{$field.validator.column}}`)
+        , CONSTRAINT `{{$serviceName}}_{{$fieldName}}_ref` FOREIGN KEY (`{{$fieldName}}`) REFERENCES `{{$field.validator.table}}` (`{{$field.validator.column}}`)
 {{/if}}
 {{/foreach}}
 {{assign var=field_has_reference value=0}}
