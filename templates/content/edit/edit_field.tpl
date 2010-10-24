@@ -1,11 +1,11 @@
-{{if $field.input.type != 'parsed'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none'}}
 	{formfeedback warning=$errors.{{$fieldName}}}
 	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
 {{/if}}
 
 {{if !empty($field.input.type)}}
-	{{if !$namespace}}{{assign var=namespace value=$type.name}}{{/if}}
+    {{if !$namespace}}{{assign var=namespace value=$type.name}}{{/if}}
     {{if $field.input.type=="none"}}
 	{* No input for {{$field.name}} *}
     {{elseif $field.input.type=="choice"}}
@@ -76,7 +76,7 @@
 	<input class="textInput" type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldName}}" />
 {{/if}}
 
-{{if $field.input.type != 'parsed'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none'}}
 	{formhelp note="{{$field.help}}"}
 	{/forminput}
 {{/if}}

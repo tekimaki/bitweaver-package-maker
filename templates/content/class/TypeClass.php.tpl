@@ -208,6 +208,8 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		// This is particularly important for classes which will
 		// touch the filesystem in some way.
 		$abort = ignore_user_abort(FALSE);
+		// A flag to let the custom store block know if we updated or inserted.
+		$new = FALSE;
 		if( $this->verify( $pParamHash )
 {{if count($type.typemaps) > 0}}
 			&& $this->verifyTypemaps( $pParamHash )
@@ -221,6 +223,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_store'], $locId );
 				}
 			} else {
+				$new = TRUE;
 				$pParamHash['{{$type.name|lower}}_store']['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
 				if( @$this->verifyId( $pParamHash['{{$type.name|lower}}_id'] ) ) {
 					// if pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] is set, some is requesting a particular {{$type.name|lower}}_id. Use with caution!

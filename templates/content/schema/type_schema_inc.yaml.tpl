@@ -14,6 +14,11 @@
 {{if $type.base_package == "liberty"}}
         , CONSTRAINT `{{$typeName}}_content_ref` FOREIGN KEY (`content_id`) REFERENCES `liberty_content` (`content_id`)
 {{/if}}
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
+{{if $field.validator.type == "reference"}}
+		, CONSTRAINT `{{$serviceName}}_{{$fieldName}}_{{$field.validator.column}}_ref` FOREIGN KEY (`{{$fieldName}}`) REFERENCES `{{$field.validator.table}}` (`{{$field.validator.column}}`)
+{{/if}}
+{{/foreach}}
 {{foreach from=$type.constraints item=constraint}}
         , {{$constraint}}
 {{/foreach}}
