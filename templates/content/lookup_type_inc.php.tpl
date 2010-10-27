@@ -26,8 +26,8 @@ if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 	} elseif( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		$gContent = new {{$type.class_name}}( NULL, $_REQUEST['content_id'] );
 
-	} elseif (@BitBase::verifyId( $_REQUEST['{{$package}}']['{{$type.name}}_id'] ) ) {
-		$gContent = new {{$type.class_name}}( $_REQUEST['{{$package}}']['{{$type.name}}_id'] );
+	} elseif (@BitBase::verifyId( $_REQUEST['{{$type.name}}']['{{$type.name}}_id'] ) ) {
+		$gContent = new {{$type.class_name}}( $_REQUEST['{{$type.name}}']['{{$type.name}}_id'] );
 
 	// otherwise create new object
 	} else {
