@@ -22,7 +22,7 @@
                 {/foreach}
             {/legend}
 {{/foreach}}
-			<div class="row submit">
+			<div class="buttonHolder row submit">
 				<input class="button" type="submit" name="{{$package}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/jstab}

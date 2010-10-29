@@ -6,7 +6,7 @@
 {{foreach from=$config.settings key=pkgSettingsName item=pkgSettingGroup name=pkgSettings}}
 			{include file="bitpackage:kernel/config_options_inc.tpl" legend="{{$pkgSettingsName|ucfirst}} Features" options=$form{{$Package}}{{$Plugin}}{{$pkgSettingsName|ucfirst}}}
 {{/foreach}}
-			<div class="row submit">
+			<div class="buttonHolder row submit">
 				<input class="button" type="submit" name="{{$plugin}}_settings" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/jstab}
