@@ -26,6 +26,10 @@ if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 	} elseif( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		$gContent = new {{$type.class_name}}( NULL, $_REQUEST['content_id'] );
 
+	// if {{$type.name}}_content_id supplied, use that
+	} elseif( @BitBase::verifyId( $_REQUEST['{{$type.name}}_content_id'] ) ) {
+		$gContent = new {{$type.class_name}}( NULL, $_REQUEST['{{$type.name}}_content_id'] );
+
 	} elseif (@BitBase::verifyId( $_REQUEST['{{$type.name}}']['{{$type.name}}_id'] ) ) {
 		$gContent = new {{$type.class_name}}( $_REQUEST['{{$type.name}}']['{{$type.name}}_id'] );
 

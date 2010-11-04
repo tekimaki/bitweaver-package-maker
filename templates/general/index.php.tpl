@@ -86,13 +86,28 @@ foreach( $_REQUEST as $key => $val ) {
 
 {{if $config.homeable}}
 if (empty($requestType)) {
-	// Use the home type and home content
-	$requestType = $gBitSystem->getConfig("{{$package}}_home_type", "{{foreach from=$config.types key=typeName item=type name=types}}{{if $smarty.foreach.types.first}}{{$typeName}}{{/if}}{{/foreach}}");
-    if( $gBitSystem->getConfig( '{{$package}}_home_format', 'list' ) == 'list' ){
-        include_once( {{$PACKAGE}}_PKG_PATH.'list_'.$requestType.'.php' );
-        die;
-    }else{
-		$_REQUEST[$requestType.'_id'] = $gBitSystem->getConfig( "{{$package}}_".$requestType."_home_id" );
+    // If content id and content_type_guid are specified try those
+    if( !empty( $_REQUEST['content_id'] ) && !empty( $_REQUEST['content_type_guid'] ) ){
+        switch( $_REQUEST['content_type_guid'] ){
+{{foreach from=$config.types key=typeName item=type name=types}}
+        case 'bit{{$typeName}}':
+            $requestType = '{{$typeName}}';
+            $requestKeyType = 'content_id';
+            $_REQUEST['{{$typeName}}_content_id'] = $_REQUEST['content_id'];
+            break;
+{{/foreach}}
+        }
+    }
+    // Use the home type and home content
+    if( empty( $requestType) ){
+		// Use the home type and home content
+		$requestType = $gBitSystem->getConfig("{{$package}}_home_type", "{{foreach from=$config.types key=typeName item=type name=types}}{{if $smarty.foreach.types.first}}{{$typeName}}{{/if}}{{/foreach}}");
+		if( $gBitSystem->getConfig( '{{$package}}_home_format', 'list' ) == 'list' ){
+			include_once( {{$PACKAGE}}_PKG_PATH.'list_'.$requestType.'.php' );
+			die;
+		}else{
+			$_REQUEST[$requestType.'_id'] = $gBitSystem->getConfig( "{{$package}}_".$requestType."_home_id" );
+		}
 	}
 }
 {{/if}}
