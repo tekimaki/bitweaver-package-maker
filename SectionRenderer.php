@@ -31,12 +31,24 @@ class SectionRenderer extends aRenderer{
 				switch( $file ){
 				// each of these files is customized per section
 				case 'display_section_inc.tpl':
+					foreach($config['sections'] as $section => $params) {
+						global $gBitSmarty;
+						if( empty( $params['modes'] ) || in_array( 'view', $params['modes'] ) ){
+							$params['name'] = $params['section'] = $section;
+							$gBitSmarty->assign('section', $params);
+							SectionRenderer::renderSectionFile( $config, $dir, $file, $params );
+						}
+					}
+					break;
 				case 'edit_section_inc.tpl':
 					foreach($config['sections'] as $section => $params) {
 						global $gBitSmarty;
-						$params['name'] = $params['section'] = $section;
-						$gBitSmarty->assign('section', $params);
-						SectionRenderer::renderSectionFile( $config, $dir, $file, $params );
+						if( !empty( $params['modes'] ) && in_array( 'edit', $params['modes'] ) ){
+							$params['name'] = $params['section'] = $section;
+							$gBitSmarty->assign('section', $params);
+							$gBitSmarty->assign('section', $params);
+							SectionRenderer::renderSectionFile( $config, $dir, $file, $params );
+						}
 					}
 					break;
 				// common section files
