@@ -101,10 +101,10 @@
       package_admin: {{$config.name}}_package_admin
 {{/if}}
     tpl:
-{{foreach from=$config.services.files key=file item=typemaps}}
-{{if $file eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
-{{if $file eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
-      {{$file}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
+{{foreach from=$config.services.templates key=file item=typemaps}}
+{{if $tpl eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
+{{if $tpl eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
+      {{$tpl}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
 {{/foreach}}
 {{if $config.sections}}{{* this should be handled in prepConfig *}}
       content_display_section: 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl'
