@@ -7,6 +7,12 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':
 			$pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_view');
+{{if $section.modes && in_array('edit',$section.modes)}}
+            if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' )
+                || !empty( $pParamHash['store_{{$sectionName}}'] ) ){
+                $pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_edit');
+            }
+{{/if}}
 			break;
 {{/foreach}}
 		}
@@ -20,6 +26,23 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 			$pObject->mInfo['{{$config.name}}']['{{$typemapName}}'] = ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId(); 
 {{/foreach}}
 			$pParamHash['has_section'] = TRUE;
+{{if $section.modes && in_array('edit',$section.modes)}}
+            // edit
+            if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' ) ){
+                {{$config.name}}_content_edit( $pObject, $pParamHash );
+            }
+            // store
+            if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
+                {{$config.name}}_content_store( $pObject, $pParamHash );
+                if( count ($pObject->mErrors ) == 0 ) {
+                    bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
+                }else{
+                    {{$config.name}}_content_preview( $pObject, $pParamHash );
+                    $gBitSmarty->assign_by_ref( 'errors', $pObject->mErrors['{{$section.name}}'] ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
+                    $_REQUEST['action'] = 'edit'; //force us back to the edit panel
+                }
+            }
+{{/if}}
 			break;
 		}
 		/* =-=- CUSTOM BEGIN: content_section_function -=-= */
