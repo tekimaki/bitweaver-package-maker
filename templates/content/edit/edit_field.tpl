@@ -15,15 +15,17 @@
 		{{/foreach}}
 	    </select>
     {{elseif $field.input.type=="radio"}}
+		<ul>
 		{{foreach from=$field.validator.choices item=choice}}
-		<input type="radio" name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>{{$choice}}<br />
+		<li><label for="{{$namespace}}[{{$fieldName}}]"><input type="radio" name="{{$namespace}}[{{$fieldName}}]" id="{{$fieldName}}" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>&nbsp;{{$choice}}</label></li>
 		{{/foreach}}
-	    </select>
+		</ul>
     {{elseif $field.input.type=="checkbox"}}
+		<ul>
 		{{foreach from=$field.validator.choices item=choice}}
-		<input type="checkbox" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>{{$choice}}<br />
+		<li><label for="{{$namespace}}[{{$fieldName}}]"><input type="checkbox" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{{$choice}}" {if $gContent->getField("{{$fieldName}}")}checked="checked"{/if}/>&nbsp;{{$choice}}</label></li>
 		{{/foreach}}
-	    </select>
+		</ul>
     {{elseif $field.input.type=="hexcolor"}}
     	    <input class="textInput" type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim}" id="{{$fieldName}}" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField("{{$fieldName}}")}" />
     {{elseif $field.input.type=="hexcolor"}}
