@@ -47,7 +47,7 @@
 {/if}
 {{else}}
 {{* We are editing a service *}}
-{{foreach from=$config.services key=serviceName item=service}}
+{{assign var=serviceName value=$service.name}}
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$serviceName|strtoupper}})} 
 	{if $gContent->isValid() && $gBitUser->hasPermission('p_{{$serviceName}}_update') ||
 		$gBitUser->hasPermission('p_{{$serviceName}}_view')}
@@ -62,6 +62,5 @@
         {/legend}
         {/if}
 {/if}
-{{/foreach}}
 {{/if}}
 {/strip}
