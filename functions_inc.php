@@ -64,12 +64,18 @@ function check_args($argv) {
 	if (count($argv) != 2) {
 		usage($argv);
 	}
-	if (is_file($argv[1])) {
-		echo "Loading $argv[1]\n";
-		$yaml = Spyc::YAMLLoad($argv[1]);
-		return $yaml;
+	$files = array($argv[1], BIT_ROOT_PATH.$argv[1].'/admin/pkg_'.$argv[1].'.yaml' );
+	foreach ($files as $file) {
+		if (is_file($file) && is_readable($file)) {
+			echo "Loading $file\n";
+			$yaml = Spyc::YAMLLoad($file);
+			return $yaml;
+		}
 	}
-	error("Not a readable file: " .$argv[1]);
+	foreach ($files as $file) {
+		error("Not a readable file: " .$file, false);
+	}
+	die;
 }
 
 function generate( $spec ){
