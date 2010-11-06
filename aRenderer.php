@@ -213,7 +213,7 @@ abstract class aRenderer{
 							}
 							$count = count($customBlock);
 							if ($start_count != $count * 2) {
-								error("Start count does not match preserved count.");
+								error("Start count does not match preserved count: ". $filename . " : " .$start_count . " != " .($count *2));
 							} else {
 								$gBitSmarty->assign('customBlock', $customBlock);
 							}
@@ -267,7 +267,7 @@ abstract class aRenderer{
 							$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
 
 							// create sql for loading up a select list of options
-							$optionsHashQuery = "SELECT a.".$validator['column'].", ".$tableBPrefix.".".$input['desc_column']." FROM ".$validator['table']." a"; 
+							$optionsHashQuery = "SELECT a.".(empty($input['column']) ? $validator['column'] : $input['column']).", ".$tableBPrefix.".".$input['desc_column']." FROM ".(empty($input['table']) ? $validator['table'] : $input['table'])." a"; 
 							$optionsHashQuery .= !empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
 
 							// set references to the hash name and the query
