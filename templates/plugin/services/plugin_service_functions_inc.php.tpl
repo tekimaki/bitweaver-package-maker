@@ -1,8 +1,7 @@
 {{foreach from=$config.services.functions key=func item=typemaps}}
 function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
-{{if $func eq 'comment_store'}}
-{{elseif $func eq 'content_display'}}
+{{if $func eq 'content_display'}}
 {{include file="plugin_content_display.php.tpl"}}
 {{elseif $func eq 'content_edit'}}
 {{include file="plugin_content_edit.php.tpl"}}
