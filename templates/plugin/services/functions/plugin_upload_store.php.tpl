@@ -1,3 +1,4 @@
+{{*
 {{if !empty($typemap.attachments)}}
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
 		// Store the {{$attachment}} attachment
@@ -7,3 +8,4 @@
 		}
 {{/foreach}}
 {{/if}}
+*}}

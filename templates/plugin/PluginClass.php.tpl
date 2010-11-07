@@ -30,6 +30,8 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 	var $mSchema;
 
+	var $mServiceContent;
+
 	public function __construct( $pContentId=NULL ) {
 		{{$config.base_class}}::{{$config.base_class}}();
 		$this->mContentId = $pContentId;
@@ -42,6 +44,13 @@ class {{$config.class_name}} extends {{$config.base_class}} {
     function isValid() {
         return( BitBase::verifyId( $this->mContentId ) );
     }
+
+	/**
+	 * setServiceContent
+	 */
+	function setServiceContent( &$pObject ){
+		$this->mServiceContent = &$pObject;
+	}
 
 
 	/**
