@@ -7,4 +7,5 @@
 	$pObject->mInfo['parsed_{{$fieldName}}'] = $pObject->parseData($parseHash);
 {{/if}}
 {{/foreach}}
+{{/if}}
 {{include file="custom_content_load_inc.php.tpl"}}
