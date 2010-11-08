@@ -77,7 +77,7 @@
 
 {{if !empty($type.attachments)}}
 
-						{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
+						{if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 							<div class="row">
 							{legend legend="Attachments"}
 								{include file="bitpackage:liberty/edit_storage.tpl"}

@@ -4,8 +4,8 @@
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$config.name|strtoupper}})} 
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 {{if $typemap.services && in_array('content_edit_mini',$typemap.services)}}
-	{if $gContent->isValid() && $gBitUser->hasPermission('p_{{$typemapName}}_service_update') ||
-		$gBitUser->hasPermission('p_{{$typemapName}}_service_view')}
+	{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
+		$gContent->hasUserPermission('p_{{$typemapName}}_service_view')}
 	{legend legend={{$typemap.label}}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
@@ -15,7 +15,7 @@
 {{/if}}
 {{/foreach}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
-		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
+		{if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 			<div class="row {{$typemapName}}_{{$attachment}}">
 				{if !empty($gContent->mInfo.{{$typemapName}}_{{$attachment}}_id)}
 					{assign var={{$typemapName}}_{{$attachment}}_id value=$gContent->mInfo.{{$typemapName}}_{{$attachment}}_id}
@@ -49,8 +49,8 @@
 {{* We are editing a service *}}
 {{assign var=serviceName value=$service.name}}
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$serviceName|strtoupper}})} 
-	{if $gContent->isValid() && $gBitUser->hasPermission('p_{{$serviceName}}_update') ||
-		$gBitUser->hasPermission('p_{{$serviceName}}_view')}
+	{if $gContent->isValid() && $gContent->hasPermission('p_{{$serviceName}}_update') ||
+		$gContent->hasPermission('p_{{$serviceName}}_view')}
 	{legend legend=$serviceName.label|default:$serviceName}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
