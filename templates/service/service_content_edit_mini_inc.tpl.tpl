@@ -49,8 +49,8 @@
 {{* We are editing a service *}}
 {{assign var=serviceName value=$service.name}}
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$serviceName|strtoupper}})} 
-	{if $gContent->isValid() && $gContent->hasPermission('p_{{$serviceName}}_update') ||
-		$gContent->hasPermission('p_{{$serviceName}}_view')}
+	{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$serviceName}}_update') ||
+		$gContent->hasUserPermission('p_{{$serviceName}}_view')}
 	{legend legend=$serviceName.label|default:$serviceName}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}

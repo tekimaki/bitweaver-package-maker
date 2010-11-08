@@ -4,8 +4,8 @@
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$config.name|strtoupper}})} 
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 {{if $typemap.services && in_array('content_edit_mini',$typemap.services)}}
-	{if $gContent->isValid() && $gContent->hasPermission('p_{{$typemapName}}_service_update') ||
-		$gContent->hasPermission('p_{{$typemapName}}_service_view')}
+	{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
+		$gContent->hasUserPermission('p_{{$typemapName}}_service_view')}
 	{legend legend={{$typemap.label}}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
@@ -50,7 +50,7 @@
 {{foreach from=$config.services key=serviceName item=service}}
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$serviceName|strtoupper}})} 
 	{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$serviceName}}_update') ||
-		$gContent->hasPermission('p_{{$serviceName}}_view')}
+		$gContent->hasUserPermission('p_{{$serviceName}}_view')}
 	{legend legend=$serviceName.label|default:$serviceName}
 {{foreach from=$service.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
