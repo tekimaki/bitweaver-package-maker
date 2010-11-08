@@ -1,6 +1,6 @@
 ---
 package:
-  package: utservice
+  package: service
   description: Package maker unittest\: Service.
   copyright:
     - {year: 2010, name: Tekimaki LLC, contact: http://tekimaki.com}
@@ -14,8 +14,8 @@ package:
     liberty: {min: 2.1.5}
   maintainer_url: http://www.tekimaki.com
   services:
-    utservice:
-      class_name: UTService
+    service:
+      class_name: Service
       description: A unittest class of the package maker service class feature.
       base_class: BitBase
       base_package: kernel
