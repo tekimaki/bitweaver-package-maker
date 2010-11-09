@@ -186,8 +186,8 @@
 		$this->validate{{$typemapName|ucfirst}}Fields($pParamHash);
 {{if !empty($typemap.attachments)}}
 		$this->validate{{$typemapName|ucfirst}}Attachments();
-		return( count( $this->mErrors )== 0 );
 {{/if}}
+		return( count( $this->mErrors )== 0 );
 {{/if}}
 	}
 
