@@ -1,7 +1,7 @@
 		global $gBitSmarty;
 		// Prep any data we may need for the form
 		// pass through to display to load up content data
-		// {{$config.name}}_content_display( $pObject, $pParamHash );
+		{{$config.name}}_content_display( $pObject, $pParamHash );
 {{assign var=jsColorIncluded value=false}}
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
