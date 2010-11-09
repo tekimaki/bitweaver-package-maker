@@ -54,6 +54,7 @@ function pkgmkr_setup() {
 	require_once( PKGMKR_PKG_PATH . 'aRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'PackageRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'TypeRenderer.php' );
+	require_once( PKGMKR_PKG_PATH . 'TypemapRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'ServiceRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'PluginRenderer.php' );
 	require_once( PKGMKR_PKG_PATH . 'GraphpluginRenderer.php' );

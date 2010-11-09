@@ -47,7 +47,7 @@ class PluginRenderer extends aRenderer{
 			// prep typemap data 
 			foreach( $config['typemaps'] as $typemapName=>$typemap ){
 				$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-				TypeRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $excludeFields );
+				TypemapRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $excludeFields );
 			}
 
 			// prep sections so we know their typemaps
@@ -132,15 +132,17 @@ class PluginRenderer extends aRenderer{
 			// the root of this install.
 			chdir( $plugin_path );
 
+			// @TODO This switch is annoying, cant we automatically know the renderer based on the action
 			foreach ($actions as $action => $files) {
 				switch( $action ){
 				case "plugin":
 					$this->renderFiles($config, $dir, $files);
 					break;
+				case "typemap":
+					TypemapRenderer::renderFiles($config, $dir, $files );
+					break;
 				case "section":
-					if ( !empty( $config['sections'] ) ) {
-						SectionRenderer::renderFiles($config, $dir, $files );
-					}
+					SectionRenderer::renderFiles($config, $dir, $files );
 					break;
 				default:
 					error("Unknown action: " . $action);
