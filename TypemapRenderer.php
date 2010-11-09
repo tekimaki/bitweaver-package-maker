@@ -20,7 +20,7 @@ class TypemapRenderer extends aRenderer{
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = $file;
 		if( !empty( $params['typemap'] ) ){
-			$tmp_file = preg_replace("/typemap_inc/", strtolower($params['typemap']).'_inc', $tmp_file);
+			$tmp_file = preg_replace("/typemap/", strtolower($params['typemap']), $tmp_file);
 		}
 		return $tmp_file; 
 	}
@@ -28,12 +28,21 @@ class TypemapRenderer extends aRenderer{
 	public static function renderFiles( $config, $dir, $files ){ 
 		if( !empty( $config['typemaps'] ) ){
 			foreach($config['typemaps'] as $typemap => $params) {
-				global $gBitSmarty;
-				$params['typemap'] = $typemap;
-				$gBitSmarty->assign('typemapName', $typemap);
-				$gBitSmarty->assign('typemap', $params);
 				foreach ($files as $file) {
-					self::renderTypemapFile( $config, $dir, $file, $params );
+					switch( $file ){
+					case 'fieldset_typemap_inc.tpl':
+						// if not one-to-many do not render this tpl
+						if( empty( $params['relation'] ) || $params['relation'] != 'one-to-many' ){
+							break;
+						}
+					default: 
+						global $gBitSmarty;
+						$params['typemap'] = $typemap;
+						$gBitSmarty->assign('typemapName', $typemap);
+						$gBitSmarty->assign('typemap', $params);
+						self::renderTypemapFile( $config, $dir, $file, $params );
+						break;
+					}
 				}
 			}
 		}

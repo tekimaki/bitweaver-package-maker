@@ -148,6 +148,11 @@
 		$this->mDb->query( $query, $bindVars );
 {{/if}} 
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
+{{if $typemap.relation != 'one-to-one'}}
+            if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ) ){
+                unset( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ); 
+            } 
+{{/if}}
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
 					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;

@@ -4,6 +4,12 @@
 		{{$config.name}}_content_display( $pObject, $pParamHash );
 {{assign var=jsColorIncluded value=false}}
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
+{{if $typemap.relation == 'one-to-many' && !$typemap.attachments && !$jsMultiFormIncluded}}
+{{assign var=jsMultiFormIncluded value=true}}
+		global $gBitThemes;
+		$gBitThemes->loadAjax( 'jquery' );
+		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/JQuery.BitMultiForm.js', FALSE );
+{{/if}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{* hexcolor lib *}}
 {{if !empty($field.validator.type) && $field.validator.type == 'hexcolor' && !$jsColorIncluded}}

@@ -13,6 +13,7 @@ plugin/templates:
     - service_edit_mini_inc.tpl
   typemap:
     - edit_typemap_inc.tpl
+    - fieldset_typemap_inc.tpl
   section:
     - service_display_section.tpl
     - display_section_inc.tpl
