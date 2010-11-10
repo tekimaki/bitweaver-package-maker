@@ -3,8 +3,8 @@
 	This shit is seriously complicated to render *}}
 {{if $index}}
 {{assign var=fieldId value=$fieldName|cat:'_{$index}'}}
-{{assign var=inputValue value='{$gContent->mInfo['|cat:"`$config.name`][`$typemapName`]["|cat:'{$index}'|cat:"][`$fieldName`]}"}}
-{{assign var=inputValueAlt value='$gContent->mInfo['|cat:"`$config.name`][`$typemapName`]["|cat:'$index'|cat:"][`$fieldName`]"}}
+{{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`}"}}
+{{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`."}}
 {{else}}
 {{assign var=fieldId value=$fieldName}}
 {{/if}}
