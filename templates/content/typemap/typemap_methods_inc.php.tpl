@@ -3,70 +3,24 @@
 
 {{* @TODO This only really works if the table has a sequnenced column, need some other way of getting a unique value if desired *}}
 {{if $typemap.sequence}}
-	/**
-	 * load a row from the {{$type.name}}_{{$typemapName}} table 
-	 */
-	 function load{{$typemapName|ucfirst}}( $p{{$typemapName|ucfirst}}Id = NULL ){
-		$ret = array();
-		if( $this->verifyId( $p{{$typemapName|ucfirst}}Id ) ){
-			$query = "SELECT `{{$typemapName}}_id` as hash_key, `{{$typemapName}}_id`,{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
- `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
-{{/foreach}}
- FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.{{$typemapName}}_id = ?";
-			$ret = $this->mDb->getAssoc( $query, $bindVars );
-		}
-{{* Need a LibertyContent context to parse with which sucks. *}}
-{{assign var=parser value=false}}
-{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-{{if $field.input.type == 'parsed' && !$parser}}
-		$parser = new LibertyContent($this->mContentId);
-		{{assign var=parser value=true}}
-{{/if}}
-{{/foreach}}
-{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-{{if $field.input.type == 'parsed'}}
-		// Parse all the {{$fieldName}}
-		foreach ($ret as $key => &$data) {
-			$parseHash['data'] = $data['{{$fieldName}}'];
-			$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
-			$data['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
-		}
-{{/if}}
-{{/foreach}}
-		return $ret;
-	}
 
-	/**
-	 * stores one or more records in the {{$type.name}}_{{$typemapName}} table
-	 */
-	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
-			$table = '{{$type.name}}_{{$typemapName}}';
-			if( !empty( $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] )){
-				foreach ($pParamHash['{{$type.name}}_store']['{{$typemapName}}'] as $key => &$data) {
-{{if $type.base_package == "liberty" || $type.base_table == "liberty_content"}}
-					if (!empty($pParamHash['{{$type.name}}']['content_id'])) {
-						$data['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
-					} else {
-						$data['content_id'] = $this->mContentId;
-					}
-{{/if}}
-					// {{$typemapName}} id is set update the record
-					if( !empty( $data['{{$typemapName}}_id'] ) ){
-						$locId = array( '{{$typemapName}}_id' => $data['{{$typemapName}}_id'] );
-						// unset( $data['{{$typemapName}}_id'] );
-						$result = $this->mDb->associateUpdate( $table, $data, $locId );
-					// {{$typemapName}} id is not set create a new record
-					}else{
-						$data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
-						$result = $this->mDb->associateInsert( $table, $data );
-					}
-				}
-			}
-		}
-	}
+{{include file="typemap_load_seq_inc.php.tpl"}}
+
+{{include file="typemap_store_seq_inc.php.tpl"}}
+
 {{* Not sequenced tables *}}
 {{else}}
+
+{{* switch store and storeMixed based on mapping and attachments *}}
+{{if !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments)}}
+{{include file="typemap_store_inc.php.tpl"}}
+{{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
+{{include file="typemap_store_onetomany_inc.php.tpl"}}
+{{elseif $typemap.relation eq 'one-to-one' && $typemap.attachments}}
+{{include file="typemap_store_attach_inc.php.tpl"}}
+{{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
+{{include file="typemap_store_onetomany_attach_inc.php.tpl"}}
+{{/if}}
 
 	/**
 	 * get{{$typemapName|ucfirst}}ByContentId
@@ -84,91 +38,8 @@
 		return $ret;
 	}
 
-	/**
-	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
-	 */
-	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-{{if $typemap.relation eq 'one-to-one' || $typemap.base_table eq 'liberty_content'}}
-		if( empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] ) && $this->isValid() ){
-			$pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] = $this->mContentId; 
-		}
 {{/if}}
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
-			$table = '{{$type.name}}_{{$typemapName}}';
-{{if $typemap.base_table eq 'liberty_content'}}
-{{foreach from=$typemap.attachments key=attachment item=prefs}}
-			$old_{{$attachment}}_id = array();
-
-			// Store the test_image attachment
-			if( !empty( $_FILES['{{$typemapName}}_{{$attachment}}']['tmp_name'] ) ){
-				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
-				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
-					// add the attachment id to our store hash
-					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
-{{if $typemap.relation eq 'one-to-one'}} 
-					// For one to one we need to expunge an old attachment_id
-					// Figure out if we have one at all and if it has an old value
-					$old_{{$attachment}}_id = $this->mDb->getAssoc("SELECT `content_id`, `{{$typemapName}}_{{$attachment}}_id` FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?", array('content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id']));
-{{/if}}
-				}
-			}
-{{/foreach}}
-{{if $typemap.relation eq 'one-to-one'}} 
-
-			// record already exists, update it
-			if( $this->get{{$typemapName|ucfirst}}ByContentId( $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] ) ){
-				$locId = array( 'content_id' => $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] );
-				unset( $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] );
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'], $locId );
-			// create a new record
-			}else{
-				$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] );
-			}
-
-{{foreach from=$typemap.attachments key=attachment item=prefs}}
-			// For one to one we need to expunge old {{$attachment}} attachment_id
-			if( !empty( $old_{{$attachment}}_id[$pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id']] ) ) {
-				$attachment_id = $old_{{$attachment}}_id[$pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id']];
-				$this->mServiceContent->expungeAttachment( $attachment_id );
-			}
-{{/foreach}}
-{{else}}
-			$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] );
-{{/if}}
-{{/if}}
-		}
-		return count( $this->mErrors ) == 0;
-	}
-{{/if}}
-
-	/**
-	 * stores multiple records in the {{$type.name}}_{{$typemapName}} table
-{{if !$typemap.sequence}}	 * uses bulk delete to avoid storage of duplicate records{{/if}} 
-	 */
-	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
-{{if !$typemap.sequence && $typemap.relation != 'one-to-one'}}
-		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
-		$bindVars[] = $this->mContentId;
-		$this->mDb->query( $query, $bindVars );
-{{/if}} 
-		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
-{{if $typemap.relation != 'one-to-one'}}
-            if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ) ){
-                unset( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ); 
-            } 
-{{/if}}
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
-					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
-				}
-			}else{
-				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
-			}
-		}
-		return count( $this->mErrors ) == 0;
-	}
+{{* end of sequence switch *}}
 
 	/** 
 	 * verifies a data set for storage in the {{$type.name}}_{{$typemapName|ucfirst}} table
@@ -383,28 +254,6 @@
 	}
 
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
-{{*@TODO DEPRECATED - slated for delete
-	/**
-	 * store{{$attachment|ucfirst}}Attachment stores the attachment id
-	 */
-	function store{{$attachment|ucfirst}}Attachment($pObject, $pStoreHash) {
-		if (!empty($pStoreHash['attachment_id']) && 
-		    !empty($pStoreHash['content_id'])) {
-			// Figure out if we have one at all and if it has an old value
-			$old_id = $this->mDb->getAssoc("SELECT `content_id`, `{{$typemapName}}_{{$attachment}}_id` FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?", array('content_id' => $pStoreHash['content_id']));
-			if (empty($old_id)) {
-				$this->mDb->associateInsert("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => $pStoreHash['attachment_id'], 'content_id' => $pStoreHash['content_id']));
-			} else {
-				$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => $pStoreHash['attachment_id']), array('content_id' => $pStoreHash['content_id']));
-			}
-			if (!empty($old_id) && !empty($old_id[$pStoreHash['content_id']])) {
-				$pObject->expungeAttachment($old_id[$pStoreHash['content_id']]);
-			}
-
-		}
-	}
-*}}
-
 	/**
 	 * expunge{{$attachment|ucfirst}}Attachment expunges the attachment id only from the typemap record
 	 */
