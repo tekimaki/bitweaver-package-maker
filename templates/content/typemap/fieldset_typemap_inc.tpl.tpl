@@ -2,7 +2,11 @@
 {if !$index}
     {assign var=index value=0}
 {/if}
+{{if !$typemap.attachments}}
 <div id="{{$config.name}}_{{$typemapName}}_{$index}" class="multiform_unit" style="{if !is_int($index) && $index == 'temp'}display:none{/if}">
+{{else}}
+<div id="{{$config.name}}_{{$typemapName}}">
+{{/if}}
 {{/if}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
@@ -38,7 +42,29 @@
 			{/if}
 		{/if}
 
-		{include file="bitpackage:liberty/edit_upload.tpl" upload_name="{{$typemapName}}_{{$attachment}}" upload_type="New {{$prefs.name|ucfirst}}"}
+		{formlabel label="{{$prefs.name|ucfirst}}" class="label"}
+		{forminput}
+			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="40" />
+			{{if $typemap.relation eq 'one-to-one'}}
+				{formhelp note='Select a new {{$prefs.name|ucfirst}}.'}
+			{{/if}}
+		{/forminput}
+	</div>
+	<div class="buttonHolder row">
+		<input class="button" type="button" value="Upload" 
+			onclick="javascript:LibertyPreflight.uploader( 
+				this.form, 
+				'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
+				'{tr}Please wait for the current upload to finish.{/tr}',
+				'liberty_upload_frame_{{$config.name}}_{{$typemapName}}',
+				'{{$config.name}}',
+				'{{$typemapName}}'
+			);" 
+		/>
+		{include file="bitpackage:liberty/preflight_uploader_inc.tpl" frame_id="{{$config.name}}_{{$typemapName}}" }
+		<script type="text/javascript">
+			LibertyPreflight.uploaderSetup( '{{$config.name}}_{{$typemapName}}' );
+		</script>
 	</div>
 {/if}
 {{/foreach}}

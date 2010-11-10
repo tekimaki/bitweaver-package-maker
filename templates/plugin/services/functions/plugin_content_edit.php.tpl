@@ -1,4 +1,4 @@
-		global $gBitSmarty;
+		global $gBitSmarty, $gBitThemes;
 		// Prep any data we may need for the form
 		// pass through to display to load up content data
 		{{$config.name}}_content_display( $pObject, $pParamHash );
@@ -6,16 +6,19 @@
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.relation == 'one-to-many' && !$typemap.attachments && !$jsMultiFormIncluded}}
 {{assign var=jsMultiFormIncluded value=true}}
-		global $gBitThemes;
 		$gBitThemes->loadAjax( 'jquery' );
 		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/JQuery.BitMultiForm.js', FALSE );
+{{/if}}
+{{if $typemap.attachments}}
+{{assign var=jsPreflightIncluded value=true}}
+		$gBitThemes->loadAjax( 'MochiKit' );
+		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
 {{/if}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{* hexcolor lib *}}
 {{if !empty($field.validator.type) && $field.validator.type == 'hexcolor' && !$jsColorIncluded}}
 {{assign var=jsColorIncluded value=true}}
 		// hexcolor library
-		global $gBitThemes;
 		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
 {{/if}}
 {{* select options *}}
