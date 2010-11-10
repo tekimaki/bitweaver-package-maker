@@ -2,7 +2,7 @@
 	$gContent->hasUserPermission('p_{{$typemapName}}_service_edit')}
 {legend legend={{$typemap.label}}}
 {{if $typemap.relation eq 'one-to-one'}}
-{{include file="edit_typemap_inc.tpl.tpl"}}
+{{include file="fieldset_typemap_inc.tpl.tpl"}}
 {{elseif $typemap.relation eq 'one-to-many'}}
 {* multiform block *}
 <div id="{{$config.plugin}}_{{$typemapName}}_multiform">
