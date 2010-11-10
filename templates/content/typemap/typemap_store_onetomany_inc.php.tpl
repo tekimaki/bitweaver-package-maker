@@ -16,13 +16,13 @@
 
 	/**
 	 * stores multiple records in the {{$type.name}}_{{$typemapName}} table
+	 * uses bulk delete to avoid storage of duplicate records
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
 		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
-
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
             if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ) ){
                 unset( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ); 

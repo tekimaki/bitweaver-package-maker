@@ -17,11 +17,12 @@
 {{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {{include file="typemap_store_onetomany_inc.php.tpl"}}
 {{elseif $typemap.relation eq 'one-to-one' && $typemap.attachments}}
-{{include file="typemap_store_attach_inc.php.tpl"}}
-{{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
-{{include file="typemap_store_onetomany_attach_inc.php.tpl"}}
+{{include file="typemap_store_attch_inc.php.tpl"}}
+{{elseif $typemap.relation eq 'one-to-many' && $typemap.attachments}}
+{{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
 {{/if}}
 
+{{if $typemap.relation eq 'one-to-one'}}
 	/**
 	 * get{{$typemapName|ucfirst}}ByContentId
 	 */
@@ -37,6 +38,7 @@
 		}
 		return $ret;
 	}
+{{/if}}
 
 {{/if}}
 {{* end of sequence switch *}}
