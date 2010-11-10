@@ -65,6 +65,7 @@
 			}
 		}
 	}
+{{* Not sequenced tables *}}
 {{else}}
 
 	/**
@@ -94,7 +95,7 @@
 {{/if}}
 		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
 			$table = '{{$type.name}}_{{$typemapName}}';
-{{if $typemap.relation eq 'one-to-one' && $typemap.base_table eq 'liberty_content'}}
+{{if $typemap.base_table eq 'liberty_content'}}
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
 			$old_{{$attachment}}_id = array();
 
@@ -104,12 +105,15 @@
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
 					// add the attachment id to our store hash
 					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
+{{if $typemap.relation eq 'one-to-one'}} 
 					// For one to one we need to expunge an old attachment_id
 					// Figure out if we have one at all and if it has an old value
 					$old_{{$attachment}}_id = $this->mDb->getAssoc("SELECT `content_id`, `{{$typemapName}}_{{$attachment}}_id` FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?", array('content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id']));
+{{/if}}
 				}
 			}
 {{/foreach}}
+{{if $typemap.relation eq 'one-to-one'}} 
 
 			// record already exists, update it
 			if( $this->get{{$typemapName|ucfirst}}ByContentId( $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['content_id'] ) ){
@@ -130,6 +134,7 @@
 {{/foreach}}
 {{else}}
 			$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] );
+{{/if}}
 {{/if}}
 		}
 		return count( $this->mErrors ) == 0;
