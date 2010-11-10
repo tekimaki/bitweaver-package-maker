@@ -1,9 +1,8 @@
 {if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
 	$gContent->hasUserPermission('p_{{$typemapName}}_service_edit')}
 {legend legend={{$typemap.label}}}
-{{if $typemap.relation eq 'one-to-one'}}
-{{include file="fieldset_typemap_inc.tpl.tpl"}}
-{{elseif $typemap.relation eq 'one-to-many'}}
+{{* one-to-many typemaps which do not have attachment fields *}}
+{{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {* multiform block *}
 <div id="{{$config.plugin}}_{{$typemapName}}_multiform">
 	{* if we have existing reps we create an input block for each one *}
@@ -26,6 +25,10 @@
 
 {* to support multiple {{$typemapName}} instances a temp input block which can be cloned by js is included - requires BitBase.MultiForm.js handlers *}
 {include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" index="temp" rep=0}
+{{* @TODO many-to-many *}}
+{{* one-to-one typemaps and one-to-many with attachment fields *}}
+{{else}}
+{{include file="fieldset_typemap_inc.tpl.tpl"}}
 {{/if}}
 {/legend}
 {/if}
