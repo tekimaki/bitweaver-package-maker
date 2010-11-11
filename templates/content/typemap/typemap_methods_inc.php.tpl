@@ -118,7 +118,7 @@
 
 		$query = "SELECT {{if $typemap.sequence}}`{{$typemapName}}_id` as hash_key, `{{$typemapName}}_id`,{{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
- `{{$typemapName}}_{{$attachment}}_id`{{if !empty($typemap.fields) || !$smarty.foreach.fields.last}},{{/if}}
+ `{{$attachment}}_id`{{if !empty($typemap.fields) || !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
  `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
@@ -263,9 +263,9 @@
 		if( $pObject->isValid() ){
 			$locId['content_id'] = $pObject->mContentId;
 			if (!empty($pAttachmentId)) {
-				$locId['{{$typemapName}}_{{$attachment}}_id'] = $pAttachmentId;
+				$locId['{{$attachment}}_id'] = $pAttachmentId;
 			}
-			$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$typemapName}}_{{$attachment}}_id' => NULL), $locId);
+			$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$attachment}}_id' => NULL), $locId);
 		}
 	}
 {{/foreach}}

@@ -17,7 +17,7 @@
 				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
 					// add the attachment id to our store hash
-					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
+					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
 				}
 			}
 {{/foreach}}
@@ -42,6 +42,9 @@
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
+		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
+		$bindVars[] = $this->mContentId;
+		$this->mDb->query( $query, $bindVars );
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){

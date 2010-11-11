@@ -16,15 +16,15 @@
 {{/foreach}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 		{if $gContent->hasUserPermission('p_liberty_attach_attachments') }
-			<div class="row {{$typemapName}}_{{$attachment}}">
-				{if !empty($gContent->mInfo.{{$typemapName}}_{{$attachment}}_id)}
-					{assign var={{$typemapName}}_{{$attachment}}_id value=$gContent->mInfo.{{$typemapName}}_{{$attachment}}_id}
-					{assign var=storage value=$gContent->mStorage.${{$typemapName}}_{{$attachment}}_id}
+			<div class="row {{$config.name}}_{{$attachment}}_id">
+				{if !empty($gContent->mInfo.{{$attachment}}_id)}
+					{assign var=attachment_id value=$gContent->mInfo.{{$attachment}}_id}
+					{assign var=storage value=$gContent->mStorage.$attachment_id}
 					{if !empty($storage)}
 					{formlabel label="{{$prefs.name|ucfirst}}"}
 					{forminput}
 						{if $storage.is_mime}
-							{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small preferences=$gContent->mStoragePrefs.$attachmentId attachment=$storage}
+							{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small preferences=$gContent->mStoragePrefs.$attachment_id attachment=$storage}
 						{else}
 							{jspopup href=$storage.source_url title=$storage.title|default:$storage.filename notra=1 img=$storage.thumbnail_url.avatar}
 							<br />{$storage.filename} <span class="date">{$storage.file_size|display_bytes}</span>
