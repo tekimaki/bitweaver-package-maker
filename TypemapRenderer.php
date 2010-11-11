@@ -75,8 +75,10 @@ class TypemapRenderer extends aRenderer{
 					switch( $file ){
 					case 'fieldset_typemap_inc.tpl':
 						// if not one-to-many do not render this tpl
+						// @TODO this mess needs cleaning up look at tpls like plugin/edit/edit_section_inc.tpl.tpl 
+						// difference of editing in a section or not 
 						if( empty( $params['relation'] ) || $params['relation'] != 'one-to-many' ){
-							break;
+							// break;
 						}
 					default: 
 						global $gBitSmarty;
