@@ -30,14 +30,14 @@
   sequences: 
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.sequence}}
-	{{$config.name}}_{{$typemapName}}_id_seq: {start: 1}
+    {{$config.name}}_{{$typemapName}}_id_seq: {start: 1}
 {{/if}}
 {{/foreach}}
   defaults: 
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 {{foreach from=$typemap.defaults item=default}}
     - >
-	INSERT INTO `{{$typemapName}}_data` {{$default}}
+    INSERT INTO `{{$typemapName}}_data` {{$default}}
 {{/foreach}}{{/foreach}}
   permissions: 
 {{foreach from=$config.sections key=sectionName item=section name=sections}}
