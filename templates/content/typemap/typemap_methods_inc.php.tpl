@@ -1,27 +1,25 @@
 // {{literal}}{{{{{/literal}} =================== TypeMap Fieldset {{$typemapName|ucfirst}} Handlers  ====================
 
 
-{{* @TODO This only really works if the table has a sequnenced column, need some other way of getting a unique value if desired *}}
+{{* load *}}
 {{if $typemap.sequence}}
-
 {{include file="typemap_load_seq_inc.php.tpl"}}
+{{/if}}
 
+{{* store *}}
+{{if $typemap.sequence && !$typemap.attachments}}
 {{include file="typemap_store_seq_inc.php.tpl"}}
-
-{{* Not sequenced tables *}}
-{{else}}
-
-{{* switch store and storeMixed based on mapping and attachments *}}
-{{if !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments)}}
+{{elseif $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
+{{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
+{{elseif !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments)}}
 {{include file="typemap_store_inc.php.tpl"}}
 {{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {{include file="typemap_store_onetomany_inc.php.tpl"}}
 {{elseif $typemap.relation eq 'one-to-one' && $typemap.attachments}}
 {{include file="typemap_store_attch_inc.php.tpl"}}
-{{elseif $typemap.relation eq 'one-to-many' && $typemap.attachments}}
-{{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
 {{/if}}
 
+{{if !$typemap.sequence}}
 {{if $typemap.relation eq 'one-to-one'}}
 	/**
 	 * get{{$typemapName|ucfirst}}ByContentId
@@ -39,9 +37,8 @@
 		return $ret;
 	}
 {{/if}}
-
 {{/if}}
-{{* end of sequence switch *}}
+
 
 	/** 
 	 * verifies a data set for storage in the {{$type.name}}_{{$typemapName|ucfirst}} table
