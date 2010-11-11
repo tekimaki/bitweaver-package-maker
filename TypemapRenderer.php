@@ -17,6 +17,49 @@
 
 class TypemapRenderer extends aRenderer{
 
+	public static function prepConfig( &$config ){ 
+		$config['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($config['typemap']);
+
+		// set default data relation
+		$config['relation'] = !empty( $config['relation'] )?$config['relation']:'one-to-one';
+
+		// set base_table
+		$config['base_table'] = !empty( $config['base_table'] )?$config['base_table']:($config['base_package'] == 'liberty'?'liberty_content':NULL);
+
+		// set relation requirements
+		switch( $config['relation'] ){
+		case 'one-to-one':
+			if( $config['base_table'] == 'liberty_content' ) {
+				if( empty( $config['fields']['content_id'] ) ){
+					// keep content_id to the top of the stack
+					$config['fields'] = array( 'content_id'=>array() )+$config['fields'];
+				}
+				$config['fields']['content_id']['schema']['primary'] = TRUE;
+				$config['fields']['content_id']['validator']['type'] = 'int';
+			}
+			break;
+		case 'one-to-many':
+			if( $config['base_table'] == 'liberty_content' ) {
+				if( empty( $config['fields']['content_id'] ) ){
+					// keep content_id to the top of the stack
+					$config['fields'] = array( 'content_id'=>array() )+$config['fields'];
+				}
+				$config['fields']['content_id']['validator']['type'] = 'int';
+			}
+			break;
+		case 'many-to-many':
+			break;
+		}
+
+		// set sequencing
+		if( !empty( $config['attachments'] ) && $config['relation'] != 'one-to-one' ){
+			$config['sequence'] = TRUE;
+		}
+
+		// prep fields
+		TypemapRenderer::prepFieldsConfig( $config, $excludeFields ); // @TODO excludeFields ?
+	}
+
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = $file;
 		if( !empty( $params['typemap'] ) ){

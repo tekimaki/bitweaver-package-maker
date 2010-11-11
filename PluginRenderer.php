@@ -36,19 +36,20 @@ class PluginRenderer extends aRenderer{
 
 		// set default base package
 		if( empty( $config['base_package'] ) )
-			$config['base_package'] = 'Liberty'; 
+			$config['base_package'] = 'liberty'; 
 
 		// set default base class
 		if( empty( $config['base_class'] ) )
 			$config['base_class'] = 'LibertyBase'; 
 
-		// @TODO move to typemap class
+		// prep typemap data 
 		if( !empty( $config['typemaps'] ) ){
-			// prep typemap data 
-			foreach( $config['typemaps'] as $typemapName=>$typemap ){
-				$config['typemaps'][$typemapName]['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($typemapName);
-				TypemapRenderer::prepFieldsConfig( $config['typemaps'][$typemapName], $excludeFields );
+			foreach( $config['typemaps'] as $typemapName=>&$typemap ){
+				$typemap['base_package'] = $config['base_package'];
+				$typemap['typemap'] = $typemapName;
+				TypemapRenderer::prepConfig( $typemap );
 			}
+			unset( $typemap ); // fucking php get it together - var is not scoped to the foreach!
 
 			// prep sections so we know their typemaps
 			if (!empty($config['sections'])) {
