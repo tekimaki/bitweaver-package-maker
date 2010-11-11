@@ -9,7 +9,7 @@
 				{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small prelations=$gContent->mStoragePrefs.$attachment_id attachment=$storage}
 			{/forminput}
 			{{assign var=namespace value="`$config.name`[`$typemapName`]["|cat:'{$index}]'}}
-			<input type="hidden" name="{{$namespace}}[{{$attachment}}]" value="{$gContent->mStorage.$attachment_id}" />
+			<input type="hidden" name="{{$namespace}}[{{$attachment}}_id]" value="{${{$typemapName}}.{{$attachment}}_id}" />
 		</div>
 	{/if}
 {/if}
