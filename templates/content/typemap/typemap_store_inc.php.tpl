@@ -22,7 +22,6 @@
 
 	/**
 	 * stores multiple records in the {{$type.name}}_{{$typemapName}} table
-	 * uses bulk delete to avoid storage of duplicate records 
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
