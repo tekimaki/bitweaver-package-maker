@@ -8,6 +8,11 @@
 </div>
 {{/if}}
 {{/foreach}}
+{{if $typemap.sequence}}
+<div class="row" style="display:none">
+<input type="hidden" name="{{$namespace}}[{{$typemapName}}_id]" value="{${{$typemapName}}.{{$typemapName}}_id}" />
+</div>
+{{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_valid_attachment_field.tpl"}}
 {{/foreach}}

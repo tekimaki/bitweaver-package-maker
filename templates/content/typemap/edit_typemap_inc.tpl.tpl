@@ -30,12 +30,12 @@
 {{* one-to-many typemaps with attachment fields *}}
 {{elseif $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 <div id="{{$config.plugin}}_{{$typemapName}}">
-{* place empty fieldset at the top *}
-{{include file="fieldset_typemap_inc.tpl.tpl"}}
 {* place a fieldset for each existing instance *}
 {foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
 {{include file="fieldset_valid_attch_inc.tpl"}}
 {/foreach}
+{* place empty fieldset at the bottom *}
+{{include file="fieldset_typemap_inc.tpl.tpl"}}
 </div>
 
 {{* many-to-many *}} 

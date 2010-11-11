@@ -1,7 +1,11 @@
 {{if $typemap.relation eq 'one-to-many'}}
+{{if $typemap.attachments}}
+{assign var=index value=0} {* new attachment must always have index of 0 *}
+{{else}}
 {if !$index}
     {assign var=index value=0}
 {/if}
+{{/if}}
 {{if !$typemap.attachments}}
 <div id="{{$config.name}}_{{$typemapName}}_{$index}" class="multiform_unit" style="{if !is_int($index) && $index == 'temp'}display:none{/if}">
 {{else}}
