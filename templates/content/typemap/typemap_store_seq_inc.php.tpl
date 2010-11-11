@@ -8,26 +8,25 @@
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
 		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
 			$table = '{{$type.name}}_{{$typemapName}}';
-			if( !empty( $pParamHash['{{$type.name}}_store']['{{$typemapName}}'] )){
-				foreach ($pParamHash['{{$type.name}}_store']['{{$typemapName}}'] as $key => &$data) {
 {{if $type.base_package == "liberty" || $type.base_table == "liberty_content"}}
-					if (!empty($pParamHash['{{$type.name}}']['content_id'])) {
-						$data['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
-					} else {
-						$data['content_id'] = $this->mContentId;
-					}
-{{/if}}
-					// {{$typemapName}} id is set update the record
-					if( !empty( $data['{{$typemapName}}_id'] ) ){
-						$locId = array( '{{$typemapName}}_id' => $data['{{$typemapName}}_id'] );
-						// unset( $data['{{$typemapName}}_id'] );
-						$result = $this->mDb->associateUpdate( $table, $data, $locId );
-					// {{$typemapName}} id is not set create a new record
-					}else{
-						$data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
-						$result = $this->mDb->associateInsert( $table, $data );
-					}
+			$data = &$pParamHash['{{$type.name}}_store']['{{$typemapName}}'];
+			if( empty( $data['content_id'] ) ){
+				if (!empty($pParamHash['{{$type.name}}']['content_id'])) {
+					$data['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
+				} else {
+					$data['content_id'] = $this->mContentId;
 				}
+			}
+{{/if}}
+			// {{$typemapName}} id is set update the record
+			if( !empty( $data['{{$typemapName}}_id'] ) ){
+				$locId = array( '{{$typemapName}}_id' => $data['{{$typemapName}}_id'] );
+				// unset( $data['{{$typemapName}}_id'] );
+				$result = $this->mDb->associateUpdate( $table, $data, $locId );
+			// {{$typemapName}} id is not set create a new record
+			}else{
+				$data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
+				$result = $this->mDb->associateInsert( $table, $data );
 			}
 		}
 	}
