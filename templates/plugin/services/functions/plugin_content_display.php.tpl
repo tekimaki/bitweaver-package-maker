@@ -5,9 +5,9 @@
 {{if $typemap.relation == "one-to-one"}}
 		if( $pObject->isValid() ) {
 			// Parse the {{$fieldName}}
-			$parseHash['data'] = $pObject->mInfo['{{$fieldName}}'];
+			$parseHash['data'] = $pObject->mInfo['{{$config.plugin}}']['{{$typemapName}}']['{{$fieldName}}'];
 			$parseHash['cache_extension'] = "{{$typemapName}}_{{$fieldName}}";
-			$pObject->mInfo['parsed_{{$fieldName}}'] = $pObject->parseData($parseHash);
+			$pObject->mInfo['{{$config.plugin}}']['{{$typemapName}}']['parsed_{{$fieldName}}'] = $pObject->parseData($parseHash);
 		}
 {{/if}}
 {{/if}}
