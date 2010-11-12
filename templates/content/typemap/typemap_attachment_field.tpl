@@ -39,8 +39,5 @@
 			);" 
 		/>
 		{include file="bitpackage:liberty/preflight_uploader_inc.tpl" frame_id="{{$config.name}}_{{$typemapName}}" }
-		<script type="text/javascript">
-			LibertyPreflight.uploaderSetup( '{{$config.name}}_{{$typemapName}}' );
-		</script>
 	</div>
 {/if}
