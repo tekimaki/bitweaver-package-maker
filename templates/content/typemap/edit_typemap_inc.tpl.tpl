@@ -42,6 +42,11 @@
 {{elseif $typemap.relation eq 'many-to-many'}}
 {{* @TODO many-to-many *}}
 
+{{* one-to-one typemaps with attachments *}}
+{{elseif $typemap.attachments}}
+<div id="{{$config.plugin}}_{{$typemapName}}">
+{{include file="fieldset_typemap_inc.tpl.tpl"}}
+</div>
 {{* one-to-one typemaps *}}
 {{else}}
 {{include file="fieldset_typemap_inc.tpl.tpl"}}
