@@ -34,7 +34,7 @@
 {{/if}}
 				{* =-=- CUSTOM END: servicetabs -=-= *}
 				{* any service edit template tabs *}
-				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" display_help_tab=1}
+				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" display_help_tab=1 formid="edit{{$type.name}}form"}
 			{/jstabs}
 			</div>
 			<div class="editcontainer">
@@ -73,7 +73,7 @@
 						{textarea label="{{$type.fields.data.name}}" name="{{$type.name}}[edit]" help="{{$type.fields.data.help}}"}{$gContent->mInfo.data}{/textarea}
 {{/if}}
 						{* any simple service edit options *}
-						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
+						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl" formid="edit{{$type.name}}form"}
 
 {{if !empty($type.attachments)}}
 
