@@ -1,20 +1,12 @@
 {if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 	<div class="row {{$typemapName}}_{{$attachment}}">
-		{if !empty($gContent->mInfo.{{$typemapName}}_{{$attachment}}_id)}
-			{assign var={{$typemapName}}_{{$attachment}}_id value=$gContent->mInfo.{{$typemapName}}_{{$attachment}}_id}
-			{assign var=storage value=$gContent->mStorage.${{$typemapName}}_{{$attachment}}_id}
-			{if !empty($storage)}
+		{if $gContent->mInfo.{{$attachment}}_id}
+			{assign var=attachment_id value=$gContent->mInfo.{{$attachment}}_id}
+			{assign var=storage value=$gContent->mStorage.$attachment_id}
+			{if $storage}
 			{formlabel label="{{$prefs.name|ucfirst}}"}
 			{forminput}
-				{if $storage.is_mime}
-					{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small prelations=$gContent->mStoragePrefs.$attachmentId attachment=$storage}
-				{else}
-					{jspopup href=$storage.source_url title=$storage.title|default:$storage.filename notra=1 img=$storage.thumbnail_url.avatar}
-					<br />{$storage.filename} <span class="date">{$storage.file_size|display_bytes}</span>
-					{if $smarty.foreach.atts.first}
-						{formhelp note="click to see large preview"}
-					{/if}
-				{/if}
+				{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small prelations=$gContent->mStoragePrefs.$attachment_id attachment=$storage}
 			{/forminput}
 			{/if}
 		{/if}
