@@ -1,6 +1,7 @@
 {if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 	<div class="row {{$typemapName}}_{{$attachment}}">
 		{formlabel label="{{$prefs.name|ucfirst}}" class="label"}
+		{{if $typemap.relation eq 'one-to-one'}}
 		{if $gContent->mInfo.{{$attachment}}_id}
 			{assign var=attachment_id value=$gContent->mInfo.{{$attachment}}_id}
 			{assign var=storage value=$gContent->mStorage.$attachment_id}
@@ -10,6 +11,7 @@
 			{/forminput}
 			{/if}
 		{/if}
+		{{/if}}
 
 		{forminput}
 			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="40" />
