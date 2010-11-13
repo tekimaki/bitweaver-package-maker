@@ -19,26 +19,15 @@
 {{include file="typemap_store_attch_inc.php.tpl"}}
 {{/if}}
 
+{{* getbycontentid *}}
 {{if !$typemap.sequence}}
 {{if $typemap.relation eq 'one-to-one'}}
-	/**
-	 * get{{$typemapName|ucfirst}}ByContentId
-	 */
-	function get{{$typemapName|ucfirst}}ByContentId( $pContentId = NULL ){
-		$ret = NULL;
-		$contentId = !empty( $pContentId )?$pContentId:($this->isValid()?$this->mContentId:NULL);
-		if( $this->verifyId( $contentId ) ){
-			$query = "SELECT * FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
-			$result = $this->mDb->query( $query, array( $contentId ) );
-            if( $result && $result->numRows() ) {
-                $ret = $result->fields;
-            } 
-		}
-		return $ret;
-	}
+{{include file="typemap_getbycontentid_inc.php.tpl"}}
 {{/if}}
 {{/if}}
-
+{{if $typemap.relation eq 'one-to-many'}}
+{{include file="typemap_getbycontentid_onetomany_inc.php.tpl"}}
+{{/if}}
 
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_verify_onetomany_attch_inc.php.tpl"}}
