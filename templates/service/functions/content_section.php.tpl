@@ -37,7 +37,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
                     bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
                 }else{
                     {{$config.name}}_content_preview( $pObject, $pParamHash );
-                    $gBitSmarty->assign_by_ref( 'errors', $pObject->mErrors['{{$section.name}}'] ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
+                    $gBitSmarty->assign_by_ref( 'errors', $pObject->getErrors() ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
                     $_REQUEST['action'] = 'edit'; //force us back to the edit panel
                 }
             }
