@@ -1,17 +1,18 @@
 {if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 	<div class="row {{$typemapName}}_{{$attachment}}">
+		{formlabel label="{{$prefs.name|ucfirst}}" class="label"}
+		{{if $typemap.relation eq 'one-to-one'}}
 		{if $gContent->mInfo.{{$attachment}}_id}
 			{assign var=attachment_id value=$gContent->mInfo.{{$attachment}}_id}
 			{assign var=storage value=$gContent->mStorage.$attachment_id}
 			{if $storage}
-			{formlabel label="{{$prefs.name|ucfirst}}"}
 			{forminput}
 				{include file=$gLibertySystem->getMimeTemplate('storage',$storage.attachment_plugin_guid) thumbsize=small prelations=$gContent->mStoragePrefs.$attachment_id attachment=$storage}
 			{/forminput}
 			{/if}
 		{/if}
+		{{/if}}
 
-		{formlabel label="{{$prefs.name|ucfirst}}" class="label"}
 		{forminput}
 			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="40" />
 			{{if $typemap.relation eq 'one-to-one'}}
