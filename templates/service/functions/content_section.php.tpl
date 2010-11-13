@@ -17,19 +17,22 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 {{/foreach}}
 		}
 		${{$config.name}} = new {{$config.class_name}}( $pObject->mContentId ); 
-{{foreach from=$config.typemaps key=typemapName item=typemap}}
-		$pObject->mInfo['{{$config.name}}']['{{$typemapName}}'] = ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId(); 
-{{/foreach}}
-		$pParamHash['has_section'] = TRUE;
-{{if $section.modes && in_array('edit',$section.modes)}}
-		// edit
-		if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' ) ){
-			{{$config.name}}_content_edit( $pObject, $pParamHash );
-		}
-{{/if}}
 		switch( $pParamHash['section'] ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':
+{{* DEPRECATE I think these are completely unncessary - 
+load_sql and content_display take care of loading this data under display circumstances for now
+may want something like this for loading select data later
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
+			$pObject->mInfo['{{$config.name}}']['{{$typemapName}}'] = ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId(); 
+{{/foreach}}
+*}}
+			$pParamHash['has_section'] = TRUE;
+{{if $section.modes && in_array('edit',$section.modes)}}
+			// edit
+			if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' ) ){
+				{{$config.name}}_content_edit( $pObject, $pParamHash );
+			}
             // store
             if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
                 {{$config.name}}_content_store( $pObject, $pParamHash );
@@ -43,6 +46,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
             }
 
 			break;
+{{/if}}
 {{/foreach}}
 		}
 		/* =-=- CUSTOM BEGIN: content_section_function -=-= */
