@@ -45,11 +45,11 @@
 {{* one-to-one typemaps with attachments *}}
 {{elseif $typemap.attachments}}
 <div id="{{$config.plugin}}_{{$typemapName}}">
-{{include file="fieldset_typemap_inc.tpl.tpl"}}
+{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl"}
 </div>
 {{* one-to-one typemaps *}}
 {{else}}
-{{include file="fieldset_typemap_inc.tpl.tpl"}}
+{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl"}
 {{/if}}
 {/legend}
 {/if}
