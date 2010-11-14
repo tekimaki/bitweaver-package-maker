@@ -11,7 +11,7 @@
 {{/if}}
 {{if $typemap.attachments}}
 {{assign var=jsPreflightIncluded value=true}}
-		$gBitThemes->loadAjax( 'MochiKit' );
+		$gBitThemes->loadAjax( 'MochiKit', array( 'DOM.js' ));
 		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
 {{/if}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
