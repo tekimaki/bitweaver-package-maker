@@ -1,0 +1,41 @@
+--
+plugin:
+  plugin: pluginguid
+  package: packageguid  # the package the plugin is registered to 
+  copyright: 
+    - {year: year, name: name, contact: url}
+  description: A description of the plugin 
+  version: 0.0.0
+  requirements:
+    packageguid: {min: 0.0.0}
+    packageguid: {min: 0.0.0}
+  base_class: ClassName
+  base_package: packageguid
+  content_types: [content_type_guid, content_type_guid]  # content types which the plugin should auto associate with - creates a service preference in lcconfig for each type
+  typemaps:
+    file_test:
+      services: [plugin_api_hook, plugin_api_hook, ...]  # options: [content_preview, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_display, content_load, content_edit, upload_store, upload_expunge, upload_expunge_attachment]
+      service_prefs: {load: [content_section, content_load, content_display], edit_loc: [section, content]}
+      sequence: true          # an optional setting to sequence the table
+      base_table: tablename
+      maintainer_url: url 
+      permissions:
+        default: {create: owner, view: basic, update: owner}
+      relation: relationtype  # [one-to-one, one-to-many, many-to-many]
+      attachments: 
+        fieldname:            # the fieldname will be auto converted to fieldname_id this stores the related attachment_id
+          name: Input Label
+          validator: {format: [image/png, image/jpeg, image/gif]}
+      fields:
+        fieldname:
+          name: Input Label
+          schema: {type: C(128)}
+          validator: {type: string}
+  sections:
+    sectionname:
+      permissions:
+        default: {create: owner, view: owner, update: owner}
+      title: 'A Page Title'                   # a custom title for the display page
+      bodyfields: [{table: fieldname}, ... ]  # a list of fields to display, can use typemap tables or liberty_content
+      modes: [view, edit]                     # a list of modes to render - view is always rendered by default
+      typemaps: [typemap, typemap, ... ]      # a list of the typemaps whoes fieldsets should be included in the edit page (required modes: [edit])
