@@ -11,8 +11,8 @@
 			$table = '{{$type.name}}_{{$typemapName}}';
 			$data = $pParamHash['{{$type.name}}_store']['{{$typemapName}}'];
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
-			// Store the test_image attachment
-			if( empty( $data['test_image_id'] ) && !empty( $_FILES['{{$typemapName}}_{{$attachment}}']['tmp_name'] ) ){
+			// Store the {{$attachment}} attachment
+			if( empty( $data['{{$attachment}}_id'] ) && !empty( $_FILES['{{$typemapName}}_{{$attachment}}']['tmp_name'] ) ){
 				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
 					// add the attachment id to our store hash

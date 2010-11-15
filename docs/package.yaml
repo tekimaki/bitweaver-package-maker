@@ -1,0 +1,58 @@
+--
+package:
+  package: packageguid
+  description: A description of the package 
+  copyright: 
+    - {year: year, name: name, contact: url}
+  license:
+    name: License Name
+    description: A description of the license 
+    url: url 
+  version: 0.0.0
+  requirements:
+    packageguid: {min: 0.0.0}
+  maintainer_url: url 
+  homeable: true		# determines if a package can have content type or a content object set has a home page 
+  pluggable: true		# adds support for plugins (really? cant recall why i have this -wjames)
+  settings:				# package level admin settings:
+    settinggroup:		# the grouping creates a fieldset in the admin panel
+      settingguid: {label: Form Label, type: datatype, note: Input help description. }
+      settingguid: {label: Form Label, type: datatype, note: Input help description. }
+
+  services:				# see services documentation (once it exists)
+
+  types:				# content types managed by the package
+    account:
+      templates: {list_type.tpl: ulli}
+      content_name: Content Name		# human readable Content Name
+      content_name_plural: Content Name # plural form of human readable Content Name for lists
+      description: A class which represents an account.
+      base_class: BaseClassName			# typically BitBase, LibertyBase, LibertyContent, LibertyMime
+      class_name: ClassName
+      base_package: basepackage			# typically liberty
+      maintainer_url: url				# optional
+      attachments: true					# supports file attachments - a little redundant to using LibetyMime base class
+      rewrite_path: pathstring			# a prettyurl subpath string for the type
+      lookup_by: [column, column, ...]	# alternate lookup columns - will lookup content by column value. title will lookup by liberty_content::title
+      permissions:
+        default: {create: admin, update: admin} 
+      fields:							# input fields
+        title:							# title is a reserved column referring to liberty_content - use lets author override the default 'name'/form label and help text
+          name: Custom Label
+          help: Custom form help text
+        data:							# data is a reserved column referring to liberty_content - user lets author override the default 'name'/form label and help text
+          name: Custom Label
+          help: Custom form help text
+        summary:						# summary is a reserved column referring to liberty_content - user lets author override the default 'name'/form label and help text
+          name: Custom Label
+          help: Custom form help text
+        columnname:						# table column name
+          name: Label					# human readable name that is used as a form and list label
+		  help: 						# help text that appears on in the form under the input
+      statuses:							# custom status codes that replace the default liberty package options
+        min: -6    						# these codes are a little retarded in liberty package
+        max: 51							# min and max are +1 more than the lowest and highest menu codes one wants available
+        codes:							# custom menu codes
+          integer: Description			# example: 50: Available
+          integer: Description
+          integer: Description

@@ -77,6 +77,16 @@ class PluginRenderer extends aRenderer{
 				}
 			}
 		}
+
+		// prep section data
+		if( !empty( $config['sections'] ) ){
+			foreach( $config['sections'] as $sectionName=>&$section ){
+				$section['name'] = $sectionName;
+				SectionRenderer::prepConfig( $section );
+			}
+			unset( $section );
+		}
+
 		return $config;
 	}
 

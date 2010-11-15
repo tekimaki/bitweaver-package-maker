@@ -2,7 +2,7 @@
 {{if $typemap.relation == "one-to-one"}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $field.input.type == 'parsed'}}
-{{if $typemap.relation == "one-to-one"}}
+{{if !$typemap.service_prefs || ($typemap.service_prefs.load && in_array('content_display',$typemap.service_prefs.load)) }}
 		if( $pObject->isValid() ) {
 			// Parse the {{$fieldName}}
 			$parseHash['data'] = $pObject->mInfo['{{$fieldName}}'];
@@ -13,8 +13,7 @@
 {{/if}}
 {{/foreach}}
 {{elseif $typemap.relation == "one-to-many"}}
-{{* @TODO this is might be a little heavy for read cases where we dont need everything
-	Some sort of standard for triggering full load or a selective service load would help *}}
+{{if !$typemap.service_prefs || ($typemap.service_prefs.load && in_array('content_display',$typemap.service_prefs.load)) }}
 		// Get a list of the associated typemap data
 		if( !empty( $pObject->mContentId ) ){
 			if( empty( ${{$config.name}} ) ){
@@ -22,6 +21,7 @@
 			}
 			$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'content_id' => $pObject->mContentId) ); 
 		}
+{{/if}}
 {{/if}}
 {{/foreach}}
 {{include file="custom_content_display_inc.php.tpl"}}
