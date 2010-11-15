@@ -22,8 +22,8 @@ package:
   services:				# see services documentation (once it exists)
 
   types:				# content types managed by the package
-    account:
-      templates: {list_type.tpl: ulli}
+    typeguid:
+      templates: {template_name.tpl: prefix}	# template overrides - switches the version of the template used
       content_name: Content Name		# human readable Content Name
       content_name_plural: Content Name # plural form of human readable Content Name for lists
       description: A class which represents an account.
@@ -48,9 +48,9 @@ package:
           help: Custom form help text
         columnname:						# table column name
           name: Label					# human readable name that is used as a form and list label
-		  help: 						# help text that appears on in the form under the input
+          help: 						# help text that appears on in the form under the input
       statuses:							# custom status codes that replace the default liberty package options
-        min: -6    						# these codes are a little retarded in liberty package
+        min: -6							# these codes are a little retarded in liberty package
         max: 51							# min and max are +1 more than the lowest and highest menu codes one wants available
         codes:							# custom menu codes
           integer: Description			# example: 50: Available
