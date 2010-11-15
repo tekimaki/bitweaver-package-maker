@@ -65,32 +65,15 @@ class PluginRenderer extends aRenderer{
 
 			// prep service-typemap association hash
 			$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
-
-			foreach( $services as $type=>$slist ){
-				switch( $type ){
-				case 'sql':
-				case 'functions':
+			foreach( $config['typemaps'] as $typemapName=>$typemap ){
+				foreach( $services as $type=>$slist ){
 					foreach( $slist as $func ){
-						foreach( $config['typemaps'] as $typemapName=>$typemap ){
-							if( !empty( $typemap['services'] ) ){
-								if( in_array( $func, $typemap['services'] ) ){
-									$config['services']['functions'][$func][] = $typemapName;
-								}
+						if( !empty( $typemap['services'] ) ){
+							if( in_array( $func, $typemap['services'] ) || (!empty($typemap['services'][$type]) && in_array($func, $typemap['services'][$type])) ){
+								$config['services'][$type][$func][] = $typemapName;
 							}
 						}
 					}
-					break;
-				case 'templates':
-					foreach( $slist as $file ){
-						foreach( $config['typemaps'] as $typemapName=>$typemap ){
-							if( !empty( $typemap['services'] ) ){
-								if( in_array( $file, $typemap['services'] ) ){
-									$config['services']['templates'][$file][] = $typemapName;
-								}
-							}
-						}
-					}
-					break;
 				}
 			}
 		}
@@ -185,14 +168,14 @@ class PluginRenderer extends aRenderer{
 			switch( $file ){
 			case 'service_edit_mini_inc.tpl':
 				$render = FALSE;
-				if( !empty( $config['services'] ) ){
+				if( !empty( $config['services']['templates'] ) ){
 					$render = in_array( 'content_edit_mini', array_keys($config['services']['templates']) );
 				}
 				break;
 			case 'service_edit_tab_inc.tpl':
 				$render = FALSE;
-				if( !empty( $config['services'] ) ){
-					$render = in_array( 'content_edit_tab', array_keys($config['services']['templates']) );
+				if( !empty( $config['services']['templates'] ) ){
+					$render = in_array( 'content_edit_tab', array_keys($config['services']) );
 				}
 				break;
 			case 'admin_plugin_inc.php':

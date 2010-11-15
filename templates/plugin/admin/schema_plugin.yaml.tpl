@@ -83,16 +83,20 @@
   handler_file: {{$config.class_name}}.php
   api_handlers:
     sql:
-{{foreach from=$config.services.functions key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
+{{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
+{{foreach from=$typemap.services.functions item=func}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
 {{if $func eq 'content_load_sql' || $func eq 'content_list_sql'}}
-      {{$func}}: {{$config.name}}_{{$func}}
+      {{$func}}: {{$typemapName}}_{{$func}}
 {{/if}}
 {{/foreach}}
+{{/foreach}}
     function:
-{{foreach from=$config.services.functions key=func item=typemaps}}
+{{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
+{{foreach from=$typemap.services.functions item=func}}
 {{if $func != 'content_load_sql' && $func != 'content_list_sql'}}
-      {{$func}}: {{$config.name}}_{{$func}}
+      {{$func}}: {{$typemapName}}_{{$func}}
 {{/if}}
+{{/foreach}}
 {{/foreach}}
 {{if $config.sections}}{{* this should be handled in prepConfig *}}
       content_section: {{$config.name}}_content_section
@@ -101,10 +105,12 @@
       package_admin: {{$config.name}}_package_admin
 {{/if}}
     tpl:
-{{foreach from=$config.services.templates key=file item=typemaps}}
+{{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
+{{foreach from=$typemap.services.templates item=tpl}}
 {{if $tpl eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
 {{if $tpl eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
       {{$tpl}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
+{{/foreach}}
 {{/foreach}}
 {{if $config.sections}}{{* this should be handled in prepConfig *}}
       content_display_section: 'bitpackage:{{$config.package}}/{{$config.name}}/service_display_section.tpl'
