@@ -8,7 +8,6 @@
 {{if $typemap.attachments}}
 			// update the content hash when we have attachments because they use ajax upload
 			$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'content_id' => $pObject->mContentId) ); 
-			// $pObject->mInfo = array_merge( $pObject->mInfo, ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId( $pObject->mContentId ) ); 
 {{/if}}
 {{/foreach}}
 		}
