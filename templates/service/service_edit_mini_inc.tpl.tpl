@@ -5,7 +5,7 @@
 {if $gContent->hasService($smarty.const.LIBERTY_SERVICE_{{$config.name|strtoupper}})} 
 {{foreach from=$config.typemaps key=typemapName item=typemap name=typemaps}}
 {{if $typemap.services && in_array('content_edit_mini',$typemap.services)}}
-{if !$smarty.request.preflight_fieldset_guid || $smarty.request.preflight_fieldset_guid eq '{{$typemapName}}'}
+{if {{if !$typemap.service_prefs || in_array('content',$typemap.service_prefs)}}!$smarty.request.preflight_fieldset_guid || {{/if}} $smarty.request.preflight_fieldset_guid eq '{{$typemapName}}'}
 {include file="bitpackage:{{$config.package}}/{{$config.plugin}}/edit_{{$typemapName}}_inc.tpl"}
 {/if}
 {{/if}}

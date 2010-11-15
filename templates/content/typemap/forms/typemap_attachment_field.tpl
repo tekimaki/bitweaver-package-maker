@@ -21,7 +21,7 @@
 		{/forminput}
 	</div>
 	<div class="buttonHolder row">
-		<input class="button" type="button" value="Upload" 
+		<input class="button" type="button" value="Upload" name="store_{{$typemapName}}" 
 			onclick="javascript:LibertyPreflight.uploader( 
 				this.form, 
 				'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
