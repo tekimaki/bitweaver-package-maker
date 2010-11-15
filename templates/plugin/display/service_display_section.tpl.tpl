@@ -7,7 +7,7 @@
 	{if $smarty.request.action eq 'edit'}
 	<div class="body">
 	{formfeedback warning=$errors}
-	{form id="edit{{$sectionName}}form"}
+	{form id="edit{{$sectionName}}form" enctype="multipart/form-data"}
 		<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 		<input type="hidden" name="content_type_guid" value="{$gContent->mContentTypeGuid}" />
 		<input type="hidden" name="section" value="{$smarty.request.section}" />

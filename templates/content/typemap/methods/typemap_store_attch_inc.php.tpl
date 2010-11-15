@@ -11,7 +11,7 @@
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
 			$old_{{$attachment}}_id = array();
 
-			// Store the test_image attachment
+			// Store the {{$attachment}} attachment
 			if( !empty( $_FILES['{{$typemapName}}_{{$attachment}}']['tmp_name'] ) ){
 				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
