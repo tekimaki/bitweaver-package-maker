@@ -154,7 +154,7 @@ abstract class aRenderer{
 	 */
 	public static function renderFile($dir, $file, $template, $config, $prefix) {
 		global $gBitSmarty;
-
+		echo "-> Rendering $file\n";
 		$filename = $dir."/".$file;
 		message(" ".$filename);
 
