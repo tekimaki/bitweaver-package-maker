@@ -7,7 +7,7 @@
 {{/if}}
 {{assign var=functionName value=$serviceName|cat:_content_load_sql}}
 		/* =-=- CUSTOM BEGIN: {{$functionName}} -=-= */
-{{if !empty($customBlock.$functionname)}}
+{{if !empty($customBlock.$functionName)}}
 {{$customBlock.$functionName}}
 {{else}}
 
