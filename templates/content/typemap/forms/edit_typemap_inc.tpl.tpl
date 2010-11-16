@@ -29,6 +29,9 @@
 
 {{* one-to-many typemaps with attachment fields *}}
 {{elseif $typemap.relation eq 'one-to-many' && $typemap.attachments}}
+{if !$formid && $smarty.request.section}
+{assign var=formid value="edit`$smarty.request.section`form"}
+{/if}
 <div id="{{$config.plugin}}_{{$typemapName}}">
 {* place a fieldset for each existing instance *}
 {foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
