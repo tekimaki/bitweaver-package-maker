@@ -83,10 +83,8 @@
   handler_file: {{$config.class_name}}.php
   api_handlers:
     sql:
-{{foreach from=$config.services.functions key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
-{{if $func eq 'content_load_sql' || $func eq 'content_list_sql'}}
+{{foreach from=$config.services.sql key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
       {{$func}}: {{$config.name}}_{{$func}}
-{{/if}}
 {{/foreach}}
     function:
 {{foreach from=$config.services.functions key=func item=typemaps}}
