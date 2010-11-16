@@ -18,7 +18,7 @@
 class TypemapRenderer extends aRenderer{
 
 	public static function prepConfig( &$config ){ 
-		$config['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($config['typemap']);
+		$config['label'] = !empty( $config['label'] )?$config['label']:ucfirst($config['typemap']);
 
 		// set default data relation
 		$config['relation'] = !empty( $config['relation'] )?$config['relation']:'one-to-one';

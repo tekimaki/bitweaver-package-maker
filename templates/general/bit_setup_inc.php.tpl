@@ -1,7 +1,7 @@
 <?php /* -*- Mode: php; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4; -*- */
 {{include file="php_file_header.tpl"}}
 {{foreach from=$config.services key=serviceName item=service}}
-define( 'LIBERTY_SERVICE_{{$serviceName|strtoupper}}', '{{$service.type}}' );
+define( 'LIBERTY_SERVICE_{{$serviceName|strtoupper}}', '{{$serviceName}}' );
 {{/foreach}}
 
 global $gBitSystem;

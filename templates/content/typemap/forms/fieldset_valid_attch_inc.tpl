@@ -10,10 +10,23 @@
 {{/foreach}}
 {{if $typemap.sequence}}
 <div class="row" style="display:none">
-<input type="hidden" name="{{$namespace}}[{{$typemapName}}_id]" value="{${{$typemapName}}.{{$typemapName}}_id}" />
+	<input type="hidden" name="{{$namespace}}[{{$typemapName}}_id]" value="{${{$typemapName}}.{{$typemapName}}_id}" />
 </div>
 {{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
-{{include file="typemap_valid_attachment_field.tpl"}}
+{{include file="typemap_valid_attachment_field.tpl"}} 
 {{/foreach}}
+<div class="row">
+	<input type="buttom" class="button small" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Delete" 
+		onclick="LibertyPreflight.expunge(
+			this.form, 
+			'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
+			'{tr}Please wait for the delete process to finish.{/tr}',
+			'liberty_upload_frame_{{$config.name}}_{{$typemapName}}',
+			'{{$config.name}}',
+			'{{$typemapName}}',
+			'{{$config.name}}_{{$typemapName}}_{$index}'
+		);"
+	/>
+</div>
 </div>

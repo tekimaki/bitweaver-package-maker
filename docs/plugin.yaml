@@ -15,7 +15,7 @@ plugin:
   typemaps:
     file_test:
       services: [plugin_api_hook, plugin_api_hook, ...]  # options: [content_preview, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_display, content_load, content_edit, upload_store, upload_expunge, upload_expunge_attachment]
-      service_prefs: {load: [content_section, content_load, content_display], edit_loc: [section, content]}
+      service_prefs: {load: [content_section, content_load, content_display, content_load_sql, content_list_sql], edit_loc: [section, content]}
       sequence: true          # an optional setting to sequence the table
       base_table: tablename
       maintainer_url: url 

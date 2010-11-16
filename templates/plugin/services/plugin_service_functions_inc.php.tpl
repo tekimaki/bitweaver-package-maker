@@ -1,3 +1,14 @@
+{{foreach from=$config.services.sql key=func item=typemaps}}
+function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
+	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
+{{if $func eq 'content_load_sql'}}
+{{include file="plugin_content_load_sql.php.tpl"}}
+{{elseif $func eq 'content_list_sql'}}
+{{include file="plugin_content_list_sql.php.tpl"}}
+{{/if}}
+	}
+}
+{{/foreach}}
 {{foreach from=$config.services.functions key=func item=typemaps}}
 function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
