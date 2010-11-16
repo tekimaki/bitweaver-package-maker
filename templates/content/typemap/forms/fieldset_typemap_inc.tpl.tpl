@@ -11,7 +11,7 @@
 {{else}}
 <div id="{{$config.name}}_{{$typemapName}}">
 {{/if}}
-{{/if}}
+{{/if}}{{* end one-to-many special requirements *}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
 <div class="row" id="row_{{$config.name}}_{{$fieldName}}" {{if $field.input.styles.row}}style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}"{{/if}}>
@@ -29,4 +29,4 @@
 {{/foreach}}
 {{if $typemap.relation eq 'one-to-many'}}
 </div>
-{{/if}}
+{{/if}}{{* end one-to-many special requirements *}}

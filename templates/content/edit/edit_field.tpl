@@ -4,7 +4,7 @@
 {{if $index}}
 {{assign var=fieldId value=$fieldName|cat:'_{$index}'}}
 {{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`}"}}
-{{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`."}}
+{{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`"}}
 {{else}}
 {{assign var=fieldId value=$fieldName}}
 {{/if}}
@@ -48,7 +48,7 @@
     {{elseif $field.input.type=="timestamp"}}
     	    {html_select_date field_array="{{$namespace}}[{{$fieldName}}]" prefix="" time={{if $inputValueAlt}}{{$inputValueAlt}}{{else}}$gContent->getField('{{$fieldName}}'){{/if}} {{foreach from=$field.smarty key=sk item=sv}}{{$sk}}="{{$sv}}" {{/foreach}} }{html_select_time field_array="{{$namespace}}[{{$fieldName}}]" prefix="" time={{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}} {{foreach from=$field.smarty key=sk item=sv}}{{$sk}}="{{$sv}}"{{/foreach}} }
     {{elseif $field.input.type=="boolean"}}
-    	    <input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" {if {{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}}checked="checked"{/if}/>
+    	    <input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" {if {{if $inputValueAlt}}{{$inputValueAlt}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}}checked="checked"{/if}/>
     {{elseif $field.input.type=="int" || $field.input.type=="long"}}
     	    <input class="textInput" type="text" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" value="{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}" />
     {{elseif $field.input.type=="float" || $field.input.type=="double"}}
