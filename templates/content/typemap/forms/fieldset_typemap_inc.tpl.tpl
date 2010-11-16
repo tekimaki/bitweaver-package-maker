@@ -9,7 +9,7 @@
 {{if !$typemap.attachments}}
 <div id="{{$config.name}}_{{$typemapName}}_{$index}" class="multiform_unit" style="{if !is_int($index) && $index == 'temp'}display:none{/if}">
 {{else}}
-<div id="{{$config.name}}_{{$typemapName}}">
+<div id="{{$config.name}}_{{$typemapName}}_{$index}">
 {{/if}}
 {{/if}}{{* end one-to-many special requirements *}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}

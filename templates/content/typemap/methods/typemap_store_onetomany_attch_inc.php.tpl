@@ -16,7 +16,7 @@
 				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
 					// add the attachment id to our store hash
-					$data['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
+					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$attachment}}_id'] = $data['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
 				}
 			}
 {{/foreach}}
@@ -28,7 +28,7 @@
 					$result = $this->mDb->associateUpdate( $table, $data, $locId );
 				// {{$typemapName}} id is not set create a new record
 				}else{
-					$data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
+					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'] = $data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
 					$result = $this->mDb->associateInsert( $table, $data );
 				}
 			}
@@ -42,15 +42,45 @@
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
+			$stored{{$typemapName|ucfirst}} = array();
+
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){ 
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
 					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
-					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+					if( $this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify ) ){
+						$stored{{$typemapName|ucfirst}}[] = $storeHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'];
+					}
 					unset( $storeHash ); //f'n php
 				}
 			}else{
-				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+				if( $this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify ) ){
+					$stored{{$typemapName|ucfirst}}[] = $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'];
+				}
 			}
+
+			// expunge records not submitted
+            // get existing records
+            $curr{{$typemapName|ucfirst}} = $this->list{{$typemapName|ucfirst}}( array( 'content_id' => $pObject->mContentId) );
+            // walk existing records
+            foreach( $curr{{$typemapName|ucfirst}} as ${{$typemapName}}_id => $currData ){
+                // if not in stored hash expunge
+                if( !in_array( ${{$typemapName}}_id, $stored{{$typemapName|ucfirst}} ) ){
+                    // if the record has attachments store a reference
+                    $attachment_ids = array();
+{{foreach from=$typemap.attachments key=attachment item=prefs}}
+                    if( !empty( $currData['{{$attachment}}_id'] ) ){
+                        $attachment_ids[] = $currData['{{$attachment}}_id'];
+                    }
+{{/foreach}}
+                    // expunge the priority_images
+                    $this->expunge{{$typemapName|ucfirst}}( $currData );
+                    foreach( $attachment_ids as $attachment_id ){
+                        // after expunge drop the attachments too
+                        $this->mServiceContent->expungeAttachment( $attachment_id );
+                    }
+                }
+            }
+
 		}
 		return count( $this->mErrors ) == 0;
 	}

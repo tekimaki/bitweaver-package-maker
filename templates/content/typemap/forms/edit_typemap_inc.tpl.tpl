@@ -1,6 +1,6 @@
 {if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
 	$gContent->hasUserPermission('p_{{$typemapName}}_service_edit')}
-{legend legend={{$typemap.label}}}
+{legend legend="{{$typemap.label}}"}
 
 {{* one-to-many typemaps without attachment fields *}}
 {{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
@@ -35,10 +35,10 @@
 <div id="{{$config.plugin}}_{{$typemapName}}">
 {* place a fieldset for each existing instance *}
 {foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
-{{include file="fieldset_valid_attch_inc.tpl"}}
+{{include file="fieldset_valid_attch_inc.tpl"}} 
 {/foreach}
 {* place empty fieldset at the bottom *}
-{{include file="fieldset_typemap_inc.tpl.tpl"}}
+{{include file="fieldset_typemap_inc.tpl.tpl"}} 
 </div>
 
 {{* many-to-many *}} 
