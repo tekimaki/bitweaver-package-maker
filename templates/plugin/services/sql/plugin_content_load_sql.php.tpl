@@ -9,7 +9,7 @@
 }}
 		$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.attachments key=attachment item=prefs name=attachments}}, {{$config.name}}_{{$typemap}}.`{{$attachment}}_id`{{/foreach}} {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}}{{if $fieldName != 'content_id'}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}}.`{{$fieldName}}`{{/if}}{{/foreach}}";
 		$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."{{$config.name}}_{{$typemap}}` {{$config.name}}_{{$typemap}} {{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}} ON ( lc.`content_id`={{$config.name}}_{{$typemap}}.`content_id` )";
-{{*	 	$ret['where_sql'] .= ""; *}}
+{{*		$ret['where_sql'][] = ""; *}}
 {{* load only in the case of a section request *}}
 {{elseif $config.sections
 	 && ($config.typemaps.$typemap.service_prefs.load && in_array('content_section',$config.typemaps.$typemap.service_prefs.load))	
@@ -21,7 +21,7 @@
 			case '{{$sectionName}}':
 				$ret['select_sql'] .= " {{foreach from=$config.typemaps.$typemap.attachments key=attachment item=prefs name=attachments}}, {{$config.name}}_{{$typemap}}.`{{$attachment}}_id`{{/foreach}} {{foreach from=$config.typemaps.$typemap.fields key=fieldName item=field name=fields}}{{if $fieldName != 'content_id'}},{{$config.name}}_{{$typemap}}{{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}}.`{{$fieldName}}`{{/if}}{{/foreach}}";
 				$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."{{$config.name}}_{{$typemap}}` {{$config.name}}_{{$typemap}} {{if $config.typemaps.typemap.base_table == "liberty_content"}}liberty_content{{/if}} ON ( lc.`content_id`={{$config.name}}_{{$typemap}}.`content_id` )";
-{{*			 	$ret['where_sql'] .= ""; *}}
+{{*				$ret['where_sql'][] = ""; *}}
 				break;
 {{/if}}
 {{/foreach}}
