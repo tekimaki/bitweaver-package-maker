@@ -3,7 +3,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{* permission checks *}}
 		// Check permissions on the section
-		global $gBitUser;
+		global $gBitUser, $gBitSmarty, $gBitThemes;
 		switch( $pParamHash['section'] ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':
@@ -58,6 +58,8 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 			// edit
 			if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' ) ){
 				{{$config.name}}_content_edit( $pObject, $pParamHash );
+				$gBitThemes->loadAjax( 'jquery' );
+				$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/JQuery.placeholder.js', TRUE );
 			}
 {{* data processing: store *}}
             // store
