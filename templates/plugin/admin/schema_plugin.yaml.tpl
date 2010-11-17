@@ -1,6 +1,6 @@
 ---
 {{$config.name}}: 
-  version: 0.0.0
+  version: {{$config.version}}
   required: false
   package: {{$package}}
   requirements: 
