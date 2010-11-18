@@ -11,7 +11,7 @@
 {{include file="typemap_store_seq_inc.php.tpl"}}
 {{elseif $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
-{{elseif !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments)}}
+{{elseif !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments) || $typemap.relation eq 'many-to-many'}}
 {{include file="typemap_store_inc.php.tpl"}}
 {{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {{include file="typemap_store_onetomany_inc.php.tpl"}}
