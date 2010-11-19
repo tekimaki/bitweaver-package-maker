@@ -99,7 +99,7 @@
       package_admin: {{$config.name}}_package_admin
 {{/if}}
     tpl:
-{{foreach from=$config.services.templates key=file item=typemaps}}
+{{foreach from=$config.services.templates key=tpl item=typemaps}}
 {{if $tpl eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
 {{if $tpl eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
       {{$tpl}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
