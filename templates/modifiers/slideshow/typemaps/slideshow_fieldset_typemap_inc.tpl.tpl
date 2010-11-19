@@ -2,7 +2,7 @@
 <div id="{{$config.name}}_{{$typemapName}}_{$index}">
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
-<div class="row" id="row_{{$config.name}}_{{$fieldName}}" {{if $field.input.styles.row}}style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}"{{/if}} style="display:none">
+<div class="row" id="row_{{$config.name}}_{{$fieldName}}" {{if $field.input.styles.row}}style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}"{{/if}} >
 {{assign var=namespace value="`$config.name`[`$typemapName`]["|cat:'{$index}]'}}
 {{include file="edit_field.tpl" namespace=$namespace index=y}}
 </div>
