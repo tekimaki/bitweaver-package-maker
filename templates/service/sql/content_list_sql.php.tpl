@@ -8,9 +8,6 @@
 {{/if}}
 {{assign var=functionName value=$serviceName|cat:_content_list_sql}}
 		/* =-=- CUSTOM BEGIN: {{$functionName}} -=-= */
-/* 
-{{$customBlock|vd}} 
-*/
 {{if !empty($customBlock.$functionName)}}
 {{$customBlock.$functionName}}
 {{else}}
