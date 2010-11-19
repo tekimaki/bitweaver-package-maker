@@ -24,28 +24,6 @@ if( $gBitSystem->isPackageActive( '{{$package}}' ) ){ //&& $gBitUser->hasPermiss
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
 
-{{if $config.services}}
-    // include service functions
-{{foreach from=$config.services key=serviceName item=service}}
-	require_once( {{$PACKAGE}}_PKG_PATH.'{{$service.class_name}}.php' );
-
-	/*
-    $gLibertySystem->registerService(
-		LIBERTY_SERVICE_{{$serviceName|strtoupper}},
-		{{$PACKAGE}}_PKG_NAME,
-        array(
-{{foreach from=$service.functions item=func}}
-			'{{$func}}_function' => '{{$serviceName}}_{{$func}}',
-{{/foreach}}
-        ),
-        array(
-			'description' => '{{$service.description}}'
-        )
-    );
-	*/
-{{/foreach}}
-{{/if}}
-
 {{if $config.pluggable}}
 $gLibertySystem->loadPackagePlugins( {{$PACKAGE}}_PKG_NAME );
 {{/if}}

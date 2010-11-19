@@ -104,7 +104,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
 				'label' => '{{$field.name|addslashes}}',
-				'help' => '{{$field.help}}',
+				'help' => '{{$field.help|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(

@@ -1,7 +1,12 @@
 		global $gBitSmarty, $gBitThemes;
 		// Prep any data we may need for the form
+{{if $typemap.services.functions && in_array('content_display',$typemap.services.functions)}} 
 		// pass through to display to load up content data
 		{{$config.name}}_content_display( $pObject, $pParamHash );
+{{elseif $typemap.services.functions && in_array('content_load',$typemap.services.functions)}} 
+		// pass through to load to load up content data
+		{{$config.name}}_content_load( $pObject, $pParamHash );
+{{/if}}
 {{assign var=jsColorIncluded value=false}}
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.relation == 'one-to-many' && !$typemap.attachments && !$jsMultiFormIncluded}}

@@ -20,7 +20,7 @@
 {* link to load multiforms*}
 <div class="row">
 	{forminput}
-		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}_multiform')" />{tr}Add another {{$typemapName|ucfirst}}{/tr}</a>
+		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}_multiform')" />{tr}Add another {{$typemap.label}}{/tr}</a>
 	{/forminput}
 </div>
 

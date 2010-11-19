@@ -102,3 +102,34 @@ template overriding: >
   for greater output customization. This could be implemented as themes
   and or as specific template sets on a file output basis from within the
   package yaml definitiion. We want this!
+
+
+clean up services and plugins differences: >
+  this is an analysis of the differences
+  content
+    - load,store,expunge process content and typemaps
+    - typemaps specifically related to content
+    - service
+    - unique class for each
+    - one table each
+    - load,store,expunge relate to service table
+    - handlers relate to the one table 
+    - processed by packagerenderer
+  plugin
+    - typemaps relate to service handlers
+    - services
+    - handlers relate to typemaps
+    - processed by pluginrenderer
+
+  refactor requirements
+    - reconcile very different use of key hash typemaps; service does not use
+    it, it uses its own fields and assumes one table; plugins do use them
+    assuming them to be the service tables;
+    could be resolved with prepConfig -- but that would add a layer of
+    abstraction that i think would make things more confusing.
+    - prep config of services and render into the plugin class (deprecate old
+    serive class constructor)
+    - difference between plugin and service would then be the use of plugin path
+    and plugin_inc and bit_setup_inc
+
+

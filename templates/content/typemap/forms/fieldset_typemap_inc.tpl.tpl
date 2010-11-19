@@ -59,6 +59,13 @@
 </div>
 {{/if}}
 {{/foreach}}
+{{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
+{if $index != '0'}
+<div class="row">
+	<input type="buttom" class="button small multiform_remove" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Remove link" onclick="BitMultiForm.removeForm('priorities_priority_related_links_{$index}');"/>
+</div>
+{/if}
+{{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_attachment_field.tpl"}}
 {{/foreach}}
