@@ -56,13 +56,14 @@
 			$whereSql .= " AND `content_id` = ?";
 		}
 
-		$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+		if ( !empty($whereSql) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+			$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` ".$whereSql;
+			$this->mDb->query( $query, $bindVars );
 
-		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` ".$whereSql;
-		$this->mDb->query( $query, $bindVars );
-
-		if( $this->mDb->query( $query, $bindVars ) ){
-			$ret = TRUE;
+			if( $this->mDb->query( $query, $bindVars ) ){
+				$ret = TRUE;
+			}
 		}
 
 		return $ret;

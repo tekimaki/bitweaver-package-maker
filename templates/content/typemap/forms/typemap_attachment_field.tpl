@@ -14,7 +14,7 @@
 		{{/if}}
 
 		{forminput}
-			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="40" />
+			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="{{$prefs.input.size|default:40}}" />
 			{{if $typemap.relation eq 'one-to-one'}}
 				{formhelp note="Select a new {{$prefs.name|ucfirst}}."}
 			{{/if}}

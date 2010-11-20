@@ -37,3 +37,4 @@
 		/* =-=- CUSTOM END: {{$functionName}} -=-= */
 
 		return $ret;
+{{/if}}
