@@ -1,0 +1,1 @@
+<input type="text" class="color {ldelim}required:{{if $field.validator.required}}true{{else}}false{{/if}}{rdelim} inputText" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" value="{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}" />
