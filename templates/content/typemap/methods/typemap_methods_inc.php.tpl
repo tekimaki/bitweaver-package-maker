@@ -235,7 +235,6 @@
 	}
 {{/foreach}}
 
-{{foreach from=$config.typemaps item=typemap key=typemapName name=typemaps}}
 {{foreach from=$typemap.fields item=field key=fieldName name=fields}}
 {{if $field.input.type == "reference" }}
 	function get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options($pParams = NULL) {
@@ -263,7 +262,6 @@
 		return $ret;	
 	}
 {{/if}}
-{{/foreach}}
 {{/foreach}}
 
 	// {{literal}}}}}{{/literal}}
