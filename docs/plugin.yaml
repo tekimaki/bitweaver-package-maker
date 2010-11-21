@@ -19,6 +19,7 @@ plugin:
       sequence: true          # an optional setting to sequence the table
       base_table: tablename
       maintainer_url: url 
+      sortable: <field> # an optional sortable flag for one to many. The <field> MUST be in the fields array and MUST have input: {type:hidden} on it.
       permissions:
         default: {create: owner, view: basic, update: owner}
       relation: relationtype  # [one-to-one, one-to-many, many-to-many]

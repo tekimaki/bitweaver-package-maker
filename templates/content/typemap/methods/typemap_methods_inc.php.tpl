@@ -235,4 +235,33 @@
 	}
 {{/foreach}}
 
+{{foreach from=$typemap.fields item=field key=fieldName name=fields}}
+{{if $field.input.type == "reference" }}
+	function get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options($pParams = NULL) {
+		$ret = array();
+		$bindVars = array();
+		$whereSql = '';
+		$query = "SELECT lc.`{{$field.validator.column}}` as hash_key, lc.`{{$field.input.desc_column}}` as desc FROM `".BIT_DB_PREFIX."{{$field.input.desc_table}}` lc";
+{{if !empty($field.input.type_limit)}}
+		$whereSql .= " AND lc.`content_type_guid` IN (";
+{{foreach from=$field.input.type_limit item=guid name=guids}}
+		$whereSql .= "?{{if !$smarty.foreach.guids.last}},{{/if}}";
+		$bindVars[] = "{{$guid}}";
+{{/foreach}}
+		$whereSql .= ")";
+{{/if}}
+		if ( !empty($pParams['{{$fieldName}}_search'] ) ) {
+                    $whereSql .= " AND lc.`{{$field.input.desc_column}}` LIKE ?";
+		    $bindVars[] = "%".$pParams['{{$fieldName}}_search']."%";  
+                }
+		if ( !empty($whereSql) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', ' WHERE ', $whereSql );
+			$query .= $whereSql;
+		}
+		$ret = $this->mDb->getAssoc($query, $bindVars);
+		return $ret;	
+	}
+{{/if}}
+{{/foreach}}
+
 	// {{literal}}}}}{{/literal}}

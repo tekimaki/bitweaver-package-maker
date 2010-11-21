@@ -1,0 +1,1 @@
+{textarea label="{{$field.name}}" error=$errors.{{$fieldName}} help="{{$field.help}}" noformat="true" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" rows="{{$field.input.rows|default:"20"}}"}{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}{/textarea}
