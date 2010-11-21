@@ -11,6 +11,7 @@
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.relation == 'one-to-many' && !$typemap.attachments && !$jsMultiFormIncluded}}
 {{assign var=jsMultiFormIncluded value=true}}
+{{assign var=jQueryIncluded value=true}}
 		$gBitThemes->loadAjax( 'jquery' );
 		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/JQuery.BitMultiForm.js', FALSE );
 {{/if}}
@@ -20,6 +21,21 @@
 		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
 {{/if}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
+{{* reference fields *}}
+{{if $field.input.type == "reference"}}
+		$gBitThemes->loadAjax( 'jquery', array('ui/jquery.ui.all.js') );
+		$gBitThemes->loadCss( UTIL_PKG_PATH . 'javascript/jQuery.Sortable.css'); 
+		${{$config.class_name}} = new {{$config.class_name}}();
+		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
+		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
+{{* Plugin or package javascript handler? *}}
+{{if !empty($PLUGIN) }}
+		global $gBitSystem;
+		$gBitThemes->loadJavascript( $gBitSystem->getPackagePluginPath("{{$plugin}}").'scripts/{{$config.class_name}}.js' );
+{{else}}
+		$gBitThemes->loadJavascript( {{$PACKAGE}}_PKG_PATH.'scripts/{{$config.class_name}}.js');
+{{/if}}
+{{/if}}
 {{* hexcolor lib *}}
 {{if !empty($field.validator.type) && $field.validator.type == 'hexcolor' && !$jsColorIncluded}}
 {{assign var=jsColorIncluded value=true}}
