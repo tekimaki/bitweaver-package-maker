@@ -20,7 +20,7 @@
     {{if $field.input.type=="none"}}
 	{* No input for {{$field.name}} *}
     {{else}}
-	{{assign var=fieldTemplate value="edit_field"|cat:$field.input.type|cat:".tpl"}}
+	{{assign var=fieldTemplate value="edit_field_"|cat:$field.input.type|cat:".tpl"}}
 	{{include file=$fieldTemplate}}
     {{/if}}
 {{else}}
