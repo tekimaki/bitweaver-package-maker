@@ -58,7 +58,7 @@ class SectionRenderer extends aRenderer{
 						}
 					}
 					break;
-				case 'edit_section_inc.tpl':
+				case 'edit_sect_section_inc.tpl':
 					foreach($config['sections'] as $section => $params) {
 						global $gBitSmarty;
 						if( !empty( $params['modes'] ) && in_array( 'edit', $params['modes'] ) ){
