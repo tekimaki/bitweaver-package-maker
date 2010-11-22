@@ -9,7 +9,7 @@
 {{assign var=fieldId value=$fieldName}}
 {{/if}}
 
-{{if $field.input.type != 'parsed' && $field.input.type != 'none'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden'}}
 	{formfeedback warning=$errors.{{$fieldName}}}
 	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
@@ -20,7 +20,7 @@
     {{if $field.input.type=="none"}}
 	{* No input for {{$field.name}} *}
     {{else}}
-	{{assign var=fieldTemplate value="edit_field"|cat:$field.input.type|cat:".tpl"}}
+	{{assign var=fieldTemplate value="edit_field_"|cat:$field.input.type|cat:".tpl"}}
 	{{include file=$fieldTemplate}}
     {{/if}}
 {{else}}
@@ -28,7 +28,7 @@
 	<input class="textInput" type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldId}}" />
 {{/if}}
 
-{{if $field.input.type != 'parsed' && $field.input.type != 'none'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden'}}
 	{formhelp note="{{$field.help}}"}
 	{/forminput}
 {{/if}}

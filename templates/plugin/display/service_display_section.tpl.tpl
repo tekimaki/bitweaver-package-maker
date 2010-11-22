@@ -35,7 +35,7 @@
 {{/foreach}}
 {{* default include typemap with same name *}}
 {{elseif $config.typemaps.$sectionName}}
-				{include file="bitpackage:{{$config.package}}/{{$config.name}}/edit_{{$sectionName}}_inc.tpl" serviceHash=$gContent->mInfo formid="edit{{$sectionName}}form"}
+				{include file="bitpackage:{{$config.package}}/{{$config.name}}/edit_sect_{{$sectionName}}_inc.tpl" serviceHash=$gContent->mInfo formid="edit{{$sectionName}}form"}
 {{/if}}
 				<fieldset class="inlineLabels">
 					<legend></legend>

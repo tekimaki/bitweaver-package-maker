@@ -30,10 +30,20 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 	var $mSchema;
 
+	var $mServiceContent;
+
 	public function __construct( $pContentId=NULL ) {
 		parent::__construct();
 		$this->mContentId = $pContentId;
 	}
+
+	/**
+	 * setServiceContent
+	 */
+	function setServiceContent( &$pObject ){
+		$this->mServiceContent = &$pObject;
+	}
+
 
 	function store( &$pParamHash ){
         // expunge first then we repopulate the record
