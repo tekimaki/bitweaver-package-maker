@@ -17,6 +17,24 @@
 
 class SectionRenderer extends aRenderer{
 
+	/**
+	 * prepConfig
+	 * @param $config - a section hash
+	 */
+	public static function prepConfig( &$config ){
+		// compile a list of typemaps the section references for its view  
+		if( !empty( $config['bodyfields'] ) ){
+			$config['view_typemaps'] = array(); 
+			foreach( $config['bodyfields'] as $fields ){
+				foreach( $fields as $typemapName => $field ){
+					if( !in_array( $typemapName, $config['view_typemaps'] ) ){
+						array_push( $config['view_typemaps'], $typemapName );
+					}
+				}
+			}
+		}
+	}
+
 	public static function convertName( $file, $config, $params = array() ){
 		$tmp_file = $file;
 		if( !empty( $params['section'] ) ){
@@ -40,7 +58,7 @@ class SectionRenderer extends aRenderer{
 						}
 					}
 					break;
-				case 'edit_section_inc.tpl':
+				case 'edit_sect_section_inc.tpl':
 					foreach($config['sections'] as $section => $params) {
 						global $gBitSmarty;
 						if( !empty( $params['modes'] ) && in_array( 'edit', $params['modes'] ) ){

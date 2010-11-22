@@ -601,7 +601,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
 				'label' => '{{$field.name|addslashes}}',
-				'help' => '{{$field.help}}',
+				'help' => '{{$field.help|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(
@@ -625,7 +625,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
 				'label' => '{{$field.name|addslashes}}',
-				'help' => '{{$field.help}}',
+				'help' => '{{$field.help|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(
@@ -674,7 +674,31 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 
 {{/if}}{{/foreach}}
 
-
+{{if $type.statuses}}
+	/**
+	 * getAvailableContentStatuses
+	 */
+	function getAvailableContentStatuses( $pUserMinimum={{$type.statuses.min}}, $pUserMaximum={{$type.statuses.max}} ) {
+		global $gBitUser;
+		// standard list of options
+		if( !$gBitUser->hasPermission( 'p_liberty_edit_all_status' )) {
+			$ret = array( 
+{{foreach from=$type.statuses.codes item=desc key=code}}
+				{{$code}} => "{{$desc}}",
+{{/foreach}}
+			);
+		}
+		// for admins modify the master list of options
+		else{
+			$ret = LibertyMime::getAvailableContentStatuses( $pUserMinimum, $pUserMaximum );
+{{foreach from=$type.statuses.codes item=desc key=code}}
+			$ret[{{$code}}] = "{{$desc}}";
+{{/foreach}}
+			ksort( $ret );
+		}
+        return $ret;
+	}
+{{/if}}
 
 {{if count($type.typemaps) > 0}}
 {{literal}}

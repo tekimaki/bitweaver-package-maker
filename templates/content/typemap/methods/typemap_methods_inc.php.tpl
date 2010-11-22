@@ -11,7 +11,7 @@
 {{include file="typemap_store_seq_inc.php.tpl"}}
 {{elseif $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
-{{elseif !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments)}}
+{{elseif !$typemap.relation || ($typemap.relation eq 'one-to-one' && !$typemap.attachments) || $typemap.relation eq 'many-to-many'}}
 {{include file="typemap_store_inc.php.tpl"}}
 {{elseif $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {{include file="typemap_store_onetomany_inc.php.tpl"}}
@@ -19,26 +19,15 @@
 {{include file="typemap_store_attch_inc.php.tpl"}}
 {{/if}}
 
+{{* getbycontentid *}}
 {{if !$typemap.sequence}}
 {{if $typemap.relation eq 'one-to-one'}}
-	/**
-	 * get{{$typemapName|ucfirst}}ByContentId
-	 */
-	function get{{$typemapName|ucfirst}}ByContentId( $pContentId = NULL ){
-		$ret = NULL;
-		$contentId = !empty( $pContentId )?$pContentId:($this->isValid()?$this->mContentId:NULL);
-		if( $this->verifyId( $contentId ) ){
-			$query = "SELECT * FROM `{{$type.name}}_{{$typemapName}}` WHERE `{{$type.name}}_{{$typemapName}}`.content_id = ?";
-			$result = $this->mDb->query( $query, array( $contentId ) );
-            if( $result && $result->numRows() ) {
-                $ret = $result->fields;
-            } 
-		}
-		return $ret;
-	}
+{{include file="typemap_getbycontentid_inc.php.tpl"}}
 {{/if}}
 {{/if}}
-
+{{if $typemap.relation eq 'one-to-many'}}
+{{include file="typemap_getbycontentid_onetomany_inc.php.tpl"}}
+{{/if}}
 
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_verify_onetomany_attch_inc.php.tpl"}}
@@ -56,7 +45,7 @@
 		// limit results by {{$typemapName}}_id
 		if( !empty( $pParamHash['{{$typemapName}}_id'] ) ){
 			$bindVars[] = $pParamHash['{{$typemapName}}_id'];
-			$whereSql .= "`{{$typemapName}}_id` = ?";
+			$whereSql .= " AND `{{$typemapName}}_id` = ?";
 		}
 
 {{/if}}
@@ -64,14 +53,17 @@
 		// limit results by content_id
 		if( !empty( $pParamHash['content_id'] ) ){
 			$bindVars[] = $pParamHash['content_id'];
-			$whereSql .= "`content_id` = ?";
+			$whereSql .= " AND `content_id` = ?";
 		}
 
-		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE ".$whereSql;
-		$this->mDb->query( $query, $bindVars );
+		if ( !empty($whereSql) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+			$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` ".$whereSql;
+			$this->mDb->query( $query, $bindVars );
 
-		if( $this->mDb->query( $query, $bindVars ) ){
-			$ret = TRUE;
+			if( $this->mDb->query( $query, $bindVars ) ){
+				$ret = TRUE;
+			}
 		}
 
 		return $ret;
@@ -241,6 +233,41 @@
 			$this->mDb->associateUpdate("{{$type.name}}_{{$typemapName}}", array('{{$attachment}}_id' => NULL), $locId);
 		}
 	}
+{{/foreach}}
+
+{{foreach from=$typemap.fields item=field key=fieldName name=fields}}
+{{if $field.input.type == "reference" }}
+	function get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options($pParams = NULL) {
+		$ret = array();
+		$bindVars = array();
+		$whereSql = '';
+		$query = "SELECT lc.`{{$field.validator.column}}` as hash_key, lc.`{{$field.input.desc_column}}` as desc FROM `".BIT_DB_PREFIX."{{$field.input.desc_table}}` lc";
+{{if !empty($field.input.type_limit)}}
+		$whereSql .= " AND lc.`content_type_guid` IN (";
+{{foreach from=$field.input.type_limit item=guid name=guids}}
+		$whereSql .= "?{{if !$smarty.foreach.guids.last}},{{/if}}";
+		$bindVars[] = "{{$guid}}";
+{{/foreach}}
+		$whereSql .= ")";
+{{/if}}
+		if ( !empty($pParams['{{$fieldName}}_search'] ) ) {
+                    $whereSql .= " AND lc.`{{$field.input.desc_column}}` LIKE ?";
+		    $bindVars[] = "%".$pParams['{{$fieldName}}_search']."%";  
+                }
+		// Must come last
+		if ( !empty($pParams['selected'] ) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', '', $whereSql );
+			$whereSql = ' AND ('.$whereSql.') OR lc.`{{$field.validator.column}}` = ?';
+			$bindVars[] = $pParams['selected'];
+		}
+		if ( !empty($whereSql) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', ' WHERE ', $whereSql );
+			$query .= $whereSql;
+		}
+		$ret = $this->mDb->getAssoc($query, $bindVars);
+		return $ret;	
+	}
+{{/if}}
 {{/foreach}}
 
 	// {{literal}}}}}{{/literal}}

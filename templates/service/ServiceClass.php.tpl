@@ -182,7 +182,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 */
 	function storeMixed( &$pParamHash ){
 {{if !$service.sequence && $service.base_package == "liberty"}}
-		$query = "DELETE FROM `{{$service.name}}` WHERE `content_id` = ?";
+	$query = "DELETE FROM `{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}` WHERE `content_id` = ?";
 {{/if}}
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
@@ -255,7 +255,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
 		}
 
-		$query = "DELETE FROM `{{$service.name}}` ".$whereSql;
+		$query = "DELETE FROM `{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}` ".$whereSql;
 
 		if( $this->mDb->query( $query, $bindVars ) ){
 			$ret = TRUE;
@@ -396,8 +396,8 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$this->mSchema['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
-				'help' => '{{$field.help}}',
+				'label' => '{{$field.name|addslashes}}',
+				'help' => '{{$field.help|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(
@@ -420,8 +420,8 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 			$this->mSchema['{{$typeName}}_{{$typemapName}}']['{{$fieldName}}'] = array(
 				'name' => '{{$fieldName}}',
 				'type' => '{{$field.validator.type|default:'null'}}',
-				'label' => '{{$field.name}}',
-				'help' => '{{$field.help}}',
+				'label' => '{{$field.name|addslashes}}',
+				'help' => '{{$field.help|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
 				'{{$k}}' => {{if is_array($v)}}array(

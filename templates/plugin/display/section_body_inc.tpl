@@ -15,7 +15,7 @@
 {{* attachment match *}}
 {{elseif $config.typemaps.$typemapName.attachments.$fieldName}}
 <div>
-	{attachment id=$gContent->mInfo.{{$typemapName}}_{{$fieldName}}_id}
+	{attachment id=$gContent->mInfo.{{$fieldName}}_id}
 </div>
 {{/if}}
 {{/foreach}}

@@ -14,15 +14,15 @@
 		{{/if}}
 
 		{forminput}
-			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="40" />
+			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="{{$prefs.input.size|default:40}}" />
 			{{if $typemap.relation eq 'one-to-one'}}
 				{formhelp note="Select a new {{$prefs.name|ucfirst}}."}
 			{{/if}}
 		{/forminput}
 	</div>
 	<div class="buttonHolder row">
-		<input class="button" type="button" value="Upload" 
-			onclick="javascript:LibertyPreflight.uploader( 
+		<input class="button" type="button" value="Upload" name="store_{{$typemapName}}" 
+			onclick="LibertyPreflight.uploader( 
 				this.form, 
 				'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
 				'{tr}Please wait for the current upload to finish.{/tr}',

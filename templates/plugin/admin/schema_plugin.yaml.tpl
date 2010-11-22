@@ -1,6 +1,6 @@
 ---
 {{$config.name}}: 
-  version: 0.0.0
+  version: {{$config.version}}
   required: false
   package: {{$package}}
   requirements: 
@@ -83,10 +83,8 @@
   handler_file: {{$config.class_name}}.php
   api_handlers:
     sql:
-{{foreach from=$config.services.functions key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
-{{if $func eq 'content_load_sql' || $func eq 'content_list_sql'}}
+{{foreach from=$config.services.sql key=func item=typemaps}}{{* sorry this is slighly annoying right here maybe cleanup in prepConfig -wjames *}}
       {{$func}}: {{$config.name}}_{{$func}}
-{{/if}}
 {{/foreach}}
     function:
 {{foreach from=$config.services.functions key=func item=typemaps}}
@@ -101,7 +99,7 @@
       package_admin: {{$config.name}}_package_admin
 {{/if}}
     tpl:
-{{foreach from=$config.services.templates key=file item=typemaps}}
+{{foreach from=$config.services.templates key=tpl item=typemaps}}
 {{if $tpl eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
 {{if $tpl eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
       {{$tpl}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'

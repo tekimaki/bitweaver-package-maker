@@ -18,7 +18,7 @@
 class TypemapRenderer extends aRenderer{
 
 	public static function prepConfig( &$config ){ 
-		$config['label'] = !empty( $typemap['label'] )?$typemap['label']:ucfirst($config['typemap']);
+		$config['label'] = !empty( $config['label'] )?$config['label']:ucfirst($config['typemap']);
 
 		// set default data relation
 		$config['relation'] = !empty( $config['relation'] )?$config['relation']:'one-to-one';
@@ -32,7 +32,8 @@ class TypemapRenderer extends aRenderer{
 			if( $config['base_table'] == 'liberty_content' ) {
 				if( empty( $config['fields']['content_id'] ) ){
 					// keep content_id to the top of the stack
-					$config['fields'] = array( 'content_id'=>array() )+$config['fields'];
+					$fields = array_merge( array( 'content_id'=>array() ), $config['fields'] );
+					$config['fields'] = $fields;
 				}
 				$config['fields']['content_id']['schema']['primary'] = TRUE;
 				$config['fields']['content_id']['validator']['type'] = 'int';
@@ -42,7 +43,8 @@ class TypemapRenderer extends aRenderer{
 			if( $config['base_table'] == 'liberty_content' ) {
 				if( empty( $config['fields']['content_id'] ) ){
 					// keep content_id to the top of the stack
-					$config['fields'] = array( 'content_id'=>array() )+$config['fields'];
+					$fields = array_merge( array( 'content_id'=>array() ), $config['fields'] );
+					$config['fields'] = $fields;
 				}
 				$config['fields']['content_id']['validator']['type'] = 'int';
 			}
