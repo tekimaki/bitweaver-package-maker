@@ -1,8 +1,12 @@
 <?php
 // Initialization
+
 // Depending on where the plugin lives we find kernel in one of two places
-@include_once( '../../../../kernel/setup_inc.php' );
-@include_once( '../../kernel/setup_inc.php' );
+if (is_file('../../../../kernel/setup_inc.php' ) ) {
+	require_once( '../../../../kernel/setup_inc.php' );
+} else {
+	require_once( '../../kernel/setup_inc.php' );
+}
 
 // Is package installed and enabled
 $gBitSystem->verifyPackage( '{{$package}}' );
@@ -16,6 +20,8 @@ if( !empty( $_POST['req'] ) ){
         case 'fetch_{{$typemapName}}_{{$fieldName}}_list':
             ${{$config.class_name}} = new {{$config.class_name}}();
             $options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:$fieldName|replace:" ":""|ucfirst}}Options($_POST);
+            $gBitSmarty->assign('index', $_POST['index'] );
+            $gBitSmarty->assign('selected', $_POST['selected'] );
             $gBitSmarty->assign_by_ref( '{{$fieldName}}_options', $options );
             $gBitSmarty->assign( '{{$fieldName}}_search', $_POST['{{$fieldName}}_search'] );
             break;

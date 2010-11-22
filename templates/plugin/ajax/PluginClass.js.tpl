@@ -1,7 +1,11 @@
 {{$config.class_name}} = {
 {{foreach from=$config.typemaps item=typemap key=typemapName name=typemaps}}{{foreach from=$typemap.fields item=field key=fieldName name=fields}}{{if $field.input.type == "reference"}}
-	fetch_{{$fieldName}}_list:function( fieldId, errMsg ){
+	fetch_{{$fieldName}}_list:function( fieldId, index, errMsg ){
 		{{$fieldName}}_search = jQuery('#'+fieldId+'_search').val();
+		selectedItem = jQuery('#'+fieldId).val();
+		if (selectedItem == undefined) {
+			selectedItem = -1;
+		}
         	jQuery.ajax({
 {{if empty($PLUGIN)}}
 			url:BitSystem.urls.{{$package}}+'ajax.php',
@@ -10,7 +14,7 @@
 {{/if}}
                         type:'POST',
                         context:document.body,
-                        data:{req:'fetch_{{$typemapName}}_{{$fieldName}}_list'{{if $typemap.relation == 'one-to-one'}}, {{$fieldName}}:{{$fieldName}}{{else}}, {{$fieldName}}_search:{{$fieldName}}_search{{/if}} },
+                        data:{req:'fetch_{{$typemapName}}_{{$fieldName}}_list'{{if $typemap.relation == 'one-to-one'}}, {{$fieldName}}:{{$fieldName}}{{else}}, {{$fieldName}}_search:{{$fieldName}}_search, index:index, selected:selectedItem{{/if}} },
                         success:function(dom){
                             jQuery('#'+fieldId).replaceWith(dom);
                         }

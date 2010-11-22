@@ -6,7 +6,12 @@
 	{if !empty($error)}
 		<div class="error" id="{{$fieldName}}">{$error}</div>
 	{else}
-		{{include file="edit_field_reference.tpl"}}
+	{* This is support for one-to-many content types where 
+		multiple copies of the same input might be in the form 
+		This shit is seriously complicated to render *}
+		<select style="width:100%" name="{{$namespace}}[{{$fieldName}}]" id='{{$fieldName}}_{$index}' size="{{$field.input.size|default:10}}" >
+			{html_options options=${{$fieldName}}_options  selected=$selected}
+		</select>
 	{/if}
 {/if}
 {{/if}}

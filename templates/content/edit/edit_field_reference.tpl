@@ -12,7 +12,7 @@
 <input type="submit" id="{{$fieldId}}_search_button" value="{tr}Search{/tr}" name="{{$fieldName}}_search_button" class="button" onclick="return false;">
 <script type="text/javascript">
 	jQuery( '#{{$fieldId}}_search_button' ).click(function() {ldelim}
-		{{$config.class_name}}.fetch_{{$fieldName}}_list('{{$fieldId}}', '{tr}There was a problem fetching the list of{/tr} {{$fieldName}}. {tr}Please try again or contact the administrator.{/tr}');
+		{{$config.class_name}}.fetch_{{$fieldName}}_list('{{$fieldId}}', '{$index|default:-1}', '{tr}There was a problem fetching the list of{/tr} {{$fieldName}}. {tr}Please try again or contact the administrator.{/tr}');
 		return false; 
 	{rdelim});
 </script>

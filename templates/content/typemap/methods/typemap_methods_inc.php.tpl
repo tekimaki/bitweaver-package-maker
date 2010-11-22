@@ -254,6 +254,12 @@
                     $whereSql .= " AND lc.`{{$field.input.desc_column}}` LIKE ?";
 		    $bindVars[] = "%".$pParams['{{$fieldName}}_search']."%";  
                 }
+		// Must come last
+		if ( !empty($pParams['selected'] ) ) {
+			$whereSql = preg_replace( '/^[\s]*AND\b/i', '', $whereSql );
+			$whereSql = ' AND ('.$whereSql.') OR lc.`{{$field.validator.column}}` = ?';
+			$bindVars[] = $pParams['selected'];
+		}
 		if ( !empty($whereSql) ) {
 			$whereSql = preg_replace( '/^[\s]*AND\b/i', ' WHERE ', $whereSql );
 			$query .= $whereSql;
