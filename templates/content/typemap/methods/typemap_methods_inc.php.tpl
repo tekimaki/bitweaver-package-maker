@@ -7,7 +7,9 @@
 {{/if}}
 
 {{* store *}}
-{{if $typemap.sequence && !$typemap.attachments}}
+{{if $typemap.graph}}
+{{include file="typemap_store_graph_inc.php.tpl"}}
+{{elseif $typemap.sequence && !$typemap.attachments}}
 {{include file="typemap_store_seq_inc.php.tpl"}}
 {{elseif $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_store_onetomany_attch_inc.php.tpl"}}
@@ -29,45 +31,19 @@
 {{include file="typemap_getbycontentid_onetomany_inc.php.tpl"}}
 {{/if}}
 
+{{* verify *}}
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
 {{include file="typemap_verify_onetomany_attch_inc.php.tpl"}}
 {{else}}
 {{include file="typemap_verify_inc.php.tpl"}}
 {{/if}}
 
-
-	function expunge{{$typemapName|ucfirst}}( &$pParamHash ){
-		$ret = FALSE;
-		$bindVars = array();
-		$whereSql = "";
-
-{{if $typemap.sequence}}
-		// limit results by {{$typemapName}}_id
-		if( !empty( $pParamHash['{{$typemapName}}_id'] ) ){
-			$bindVars[] = $pParamHash['{{$typemapName}}_id'];
-			$whereSql .= " AND `{{$typemapName}}_id` = ?";
-		}
-
+{{* expunge *}}
+{{if $typemap.graph}}
+{{include file="typemap_expunge_graph_inc.php.tpl"}}
+{{else}}
+{{include file="typemap_expunge_inc.php.tpl"}}
 {{/if}}
-
-		// limit results by content_id
-		if( !empty( $pParamHash['content_id'] ) ){
-			$bindVars[] = $pParamHash['content_id'];
-			$whereSql .= " AND `content_id` = ?";
-		}
-
-		if ( !empty($whereSql) ) {
-			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
-			$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` ".$whereSql;
-			$this->mDb->query( $query, $bindVars );
-
-			if( $this->mDb->query( $query, $bindVars ) ){
-				$ret = TRUE;
-			}
-		}
-
-		return $ret;
-	}
 
 	function list{{$typemapName|ucfirst}}( $pParamHash = NULL ){
 		$ret = $bindVars = array();
@@ -189,36 +165,12 @@
 		}
 	}
 
-	/**
-	 * prep{{$typemapName|ucfirst}}Verify prepares the object for input verification
-	 */
-	function prep{{$typemapName|ucfirst}}Verify() {
-		if (empty($this->mVerification['{{$type.name}}_{{$typemapName}}'])) {
-
-{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-	 		/* Validation for {{$fieldName}} */
-{{if !empty($field.validator.type) && $field.validator.type != "no-input"}}
-			$this->mVerification['{{$type.name}}_{{$typemapName}}']['{{$field.validator.type}}']['{{$fieldName}}'] = array(
-				'name' => '{{$field.name|default:$fieldName|addslashes}}',
-{{foreach from=$field.validator key=k item=v name=keys}}
-{{if $k != 'type'}}
-				'{{$k}}' => {{if is_array($v)}}array(
-{{foreach from=$v key=vk item=vv name=values}}
-					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
-
-{{/foreach}}
-					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
-
+{{* prepverify *}}
+{{if $typemap.graph}}
+{{include file="typemap_prepverify_graph_inc.php.tpl"}}
+{{else}}
+{{include file="typemap_prepverify_inc.php.tpl"}}
 {{/if}}
-{{/foreach}}
-			);
-{{elseif empty($field.validator.type)}}
-			$this->mVerification['{{$type.name}}_{{$typemapName}}']['null']['{{$fieldName}}'] = TRUE;
-{{/if}}
-{{/foreach}}
-
-		}
-	}
 
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
 	/**
