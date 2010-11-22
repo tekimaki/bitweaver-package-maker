@@ -2,11 +2,11 @@
 				//Generate slideshow hash for {{$typemapName}}
 				$pObject->mInfo['{{$typemapName}}_slideshow'] = array();
 				foreach($pObject->mInfo['{{$typemapName}}'] as $key=>$image){
-					if($image['{{$config.name}}_image_slideshow_inc']){
+					if($image['{{$typemapName}}_image_slideshow_inc']){
 						$imageHash = array();
-						$imageHash['image_id'] = $image['{{$config.name}}_image_id'];
+						$imageHash['image_id'] = $image['{{$typemapName}}_image_id'];
 						$imageHash['content_id'] = $image['content_id'];
-						$imageHash['image_caption'] = $image['{{$config.name}}_image_caption'];
+						$imageHash['image_caption'] = $image['{{$typemapName}}_image_caption'];
 						$pObject->mInfo['{{$typemapName}}_slideshow'][] = $imageHash;
 					}
 				}
