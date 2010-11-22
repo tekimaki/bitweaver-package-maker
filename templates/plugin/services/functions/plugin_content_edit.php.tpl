@@ -23,8 +23,10 @@
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{* reference fields *}}
 {{if $field.input.type == "reference"}}
+{{if !empty($typemap.sortable)}}
 		$gBitThemes->loadAjax( 'jquery', array('ui/jquery.ui.all.js') );
-		$gBitThemes->loadCss( UTIL_PKG_PATH . 'javascript/jQuery.Sortable.css'); 
+		$gBitThemes->loadCss( UTIL_PKG_PATH . 'javascript/jQuery.Sortable.css');
+{{/if}}
 		${{$config.class_name}} = new {{$config.class_name}}();
 		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
 		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
