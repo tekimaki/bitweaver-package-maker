@@ -15,7 +15,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 {{if $func eq 'content_display'}}
 {{include file="plugin_content_display.php.tpl"}}
 {{elseif $func eq 'content_edit'}}
-{{include file="plugin_content_edit.php.tpl"}}
+{{include file="slideshow_content_edit.php.tpl"}}
 {{elseif $func eq 'content_expunge'}}
 {{include file="plugin_content_expunge.php.tpl"}}
 {{elseif $func eq 'content_load'}}

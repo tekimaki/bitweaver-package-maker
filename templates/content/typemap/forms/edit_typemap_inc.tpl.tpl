@@ -1,11 +1,11 @@
 {if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
 	$gContent->hasUserPermission('p_{{$typemapName}}_service_edit')}
 {legend legend="{{$typemap.label}}"}
-
 {{* one-to-many typemaps without attachment fields *}}
 {{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
 {* multiform block *}
 <div id="{{$config.plugin}}_{{$typemapName}}_multiform">
+{{if !empty($typemap.sortable)}}<ul style="width:100%;margin-left:10px" class="sortable" id="{{$config.plugin}}_{{$typemapName}}_sortable">{{/if}}
 	{* if we have existing reps we create an input block for each one *}
 	{foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
 		{if is_int($index)} {* temp index can be set on submit so we need to exclude it from list *}
@@ -15,12 +15,34 @@
 	{foreachelse}
 		{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl"}
 	{/foreach}
+{{if !empty($typemap.sortable)}}</ul>
+<script>
+	jQuery( "#{{$config.name}}_{{$typemapName}}_sortable" ).sortable({ldelim}
+		placeholder: "ui-state-highlight",
+                update : function () {ldelim}
+                   var order = jQuery('#{{$config.name}}_{{$typemapName}}_sortable').sortable('toArray'); 
+                   var re = /.*_([0-9]+)$/;
+                   for(var i = 0; i < order.length; i++) {ldelim} 
+                      var id = re.exec([order[i]])[1];
+                      jQuery('#{{$typemap.sortable}}_'+id).val(i);
+                   {rdelim}
+                {rdelim}
+	{rdelim});
+	jQuery( "#{{$config.name}}_{{$typemapName}}_sortable" ).disableSelection();
+</script>
+{{/if}}
 </div>
 
+{* Display a message about sorting *}
+<div class="row">
+{forminput}
+	{formhelp note="You can sort the {{$typemap.label}} by dragging and dropping"}
+{/forminput}
+</div>
 {* link to load multiforms*}
 <div class="row">
 	{forminput}
-		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}_multiform')" />{tr}Add another {{$typemap.label}}{/tr}</a>
+		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}{{if empty($typemap.sortable)}}_multiform{{else}}_sortable{{/if}}')" />{tr}Add another {{$typemap.label}}{/tr}</a>
 	{/forminput}
 </div>
 

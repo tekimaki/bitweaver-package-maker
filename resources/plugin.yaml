@@ -5,17 +5,22 @@ plugin:
     - plugin_inc.php
     - admin_plugin_inc.php
     - schema_plugin.yaml
+    - plugin_ajax.php
+plugin/scripts:
+  plugin:
+    - PluginClass.js
 plugin/templates:
   plugin:
     - service_admin_inc.tpl
     - menu_plugin_admin_inc.tpl
     - service_edit_tab_inc.tpl
     - service_edit_mini_inc.tpl
+    - plugin_ajax.tpl
   typemap:
     - edit_typemap_inc.tpl
     - fieldset_typemap_inc.tpl
   section:
     - service_display_section.tpl
     - display_section_inc.tpl
-    - edit_section_inc.tpl
+    - edit_sect_section_inc.tpl
     - menu_plugin_inc.tpl

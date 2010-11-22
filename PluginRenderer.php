@@ -65,17 +65,19 @@ class PluginRenderer extends aRenderer{
 
 			// prep service-typemap association hash
 			$services = Spyc::YAMLLoad(RESOURCE_PATH.'serviceapi.yaml');
-			foreach( $config['typemaps'] as $typemapName=>$typemap ){
+			foreach( $config['typemaps'] as $typemapName=>&$typemap ){
 				foreach( $services as $type=>$slist ){
 					foreach( $slist as $func ){
 						if( !empty( $typemap['services'] ) ){
 							if( in_array( $func, $typemap['services'] ) || (!empty($typemap['services'][$type]) && in_array($func, $typemap['services'][$type])) ){
 								$config['services'][$type][$func][] = $typemapName;
+								$typemap['services'][$type][] = $func;
 							}
 						}
 					}
 				}
 			}
+			unset( $typemap ); // fu php
 		}
 
 		// prep section data
