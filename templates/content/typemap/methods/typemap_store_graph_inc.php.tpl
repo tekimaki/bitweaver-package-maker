@@ -16,19 +16,23 @@
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && 
 			!empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) 
 		){
+			// load a LibertyEdge instance
+			require_once( LIBERTYGRAPH_PKG_PATH.'LibertyEdge.php' );
+			$LE = new LibertyEdge( $graphStoreHash['liberty_edge']['tail_content_id'] );
+
         	// expunge first then we repopulate the record
 			$expungeHash = array( 'expunge_{{$typemap.graph.head.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
 									'expunge_{{$typemap.graph.tail.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
 								);
-        	$this->expunge( $expungeHash );
+			// expunge the liberty edge record
+        	$LE->expunge( $expungeHash );
 
 			// must have a tail content id 
 			$graphStoreHash['liberty_edge']['tail_content_id'] = $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'];
 			// must have a head content id to store
 			$graphStoreHash['liberty_edge']['head_content_id'] = $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'];
 
-			require_once( LIBERTYGRAPH_PKG_PATH.'LibertyEdge.php' );
-			$LE = new LibertyEdge( $graphStoreHash['liberty_edge']['tail_content_id'] );
+			// store the liberty edge record
 			$LE->store( $graphStoreHash );
 		}
         return count( $this->getErrors() == 0 );

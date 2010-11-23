@@ -76,5 +76,6 @@
 {{/foreach}}
 {{if $typemap.relation eq 'one-to-many'}}
 {{if empty($typemap.sortable)}}</div>{{else}}</li>{{/if}}
+{{/if}}
 {{/if}}{{* end one-to-many special requirements *}}
 {/strip}

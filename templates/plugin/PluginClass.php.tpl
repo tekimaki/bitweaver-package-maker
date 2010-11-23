@@ -86,9 +86,11 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 	}
 
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
-{{foreach from=$config.fields key=fieldName item=field}}
+{{foreach from=$config.typemaps key=typemapName item=typemap}}
+{{* fields *}}
+{{foreach from=$typemap.fields key=fieldName item=field}}
 {{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
-	function get{{$field.name|replace:" ":""}}Options( $pParamHash=array() ){
+	function get{{$fieldName|replace:" ":""}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$joinSql = $whereSql = "";
 {{assign var=customlabel value="`$fieldName`_options"}}
@@ -103,7 +105,40 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 		return $this->mDb->getAssoc( $query, $bindVars );
 	}
 
-{{/if}}{{/foreach}}
+{{/if}}{{/foreach}}{{* end fields loop *}}
+{{* graph *}}
+{{foreach from=$typemap.graph key=vertex item=field}}
+{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+	function get{{$field.field|ucfirst}}Options( $pParamHash=array() ){
+		$bindVars = array();
+		$selectSql = $joinSql = $whereSql = "";
+		$LC = new LibertyContent();
+		$LC->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
+{{foreach from=$field.input.type_limit item=ctype}}
+		$whereSql = "AND lc.`content_type_guid` = ?";
+		$bindVars[] = "{{$ctype}}";
+{{/foreach}}
+{{assign var=customlabel value="`$field.field`_options"}}
+		/* =-=- CUSTOM BEGIN: {{$customlabel}} -=-= */
+{{if !empty($customBlock.$customlabel)}}
+{{$customBlock.$customlabel}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: {{$customlabel}} -=-= */
+		$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+		$query = "SELECT a.tail_content_id, lc.title 
+				  FROM liberty_edge lc 
+				  INNER JOIN liberty_content lc ON a.content_id = lc.content_id 
+				  $joinSql 
+				  $whereSql";
+		return $this->mDb->getAssoc( $query, $bindVars );
+	}
+
+{{/if}}{{/foreach}}{{* end graph loop *}}
+{{/foreach}}{{* end typemap loop *}}
+
+
 
 {{include file="typemaps_methods_inc.php.tpl"}}
 

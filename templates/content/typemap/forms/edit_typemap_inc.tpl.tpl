@@ -64,8 +64,19 @@
 </div>
 
 {{* many-to-many *}} 
-{{elseif $typemap.relation eq 'many-to-many'}}
-{{* @TODO many-to-many *}}
+{{elseif $typemap.relation eq 'many-to-many' && !$typemap.graph}}
+{{* many-to-many graph *}}
+{{elseif $typemap.relation eq 'many-to-many' && $typemap.graph }}
+{{* determine if head or tail references the pObject - default is tail *}}
+{{if !$typemap.graph.head.input.value.object }}
+		<div class="row" id="row_{{$typemapName}}_{{$typemap.graph.head.name}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
+{{include file="edit_field.tpl" namespace=`$typemapName`}}
+		</div>
+{{else}}
+		<div class="row" id="row_{{$typemapName}}_{{$typemap.graph.tail.name}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
+{{include file="edit_field.tpl" namespace=`$typemapName`}}
+		</div>
+{{/if}}
 
 {{* one-to-one typemaps with attachments *}}
 {{elseif $typemap.attachments}}
