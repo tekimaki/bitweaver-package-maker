@@ -6,7 +6,7 @@
 {* multiform block *}
 <div id="{{$config.plugin}}_{{$typemapName}}_multiform">
 {{if !empty($typemap.sortable)}}<ul style="width:100%;margin-left:10px" class="sortable" id="{{$config.plugin}}_{{$typemapName}}_sortable">{{/if}}
-	{* if we have existing reps we create an input block for each one *}
+	{* if we have existing rows we create an input block for each one *}
 	{foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
 		{if is_int($index)} {* temp index can be set on submit so we need to exclude it from list *}
 			{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" {{$typemapName}}={{$typemapName}} errors=$errors.{{$typemapName}}.$index index=$index}
@@ -40,9 +40,9 @@
 {/forminput}
 </div>
 {* link to load multiforms*}
-<div class="row">
+<div class="row" id="{{$config.plugin}}_{{$typemapName}}_add_button">
 	{forminput}
-		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}{{if empty($typemap.sortable)}}_multiform{{else}}_sortable{{/if}}')" />{tr}Add another {{$typemap.label}}{/tr}</a>
+		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}{{if empty($typemap.sortable)}}_multiform{{else}}_sortable{{/if}}'{{if $typemap.validate.max}},{{$typemap.validate.max|default:-1}}{{/if}})" />{tr}Add another {{$typemap.label}}{/tr}</a>
 	{/forminput}
 </div>
 
@@ -64,8 +64,10 @@
 </div>
 
 {{* many-to-many *}} 
-{{elseif $typemap.relation eq 'many-to-many'}}
-{{* @TODO many-to-many *}}
+{{elseif $typemap.relation eq 'many-to-many' && !$typemap.graph}}
+{{* many-to-many graph *}}
+{{elseif $typemap.relation eq 'many-to-many' && $typemap.graph }}
+{{include file="edit_typemap_graph_inc.tpl" typemap=$typemap}}
 
 {{* one-to-one typemaps with attachments *}}
 {{elseif $typemap.attachments}}

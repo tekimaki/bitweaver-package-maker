@@ -20,23 +20,28 @@
 		$gBitThemes->loadAjax( 'MochiKit', array( 'DOM.js' ));
 		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
 {{/if}}
+{{foreach from=$typemap.graph key=fieldName item=field}}
+{{if $field.input.type == "reference" || $field.input.type == "select"}}
+		${{$config.class_name}} = new {{$config.class_name}}();
+		${{$field.field}}_options = ${{$config.class_name}}->get{{$field.field}}Options();
+		$gBitSmarty->assign('{{$field.field}}_options', ${{$field.field}}_options);
+{{/if}}
+{{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{* reference fields *}}
-{{if $field.input.type == "reference"}}
+{{if $field.input.type == "reference" || $field.input.type == "select"}}
+		${{$config.class_name}} = new {{$config.class_name}}();
+		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
+		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
+{{/if}}
 {{if !empty($typemap.sortable)}}
 		$gBitThemes->loadAjax( 'jquery', array('ui/jquery.ui.all.js') );
 		$gBitThemes->loadCss( UTIL_PKG_PATH . 'javascript/jQuery.Sortable.css');
 {{/if}}
-		${{$config.class_name}} = new {{$config.class_name}}();
-		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
-		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
-{{* Plugin or package javascript handler? *}}
-{{if !empty($PLUGIN) }}
+{{if $field.input.type == "reference" }}
+{{* required js *}}
 		global $gBitSystem;
 		$gBitThemes->loadJavascript( $gBitSystem->getPackagePluginPath("{{$plugin}}").'scripts/{{$config.class_name}}.js' );
-{{else}}
-		$gBitThemes->loadJavascript( {{$PACKAGE}}_PKG_PATH.'scripts/{{$config.class_name}}.js');
-{{/if}}
 {{/if}}
 {{* hexcolor lib *}}
 {{if !empty($field.validator.type) && $field.validator.type == 'hexcolor' && !$jsColorIncluded}}

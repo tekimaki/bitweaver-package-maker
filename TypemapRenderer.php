@@ -57,6 +57,8 @@ class TypemapRenderer extends aRenderer{
 		if( !empty( $config['attachments'] ) && $config['relation'] != 'one-to-one' ){
 			$config['sequence'] = TRUE;
 		}
+		// prep graph
+		TypemapRenderer::prepGraphConfig( $config );
 
 		// prep fields
 		TypemapRenderer::prepFieldsConfig( $config, $excludeFields ); // @TODO excludeFields ?
@@ -87,7 +89,7 @@ class TypemapRenderer extends aRenderer{
 						$params['typemap'] = $typemap;
 						$gBitSmarty->assign('typemapName', $typemap);
 						$gBitSmarty->assign('typemap', $params);
-						self::renderTypemapFile( $config, $dir, $file, $params );
+						TypemapRenderer::renderTypemapFile( $config, $dir, $file, $params );
 						break;
 					}
 				}
