@@ -127,7 +127,11 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/if}}
 		/* =-=- CUSTOM END: {{$customlabel}} -=-= */
 		$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
+{{if $vertex eq 'tail'}}
 		$query = "SELECT a.tail_content_id, lc.title 
+{{else}}
+		$query = "SELECT a.head_content_id, lc.title 
+{{/if}}
 				  FROM liberty_edge lc 
 				  INNER JOIN liberty_content lc ON a.content_id = lc.content_id 
 				  $joinSql 
