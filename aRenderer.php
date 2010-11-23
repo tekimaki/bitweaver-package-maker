@@ -248,39 +248,8 @@ abstract class aRenderer{
 						}
 					}
 
-					// convenience
-					$input = &$field['input'];
-					$validator = &$field['validator'];
-
-					switch( $input['type'] ){
-					case 'select':
-						// default select from a table
-						$input['source'] = !empty( $input['source'] )?$input['source']:'table';
-						switch( $input['source'] ){
-						case 'table':
-							// create select menu building blocks
-							// a hash name
-							$optionsHashName = $fieldName.'_options';
-
-							// list sql
-							$tableBPrefix = !empty( $input['desc_column'] )?'b':'a';
-							$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
-
-							// create sql for loading up a select list of options
-							$optionsHashQuery = "SELECT a.".(empty($input['column']) ? $validator['column'] : $input['column']).", ".$tableBPrefix.".".$input['desc_column']." FROM ".(empty($input['table']) ? $validator['table'] : $input['table'])." a"; 
-							$optionsHashQuery .= !empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"";
-
-							// set references to the hash name and the query
-							$input['optionsHashName'] = $optionsHashName;
-							$input['optionsHashQuery'] = $optionsHashQuery; 
-							break;
-						case 'dataset':
-							// set reference to the hash name
-							$input['optionsHashName'] = $input['dataset'].'Options';
-							break;
-						}
-						break;
-					}
+					// prep any reference options
+					self::prepRefrenceOptions( $fieldName, $field );
 
 					// prep js
 					if( !empty($input['js']) ){
@@ -304,6 +273,82 @@ abstract class aRenderer{
 			}
 		}
 	}
+
+	public static function prepGraphConfig( &$schema ){
+		if( !empty( $schema['graph'] ) ){
+			foreach ($schema['graph'] as $vertex => &$field) {
+				switch( $vertex ){
+				case 'head':
+				case 'tail':
+					$input = &$field['input'];
+					$optionsHashName = $field['field'].'_options';
+					$input['optionsHashName'] = $optionsHashName;
+					// nothing yet, but someday
+					break;
+				default:
+					error( "ERROR: invalid gaaph vertex ".$vertex );
+				}
+			}
+		}
+	}
+
+	public static function prepRefrenceOptions( $fieldName, &$field ){
+		// switch input type
+		// convenience
+		$input = &$field['input'];
+		$validator = &$field['validator'];
+
+		switch( $input['type'] ){
+		case 'select':
+
+			// default select from a table
+			$input['source'] = !empty( $input['source'] )?$input['source']:'table';
+
+			// switch input source
+			switch( $input['source'] ){
+			case 'table':
+				// create select menu building blocks
+				// a hash name
+				$optionsHashName = $fieldName.'_options';
+
+				// list sql
+				$tableBPrefix = !empty( $input['desc_column'] )?'b':'a';
+				$joinColumn = !empty( $input['join_column'] )?$input['join_column']:'content_id'; //default to liberty_content as is most common
+
+				// create sql for loading up a select list of options
+				$optionsHashQuery = "SELECT a.".(empty($input['column']) ? $validator['column'] : $input['column']).", ".$tableBPrefix.".".$input['desc_column'].
+									" FROM ".(empty($input['table']) ? $validator['table'] : $input['table'])." a". 
+									(!empty( $input['desc_table'] )?" INNER JOIN ".$input['desc_table']." ".$tableBPrefix." ON a.".$joinColumn." = ".$tableBPrefix.".".$joinColumn:"");
+
+				// limit by contnet type guid
+				/* This is a nice idea - but this sql prep is becoming a problem for more complex query needs like when service sql must be added
+				if( !empty( $input['type_limit'] ) ){
+					$whereSql = ""; 
+					foreach( $input['type_limit'] as $ctype ){
+						if( $input['table'] == 'liberty_content' ) {
+							$whereSql = " AND a.`content_type_guid` = '$ctype'";
+						}elseif( $input['desc_table'] == 'liberty_content' ){
+							$whereSql = " AND b.`content_type_guid` = '$ctype'";
+						}
+					}
+					$optionsHashQuery .= $whereSql;
+				}
+				*/
+
+				// set references to the hash name and the query
+				$input['optionsHashName'] = $optionsHashName;
+				$input['optionsHashQuery'] = $optionsHashQuery; 
+				break;
+			case 'dataset':
+				// set reference to the hash name
+				$input['optionsHashName'] = $input['dataset'].'Options';
+				break;
+			} // end switch input source
+
+			break;
+		} // end switch input type
+	}
+	
 
 	/**
 	 * listFile

@@ -6,6 +6,7 @@
 		if (selectedItem == undefined) {
 			selectedItem = -1;
 		}
+		BitBase.showSpinner();
         	jQuery.ajax({
 {{if empty($PLUGIN)}}
 			url:BitSystem.urls.{{$package}}+'ajax.php',
@@ -17,6 +18,7 @@
                         data:{req:'fetch_{{$typemapName}}_{{$fieldName}}_list'{{if $typemap.relation == 'one-to-one'}}, {{$fieldName}}:{{$fieldName}}{{else}}, {{$fieldName}}_search:{{$fieldName}}_search, index:index, selected:selectedItem{{/if}} },
                         success:function(dom){
                             jQuery('#'+fieldId).replaceWith(dom);
+			    BitBase.hideSpinner();
                         }
                       });
 		return false;
