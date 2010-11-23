@@ -47,6 +47,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 					${{$config.name}} = new {{$config.class_name}}(); 
 				}
 				$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'content_id' => $pObject->mContentId) ); 
+				{{if $typemap.modifier && in_array('slideshow',$typemap.modifier)}}{{include file="slideshow_content_section_inc.php.tpl"}}{{/if}}
 			}
 {{/if}}
 {{/if}}
