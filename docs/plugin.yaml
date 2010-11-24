@@ -35,7 +35,7 @@ plugin:
         fieldname:
           name: Input Label
           schema: {type: C(128)}
-          input: {type: inputtype, default: value, placeholder: string, style: {row: {property: value}}  # values to customize the input block
+          input: {type: inputtype, default: value, placeholder: string, ajax: true, style: {row: {property: value}}  # values to customize the input block
           validator: {type: string}
   sections:
     sectionname:
