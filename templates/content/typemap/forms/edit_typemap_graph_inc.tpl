@@ -8,7 +8,7 @@
 		<ul id="{{$config.plugin}}_{{$typemapName}}_multiform">
 		{{assign var=namespace value="`$config.name`[`$typemapName`]"}}
 		{foreach from=${{$field.input.optionsHashName}} key=optionId item=optionTitle name=options}
-			<li><label for="{{$namespace}}[{{$field.field}}][]"><input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$field.field}}][]" value="{$optionId}"  {if $pObject->mInfo.{{$typemapName}}.$optionsId}checked="checked"{/if}/>&nbsp;{$optionTitle}</label></li>
+			<li><label for="{{$namespace}}[{{$field.field}}][]"><input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$field.field}}][]" value="{$optionId}"  {if $gContent->mInfo.{{$typemapName}}.{{$field.field}}.$optionId}checked="checked"{/if}/>&nbsp;{$optionTitle}</label></li>
 		{/foreach}
 		</ul>
 		{{/if}}
@@ -19,7 +19,7 @@
 		<ul id="{{$config.plugin}}_{{$typemapName}}_multiform">
 		{{assign var=namespace value="`$config.name`[`$typemapName`]"}}
 		{foreach from=${{$field.input.optionsHashName}} key=optionId item=optionTitle name=options}
-			<li><label for="{{$namespace}}[{{$field.field}}][]"><input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$field.field}}][]" value="{$optionId}"  {if $pObject->mInfo.{{$typemapName}}.$optionsId}checked="checked"{/if}/>&nbsp;{$optionTitle}</label></li>
+			<li><label for="{{$namespace}}[{{$field.field}}][]"><input type="checkbox" id="{{$fieldId}}" name="{{$namespace}}[{{$field.field}}][]" value="{$optionId}"  {if $gContent->mInfo.{{$typemapName}}.{{$field.field}}.$optionId}checked="checked"{/if}/>&nbsp;{$optionTitle}</label></li>
 		{/foreach}
 		</ul>
 		{{/if}}

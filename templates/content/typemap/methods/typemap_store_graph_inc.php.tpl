@@ -21,8 +21,8 @@
 			$LE = new LibertyEdge( $graphStoreHash['liberty_edge']['tail_content_id'] );
 
         	// expunge first then we repopulate the record
-			$expungeHash = array( 'expunge_{{$typemap.graph.head.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
-									'expunge_{{$typemap.graph.tail.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
+			$expungeHash = array( 'head_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
+								  'tail_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
 								);
 			// expunge the liberty edge record
         	$LE->expunge( $expungeHash );
@@ -43,15 +43,28 @@
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
-		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
+{{if $typemap.graph.head.input.value.object }}
+		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) ){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] )){
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] as $data ){
+					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] = $data;
 					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
 				}
 			}else{
 				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
 			}
 		}
+{{else}}
+		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) ){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] )){
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] as $data ){
+					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] = $data;
+					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+				}
+			}else{
+				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+			}
+		}
+{{/if}}
 		return count( $this->mErrors ) == 0;
 	}
