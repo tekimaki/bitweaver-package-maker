@@ -43,7 +43,16 @@
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
+
 {{if $typemap.graph.head.input.value.object }}
+		// drop associations and re-add them
+		$query = "DELETE FROM `liberty_edge` le WHERE le.`head_content_id` = ? AND le.`tail_content_id` IN ( SELECT lc.content_id FROM `liberty_content` lc WHERE lc.`content_type_guid` = ? )";
+		$bindVars[] = $this->mContentId;
+{{foreach from=$typemap.graph.tail.input.type_limit item=ctype}}
+		$bindVars[] = '{{$ctype}}';
+{{/foreach}}
+		$this->mDb->query( $query, $bindVars );
+
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) ){
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] )){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] as $data ){
@@ -55,6 +64,14 @@
 			}
 		}
 {{else}}
+		// drop associations and re-add them
+		$query = "DELETE FROM `liberty_edge` le WHERE le.`tail_content_id` = ? AND le.`head_content_id` IN ( SELECT lc.content_id FROM `liberty_content` lc WHERE lc.`content_type_guid` = ? )";
+		$bindVars[] = $this->mContentId;
+{{foreach from=$typemap.graph.head.input.type_limit item=ctype}}
+		$bindVars[] = '{{$ctype}}';
+{{/foreach}}
+		$this->mDb->query( $query, $bindVars );
+
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) ){
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] )){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] as $data ){
