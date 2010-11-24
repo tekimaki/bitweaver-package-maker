@@ -1,1 +1,1 @@
-<input class="textInput" type="text" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" value="{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}" />
+<input class="textInput" type="text" id="{{$fieldId}}" name="{{$namespace}}[{{$fieldName}}]" value="{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}" {{if $field.input.placeholder}}placeholder="{{$field.input.placeholder}}"{{/if}}/>
