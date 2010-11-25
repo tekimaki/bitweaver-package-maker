@@ -220,6 +220,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			if( $this->m{{$type.name|capitalize}}Id ) {
 				if( !empty( $pParamHash['{{$type.name|lower}}_store'] ) ){
 					$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
+					$table = BIT_DB_PREFIX."{{$type.name|lower}}_data";
 					$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_store'], $locId );
 				}
 			} else {
@@ -239,6 +240,10 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{if count($type.typemaps) > 0}}
 			$this->storeTypemaps( $pParamHash );
 {{/if}}
+{{if is_array($type.attachments) > 0}}
+			$this->storeAttachments( $pParamHash );
+{{/if}}
+
 
 			/* =-=- CUSTOM BEGIN: store -=-= */
 {{if !empty($customBlock.store)}}
@@ -697,6 +702,38 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			ksort( $ret );
 		}
         return $ret;
+	}
+{{/if}}
+
+{{if is_array($type.attachments)}}
+	function storeAttachments( &$pParamHash ) {
+		$old_attachments = array();
+{{foreach from=$type.attachments key=attachment item=prefs}}
+
+		// Store the {{$attachment}} attachment
+		if( !empty( $_FILES['{{$type.name}}_{{$attachment}}']['tmp_name'] ) ){
+			$fileStoreHash['file'] = $_FILES['{{$type.name}}_{{$attachment}}'];
+			if( $this->storeAttachment( $fileStoreHash ) ){
+				// add the attachment id to our store hash
+				$pParamHash['{{$type.name|lower}}_atch_store']['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
+				// For one to one we need to expunge an old attachment_id
+				// Figure out if we have one at all and if it has an old value
+				$old_attachments[] = $this->mDb->getOne("SELECT `{{$attachment}}_id` FROM `{{$type.name|lower}}_data` WHERE `content_id` = ?", array('content_id' => $this->mContentId ) );
+				}
+			}
+{{/foreach}}
+
+			if( !empty( $pParamHash['{{$type.name|lower}}_atch_store'] ) ){
+				$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
+				$table = BIT_DB_PREFIX."{{$type.name|lower}}_data";
+				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_atch_store'], $locId );
+			}
+
+			if( !empty( $old_{{$attachment}}_id ) ) {
+				foreach( $old_attachments as $attachment_id ) {
+					$this->mServiceContent->expungeAttachment( $attachment_id );
+				}
+			}
 	}
 {{/if}}
 
