@@ -6,7 +6,7 @@
 {* multiform block *}
 <div id="{{$config.plugin}}_{{$typemapName}}_multiform">
 {{if !empty($typemap.sortable)}}<ul style="width:100%;margin-left:10px" class="sortable" id="{{$config.plugin}}_{{$typemapName}}_sortable">{{/if}}
-	{* if we have existing reps we create an input block for each one *}
+	{* if we have existing rows we create an input block for each one *}
 	{foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
 		{if is_int($index)} {* temp index can be set on submit so we need to exclude it from list *}
 			{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" {{$typemapName}}={{$typemapName}} errors=$errors.{{$typemapName}}.$index index=$index}
@@ -67,16 +67,7 @@
 {{elseif $typemap.relation eq 'many-to-many' && !$typemap.graph}}
 {{* many-to-many graph *}}
 {{elseif $typemap.relation eq 'many-to-many' && $typemap.graph }}
-{{* determine if head or tail references the pObject - default is tail *}}
-{{if !$typemap.graph.head.input.value.object }}
-		<div class="row" id="row_{{$typemapName}}_{{$typemap.graph.head.name}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
-{{include file="edit_field.tpl" namespace=`$typemapName`}}
-		</div>
-{{else}}
-		<div class="row" id="row_{{$typemapName}}_{{$typemap.graph.tail.name}}" style="{{foreach from=$field.input.styles.row key=param item=value}}{{$param}}:{{$value}};{{/foreach}}">
-{{include file="edit_field.tpl" namespace=`$typemapName`}}
-		</div>
-{{/if}}
+{{include file="edit_typemap_graph_inc.tpl" typemap=$typemap}}
 
 {{* one-to-one typemaps with attachments *}}
 {{elseif $typemap.attachments}}

@@ -14,23 +14,28 @@ plugin:
   content_types: [content_type_guid, content_type_guid]  # content types which the plugin should auto associate with - creates a service preference in lcconfig for each type
   typemaps:
     file_test:
-      services: [plugin_api_hook, plugin_api_hook, ...]  # options: [content_preview, content_store, content_expunge, content_load_sql, content_list_sql, content_edit_mini, content_display, content_load, content_edit, upload_store, upload_expunge, upload_expunge_attachment]
+      services: 
+        functions: [plugin_api_hook, plugin_api_hook, ...]  # options: [content_preview, content_store, content_expunge, content_display, content_load, content_edit, upload_store, upload_expunge, upload_expunge_attachment]
+        sql: [plugin_api_hook, plugin_api_hook, ...]        # options: [content_load_sql, content_list_sql]
+        templates: [plugin_api_hook, plugin_api_hook, ...]  # options: [content_edit_mini]
       service_prefs: {load: [content_section, content_load, content_display, content_load_sql, content_list_sql], edit_loc: [section, content]}
-      sequence: true          # an optional setting to sequence the table
+      sequence: true                          # an optional setting to sequence the table
       base_table: tablename
       maintainer_url: url 
-      sortable: <field> # an optional sortable flag for one to many. The <field> MUST be in the fields array and MUST have input: {type:hidden} on it.
+      sortable: <field>                       # an optional sortable flag for one to many. The <field> MUST be in the fields array and MUST have input: {type: hidden} on it.
       permissions:
         default: {create: owner, view: basic, update: owner}
       relation: relationtype  # [one-to-one, one-to-many, many-to-many]
+      modifiers: [modifier, modifier]         # optional settings that cause sepecial tpl sets to be used to render special features. options: slideshow
       attachments: 
-        fieldname:            # the fieldname will be auto converted to fieldname_id this stores the related attachment_id
+        fieldname:                            # the fieldname will be auto converted to fieldname_id this stores the related attachment_id
           name: Input Label
           validator: {format: [image/png, image/jpeg, image/gif]}
       fields:
         fieldname:
           name: Input Label
           schema: {type: C(128)}
+          input: {type: inputtype, default: value, placeholder: string, ajax: true, style: {row: {property: value}}  # values to customize the input block
           validator: {type: string}
   sections:
     sectionname:

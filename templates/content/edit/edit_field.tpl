@@ -1,11 +1,21 @@
+{{**
+@param $tyepmapName
+@param $fieldName
+@param $field
+*}}
 {{* This is support for one-to-many content types where 
 	multiple copies of the same input might be in the form 
 	This shit is seriously complicated to render *}}
 {{if $index}}
 {{assign var=fieldId value=$fieldName|cat:'_{$index}'}}
+{{if $field.input.default}}
+{{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`|default:`$field.input.default`}"}}
+{{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`|default:`$field.input.default`"}}
+{{else}}
 {{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`}"}}
 {{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`"}}
-{{else}}
+{{/if}}
+{{else}}{{* no index *}}
 {{assign var=fieldId value=$fieldName}}
 {{/if}}
 

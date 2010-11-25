@@ -78,6 +78,18 @@ class PluginRenderer extends aRenderer{
 				}
 			}
 			unset( $typemap ); // fu php
+
+			// prep ajax
+			foreach( $config['typemaps'] as $typemapName=>&$typemap ){
+				if( !empty( $typemap['fields'] ) ){
+					foreach( $typemap['fields'] as $field ){
+						if( !empty( $field['input']['ajax'] ) ){
+							$config['modifier'][] = 'ajax';
+							break;
+						}
+					}
+				}
+			}
 		}
 
 		// prep section data
@@ -177,13 +189,18 @@ class PluginRenderer extends aRenderer{
 			case 'service_edit_tab_inc.tpl':
 				$render = FALSE;
 				if( !empty( $config['services']['templates'] ) ){
-					$render = in_array( 'content_edit_tab', array_keys($config['services']) );
+					$render = in_array( 'content_edit_tab', array_keys($config['services']['templates']) );
 				}
 				break;
 			case 'admin_plugin_inc.php':
 			case 'service_admin_inc.tpl':
 			case 'menu_plugin_admin_inc.tpl':
 				$render = !empty( $config['settings'] );
+				break;
+			case 'plugin_ajax.php':
+			case 'plugin_ajax.tpl':
+			case 'PluginClass.js':
+				$render = !empty( $config['modifier'] ) && in_array( 'ajax', $config['modifier'] )?TRUE:FALSE;
 				break;
 			default:
 				break;

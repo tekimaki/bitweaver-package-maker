@@ -13,7 +13,7 @@ function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 function {{$config.name}}_{{$func}}( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{if $func eq 'content_display'}}
-{{include file="plugin_content_display.php.tpl"}}
+{{include file="slideshow_content_display.php.tpl"}}
 {{elseif $func eq 'content_edit'}}
 {{include file="slideshow_content_edit.php.tpl"}}
 {{elseif $func eq 'content_expunge'}}

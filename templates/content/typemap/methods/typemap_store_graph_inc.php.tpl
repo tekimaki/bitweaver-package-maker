@@ -21,8 +21,8 @@
 			$LE = new LibertyEdge( $graphStoreHash['liberty_edge']['tail_content_id'] );
 
         	// expunge first then we repopulate the record
-			$expungeHash = array( 'expunge_{{$typemap.graph.head.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
-									'expunge_{{$typemap.graph.tail.field}}' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
+			$expungeHash = array( 'head_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
+								  'tail_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
 								);
 			// expunge the liberty edge record
         	$LE->expunge( $expungeHash );
@@ -43,15 +43,45 @@
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
-		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
+
+{{if $typemap.graph.head.input.value.object }}
+		// drop associations and re-add them
+		$query = "DELETE FROM `liberty_edge` le WHERE le.`head_content_id` = ? AND le.`tail_content_id` IN ( SELECT lc.content_id FROM `liberty_content` lc WHERE lc.`content_type_guid` = ? )";
+		$bindVars[] = $this->mContentId;
+{{foreach from=$typemap.graph.tail.input.type_limit item=ctype}}
+		$bindVars[] = '{{$ctype}}';
+{{/foreach}}
+		$this->mDb->query( $query, $bindVars );
+
+		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) ){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] )){
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] as $data ){
+					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] = $data;
 					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
 				}
 			}else{
 				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
 			}
 		}
+{{else}}
+		// drop associations and re-add them
+		$query = "DELETE FROM `liberty_edge` le WHERE le.`tail_content_id` = ? AND le.`head_content_id` IN ( SELECT lc.content_id FROM `liberty_content` lc WHERE lc.`content_type_guid` = ? )";
+		$bindVars[] = $this->mContentId;
+{{foreach from=$typemap.graph.head.input.type_limit item=ctype}}
+		$bindVars[] = '{{$ctype}}';
+{{/foreach}}
+		$this->mDb->query( $query, $bindVars );
+
+		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) ){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] )){
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] as $data ){
+					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] = $data;
+					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+				}
+			}else{
+				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+			}
+		}
+{{/if}}
 		return count( $this->mErrors ) == 0;
 	}

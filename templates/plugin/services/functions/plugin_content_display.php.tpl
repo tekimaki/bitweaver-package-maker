@@ -34,9 +34,9 @@
 			}
 {{* determine if head or tail references the pObject - default is tail *}}
 {{if $typemap.graph.head.input.value.object }}
-			$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'head_content_id' => $pObject->mContentId) ); 
+			$pObject->mInfo['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] = ${{$config.name}}->getTailContentIds(array( '{{$typemap.graph.head.field}}' => $pObject->mContentId) ); 
 {{else}}
-			$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'tail_content_id' => $pObject->mContentId) ); 
+			$pObject->mInfo['{{$typemapName}}']['{{$typemap.graph.head.field}}'] = ${{$config.name}}->getHeadContentIds(array( '{{$typemap.graph.tail.field}}' => $pObject->mContentId) ); 
 {{/if}}
 		}
 {{/if}}

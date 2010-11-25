@@ -280,6 +280,9 @@ abstract class aRenderer{
 				switch( $vertex ){
 				case 'head':
 				case 'tail':
+					$input = &$field['input'];
+					$optionsHashName = $field['field'].'_options';
+					$input['optionsHashName'] = $optionsHashName;
 					// nothing yet, but someday
 					break;
 				default:
