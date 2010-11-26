@@ -89,7 +89,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{* fields *}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 	function get{{$fieldName|replace:" ":""}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$joinSql = $whereSql = "";
@@ -108,7 +108,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/if}}{{/foreach}}{{* end fields loop *}}
 {{* graph *}}
 {{foreach from=$typemap.graph key=vertex item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 	function get{{$field.field|ucfirst}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$selectSql = $joinSql = $whereSql = "";
