@@ -31,7 +31,13 @@ package:
       class_name: ClassName
       base_package: basepackage			# typically liberty
       maintainer_url: url				# optional
-      attachments: true					# supports file attachments - a little redundant to using LibetyMime base class
+      attachments: true					# Turn on standard attachments
+      attachments: # Can be used INSTEAD OF but not yet in ADDITION to the above line to enable typemap like single attachments
+        <name>:
+          name: <Name>
+          validator: {format: [image/png, image/jpeg, image/gif]}
+          input: {preflight: false}
+      relation: one-to-one # Must be added when using the typemap style attachments
       rewrite_path: pathstring			# a prettyurl subpath string for the type
       lookup_by: [column, column, ...]	# alternate lookup columns - will lookup content by column value. title will lookup by liberty_content::title
       permissions:

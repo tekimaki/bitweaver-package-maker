@@ -76,6 +76,16 @@
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl" formid="edit{{$type.name}}form"}
 
 {{if !empty($type.attachments)}}
+{{if is_array($type.attachments) }} {{* array of specific attachments *}}
+{{* trick it into processing as a typemap *}}
+{{assign var=typemap value=$type}}
+{{assign var=type.relation value='one-to-one'}}
+{{assign var=typemapName value=$type.name}}
+{{* Now handle all the attachments *}}
+{{foreach from=$type.attachments item=prefs key=attachment no_upload_button=true}}
+	{{include file=typemap_attachment_field.tpl}}
+{{/foreach}}
+{{else}}
 
 						{if $gContent->hasUserPermission('p_liberty_attach_attachments') }
 							<div class="row">
@@ -84,7 +94,7 @@
 							{/legend}
 							</div>
 						{/if}
-
+{{/if}}
 {{/if}}
 
 						<div class="buttonHolder row submit">

@@ -20,6 +20,7 @@
 			{{/if}}
 		{/forminput}
 	</div>
+{{if !isset($prefs.input.preflight) || $prefs.input.preflight}}
 	<div class="buttonHolder row">
 		<input class="button" type="button" value="Upload" name="store_{{$typemapName}}" 
 			onclick="LibertyPreflight.uploader( 
@@ -33,4 +34,5 @@
 		/>
 		{include file="bitpackage:liberty/preflight_uploader_inc.tpl" frame_id="{{$config.name}}_{{$typemapName}}" }
 	</div>
+{{/if}}
 {/if}
