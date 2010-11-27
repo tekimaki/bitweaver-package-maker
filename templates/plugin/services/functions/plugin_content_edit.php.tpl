@@ -28,7 +28,9 @@
 		// Prep any data we may need for the form
 		${{$config.class_name}} = new {{$config.class_name}}();
 		${{$field.field}}_list = ${{$config.class_name}}->get{{$field.field}}Options();
+{{if $field.input.type == "select"}}
 		${{$field.field}}_options = array( ''=>tra('Select one...') );
+{{/if}}
 		foreach( ${{$field.field}}_list as $key=>$value ){
 			${{$field.field}}_options[$key] = $value;
 		}
