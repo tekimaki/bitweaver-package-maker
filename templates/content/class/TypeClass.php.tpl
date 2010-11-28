@@ -533,6 +533,39 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		return $ret;
 	}
 
+
+    function getEditUrl($pSection = NULL){
+        global $gBitSystem;
+        $ret = NULL;
+
+		// section edit url is the display url + /edit 
+        if( !empty($pSection) ){
+            $ret = $this->getDisplayUrl($pSection).'/edit';
+        }
+
+        /* =-=- CUSTOM BEGIN: getEditUrl -=-= */
+{{if !empty($customBlock.getEditUrl)}}
+{{$customBlock.getEditUrl}}
+{{else}}
+
+{{/if}}
+        /* =-=- CUSTOM END: getEditUrl -=-= */
+
+        // Did the section or custom code block give us a URL?
+        if ($ret == NULL) {
+            if( @$this->isValid() ) {
+                if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' )) {
+                    $ret = {{$PACKAGE}}_PKG_URL.'{{if empty($type.rewrite_path)}}{{$type.name}}{{else}}{{$type.rewrite_path}}{{/if}}/edit/'.$this->m{{$type.name|capitalize}}Id;
+                } else {
+                    $ret = {{$PACKAGE}}_PKG_URL."edit_{{$type.name|lower}}.php?{{$type.name|lower}}_id=".$this->m{{$type.name|capitalize}}Id;
+                }
+            }
+        }
+
+        return $ret;
+    }
+
+
 	/**
 	 * previewFields prepares the fields in this type for preview
 	 */
