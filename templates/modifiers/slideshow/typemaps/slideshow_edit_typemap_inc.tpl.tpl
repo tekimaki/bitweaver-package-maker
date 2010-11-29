@@ -10,7 +10,7 @@
 <div id="{{$config.plugin}}_{{$typemapName}}" class="slideshow">
 <div class="row">                                       {* master fieldset row container *}
 {formlabel label="Images" for="store_{{$typemapName}}"} {* master formlabel container *}
-{forminput class="indent"}                              {* master forminput container *} {* TODO remove indent class once form standardization is improved *}
+{forminput}                              				{* master forminput container *}
 
 {* new {{$typemapName}} fieldset *}
 {legend legend="Upload a new {{$typemap.label}}"}
