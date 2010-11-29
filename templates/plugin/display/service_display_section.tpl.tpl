@@ -8,7 +8,7 @@
 {{if $section.modes && in_array('edit',$section.modes)}}
 	<div class="edit">
 		<div class="header">
-			<h1>{tr}Edit {{$sectionName|ucfirst}}{/tr}</h1>
+			<h1>{tr}Edit {{$section.title|default:$sectionName|ucfirst}}{/tr}</h1>
 		</div>
 		<div class="body">
 		{formfeedback warning=$errors}
