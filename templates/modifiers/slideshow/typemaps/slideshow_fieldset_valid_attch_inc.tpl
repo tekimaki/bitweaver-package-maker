@@ -16,7 +16,7 @@
 </div>
 {{* the edit form *}}
 <div id="{{$config.name}}_{{$typemapName}}_{$index}_fieldset" class="slideshow_slide_fieldset" {if !$newrow}style="display:none"{/if}>
-	<a class="button small" href="javascript:void(0);" onclick="BitSlideshow.hideFieldset('{{$config.name}}_{{$typemapName}}_{$index}');">{tr}Hide{/tr}</a>
+	<a class="hide" href="javascript:void(0);" onclick="BitSlideshow.hideFieldset('{{$config.name}}_{{$typemapName}}_{$index}');">{tr}Hide{/tr}</a>
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_valid_attachment_field.tpl"}} 
 {{/foreach}}
@@ -34,7 +34,7 @@
 </div>
 {{/if}}
 <div class="row buttonHolder">
-	<input type="buttom" class="button small" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Delete" 
+	<a href="javascript:void(0);"
 		onclick="LibertyPreflight.expunge(
 			this.form, 
 			'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
@@ -44,7 +44,7 @@
 			'{{$typemapName}}',
 			'{{$config.name}}_{{$typemapName}}_{$index}'
 		);"
-	/>
+	/>Delete Image&raquo;</a>
 </div>
 </div>
 </div>{* edit {{$config.name}}_{{$typemapName}}_{$index} *}
