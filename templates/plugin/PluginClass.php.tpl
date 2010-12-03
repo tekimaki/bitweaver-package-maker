@@ -115,7 +115,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 		$LC = new LibertyContent();
 		$LC->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 {{foreach from=$field.input.type_limit item=ctype}}
-		$whereSql = "AND lc.`content_type_guid` = ?";
+		$whereSql .= "AND lc.`content_type_guid` = ?";
 		$bindVars[] = "{{$ctype}}";
 {{/foreach}}
 {{assign var=customlabel value="`$field.field`_options"}}

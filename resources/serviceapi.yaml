@@ -23,7 +23,7 @@ functions:
   - upload_store
   - upload_expunge
   - upload_expunge_attachment
-  - user_register
+  - users_register
 templates:
   - content_list_options
   - content_list_sort
