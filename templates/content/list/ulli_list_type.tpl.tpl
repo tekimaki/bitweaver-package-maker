@@ -48,10 +48,10 @@
 				{foreach item=dataItem from=${{$type.name}}List name={{$type.name}}list}
 					<li class="{if $smarty.foreach.{{$type.name}}list.last}last {/if}{cycle values="even,odd"}">
 						<div class="floaticon">
-							{if $gBitUser->hasPermission( 'p_{{$package}}_{{$type.name}}_update' )}
+							{if $gBitUser->hasPermission( 'p_{{$type.name}}_update' )}
 								{smartlink ititle="Edit" ifile="edit_{{$type.name}}.php" ibiticon="icons/accessories-text-editor" {{$type.name}}_id=$dataItem.{{$type.name}}_id}
 							{/if}
-							{if $gBitUser->hasPermission( 'p_{{$package}}_{{$type.name}}_expunge' )}
+							{if $gBitUser->hasPermission( 'p_{{$type.name}}_expunge' )}
 								<input type="checkbox" name="checked[]" title="{$dataItem.title|escape}" value="{$dataItem.{{$type.name}}_id}" />
 							{/if}
 						</div>
@@ -97,7 +97,7 @@
 				{/foreach}
 			</ul>
 
-			{if $gBitUser->hasPermission( 'p_{{$package}}_{{$type.name}}_expunge' )}
+			{if $gBitUser->hasPermission( 'p_{{$type.name}}_expunge' )}
 				<div style="text-align:right;">
 					<script type="text/javascript">/* <![CDATA[ check / uncheck all */
 						document.write("<label for=\"switcher\">{tr}Select All{/tr}</label> ");
