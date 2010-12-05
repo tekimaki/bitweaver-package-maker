@@ -31,7 +31,8 @@ package:
       class_name: ClassName
       base_package: basepackage			# typically liberty
       maintainer_url: url				# optional
-      attachments: true					# Turn on standard attachments
+      attachments: true					# Turn on standard attachment form
+      preview: false					# disables preview rendering in edit template (does not disable preview data prep as form fields may require values)
       attachments: # Can be used INSTEAD OF but not yet in ADDITION to the above line to enable typemap like single attachments
         <name>:
           name: <Name>

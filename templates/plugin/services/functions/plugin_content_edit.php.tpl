@@ -7,6 +7,7 @@
 		// pass through to load to load up content data
 		{{$config.name}}_content_load( $pObject, $pParamHash );
 {{/if}}
+{{* multiform typemap *}}
 {{assign var=jsColorIncluded value=false}}
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{if $typemap.relation == 'one-to-many' && !$typemap.attachments && !$jsMultiFormIncluded}}
@@ -15,21 +16,30 @@
 		$gBitThemes->loadAjax( 'jquery' );
 		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/JQuery.BitMultiForm.js', FALSE );
 {{/if}}
+{{* attachments *}}
 {{if $typemap.attachments}}
 {{assign var=jsPreflightIncluded value=true}}
 		$gBitThemes->loadAjax( 'MochiKit', array( 'DOM.js' ));
 		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
 {{/if}}
+{{* graph reference fields *}}
 {{foreach from=$typemap.graph key=fieldName item=field}}
-{{if $field.input.type == "reference" || $field.input.type == "select"}}
+{{if $field.input.type == "reference" || $field.input.type == "select" || $field.input.type == "checkbox"}}
+		// Prep any data we may need for the form
 		${{$config.class_name}} = new {{$config.class_name}}();
-		${{$field.field}}_options = ${{$config.class_name}}->get{{$field.field}}Options();
-		$gBitSmarty->assign('{{$typemapName}}_{{$field.field}}_options', ${{$field.field}}_options);
+		${{$field.field}}_list = ${{$config.class_name}}->get{{$field.field}}Options();
+{{if $field.input.type == "select"}}
+		${{$field.field}}_options = array( ''=>tra('Select one...') );
+{{/if}}
+		foreach( ${{$field.field}}_list as $key=>$value ){
+			${{$field.field}}_options[$key] = $value;
+		}
+		$gBitSmarty->assign_by_ref('{{$typemapName}}_{{$field.field}}_options', ${{$field.field}}_options);
 {{/if}}
 {{/foreach}}
-{{foreach from=$typemap.fields key=fieldName item=field}}
 {{* reference fields *}}
-{{if $field.input.type == "reference" || $field.input.type == "select"}}
+{{foreach from=$typemap.fields key=fieldName item=field}}
+{{if $field.input.type == "reference" || $field.input.type == "select" || $field.input.type == "checkbox"}}
 		${{$config.class_name}} = new {{$config.class_name}}();
 		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
 		$gBitSmarty->assign('{{$typemapName}}_{{$fieldName}}_options', ${{$fieldName}}_options);
@@ -49,7 +59,7 @@
 		// hexcolor library
 		$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/jscolor/jscolor.js', FALSE );
 {{/if}}
-{{* select options *}}
+{{* dataset select options *}}
 {{if $field.input.type == 'select'}}
 {{if $field.input.source == 'dataset'}}
 {{* @TODO - set up the pathing and class name in prepConfig so this is automatic from the dataset value *}}

@@ -87,7 +87,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 
 	// Getters for reference column options - return associative arrays formatted for generating html select inputs
 {{foreach from=$config.fields key=fieldName item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 	function get{{$field.name|replace:" ":""}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$joinSql = $whereSql = "";

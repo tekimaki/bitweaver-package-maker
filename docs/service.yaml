@@ -16,22 +16,22 @@ package:
     settinggroup:		# the grouping creates a fieldset in the admin panel
       settingguid: {label: Form Label, type: datatype, note: Input help description. }
   services:
-    service_guid:	# The guid for the service
-      class_name: ServiceClassName # The name of the class for the service TODO: Why do we have name and class_name?
+    service_guid:                                # The guid for the service
+      class_name: ServiceClassName               # The name of the class for the service TODO: Why do we have name and class_name?
       description: A description of the class
-      base_class: BaseClassName # Like LibertyBase
-      base_package: basePackage # Like liberty
-      service: service_guid # This also seems to match TODO: What is this for?
-      sql: [content_list_sql] # Sql functions you want see resources/serviceapi.yaml
-      functions: [content_user_perms] # Functions you want see resource/serviceapi.yaml
-      permissions: # default permissions section
+      base_class: BaseClassName                  # Like LibertyBase
+      base_package: basePackage                  # Like liberty
+      service: service_guid                      # This also seems to match TODO: What is this for?
+      sql: [content_list_sql]                    # Sql functions you want see resources/serviceapi.yaml
+      functions: [content_user_perms]            # Functions you want see resource/serviceapi.yaml
+      permissions:                               # default permissions section
         default: [update: admin, view: admin, create: admin, expunge: admin]
-      relation: one-to-many # One to many, one to one type service
-      fields: # Fields in the service typemap
+      relation: one-to-many                      # One to many, one to one type service
+      fields:                                    # Fields in the service typemap
         field_1: 
           name: field_name
           schema: {field_schema}
           validator: {field_validator}
           input: {field_input}
       constraints:
-          PRIMARY KEY ... # Constraints on the service typemap
+          PRIMARY KEY ...                        # Constraints on the service typemap

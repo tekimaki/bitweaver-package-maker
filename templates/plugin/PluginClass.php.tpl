@@ -89,7 +89,7 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 {{* fields *}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 	function get{{$fieldName|replace:" ":""}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$joinSql = $whereSql = "";
@@ -108,14 +108,14 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 {{/if}}{{/foreach}}{{* end fields loop *}}
 {{* graph *}}
 {{foreach from=$typemap.graph key=vertex item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 	function get{{$field.field|ucfirst}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$selectSql = $joinSql = $whereSql = "";
 		$LC = new LibertyContent();
 		$LC->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 {{foreach from=$field.input.type_limit item=ctype}}
-		$whereSql = "AND lc.`content_type_guid` = ?";
+		$whereSql .= "AND lc.`content_type_guid` = ?";
 		$bindVars[] = "{{$ctype}}";
 {{/foreach}}
 {{assign var=customlabel value="`$field.field`_options"}}

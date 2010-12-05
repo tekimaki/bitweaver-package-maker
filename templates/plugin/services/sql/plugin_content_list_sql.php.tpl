@@ -19,23 +19,51 @@
 {{if $config.typemaps.typemap.graph.head.input.value.object }}
 		// limit the request by the graph relation
 		if( !empty( $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'] ) ){
-			$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."liberty_edge le ON (le.`head_content_id`= lc.`content_id`)";
+			$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."liberty_edge` le ON (le.`head_content_id`= lc.`content_id`)";
 			$ret['where_sql'] .= " AND le.`tail_content_id` = ?";
 			$bindVars[] = $pParamHash['{{$config.typemaps.typemap.graph.tail.field}}'];
 			// return the values sent for pagination / url purposes
 			$pParamHash['listInfo']['{{$config.typemaps.$typemap.graph.tail.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'];
 			$pParamHash['listInfo']['ihash']['{{$config.typemaps.$typemap.graph.tail.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'];
 		}
+		// limit content lists by the head association
+        if( !empty( $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'] ) ){
+            $ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."liberty_edge` le ON (le.`head_content_id`= lc.`content_id`)";
+            $ret['where_sql'] .= " AND le.`head_content_id` = ?";
+            $ret['bind_vars'][] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
+            // return the values sent for pagination / url purposes
+            $pParamHash['listInfo']['{{$config.typemaps.$typemap.graph.head.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
+            $pParamHash['listInfo']['ihash']['{{$config.typemaps.$typemap.graph.head.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
+        } 
 {{else}}
 		if( !empty( $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'] ) ){
-			$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."liberty_edge ON (le.`tail_content_id`= lc.`content_id`)";
+			$ret['join_sql'] .= " LEFT JOIN `".BIT_DB_PREFIX."liberty_edge` le ON (le.`tail_content_id`= lc.`content_id`)";
 			$ret['where_sql'] .= " AND le.`head_content_id` = ?";
 			$bindVars[] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
 			// return the values sent for pagination / url purposes
 			$pParamHash['listInfo']['{{$config.typemaps.$typemap.graph.head.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
 			$pParamHash['listInfo']['ihash']['{{$config.typemaps.$typemap.graph.head.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.head.field}}'];
 		}
+		// limit content lists by the tail association
+        if( !empty( $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'] ) ){
+            $ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."liberty_edge` le ON (le.`head_content_id`= lc.`content_id`)";
+            $ret['where_sql'] .= " AND le.`tail_content_id` = ?";
+            $ret['bind_vars'][] = $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'];
+            // return the values sent for pagination / url purposes
+            $pParamHash['listInfo']['{{$config.typemaps.$typemap.graph.tail.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'];
+            $pParamHash['listInfo']['ihash']['{{$config.typemaps.$typemap.graph.tail.field}}'] = $pParamHash['{{$config.typemaps.$typemap.graph.tail.field}}'];
+        } 
 {{/if}}
 {{/if}}
 {{/foreach}}
+
+{{assign var=functionName value=$typemapName|cat:_content_list_sql}}
+		/* =-=- CUSTOM BEGIN: {{$functionName}} -=-= */
+{{if !empty($customBlock.$functionName)}}
+{{$customBlock.$functionName}}
+{{else}}
+
+{{/if}}
+		/* =-=- CUSTOM END: {{$functionName}} -=-= */
+
 		return $ret;

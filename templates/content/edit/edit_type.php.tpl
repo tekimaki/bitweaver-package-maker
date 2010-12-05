@@ -55,7 +55,7 @@ if( isset( $_REQUEST["preview"] ) ) {
 
 // Prep any data we may need for the form
 {{foreach from=$type.fields key=fieldName item=field}}
-{{if $field.validator.type == 'reference' && $field.input.type == 'select'}}
+{{if $field.validator.type == 'reference' && ($field.input.type == 'select' || $field.input.type == 'checkbox')}}
 ${{$field.input.optionsHashName}} = $gContent->get{{$field.name|replace:" ":""}}Options();
 ${{$field.input.optionsHashName}}_list = array( ''=>tra('Select one...') );
 foreach( ${{$field.input.optionsHashName}} as $key=>$value ){

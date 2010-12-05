@@ -55,12 +55,21 @@
 		if( !empty( $whereSql ) ){
 			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
 
+{{if $typemap.graph.tail.input.type eq 'select'}}
+			$query = "SELECT  le.`tail_content_id` 
+						FROM `liberty_edge` le 
+						INNER JOIN `liberty_content` lc ON lc.`content_id` = le.`tail_content_id` 
+						$whereSql";
+
+			$ret = $this->mDb->getArray( $query, $bindVars );
+{{elseif $typemap.graph.tail.input.type eq 'checkbox'}}
 			$query = "SELECT  le.`tail_content_id`, lc.`title` 
 						FROM `liberty_edge` le 
 						INNER JOIN `liberty_content` lc ON lc.`content_id` = le.`tail_content_id` 
 						$whereSql";
 
 			$ret = $this->mDb->getAssoc( $query, $bindVars );
+{{/if}}
 		}
 
 		return $ret;
@@ -83,12 +92,21 @@
 		if( !empty( $whereSql ) ){
 			$whereSql = preg_replace( '/^[\s]*AND\b/i', 'WHERE ', $whereSql );
 
+{{if $typemap.graph.head.input.type eq 'select'}}
+			$query = "SELECT  le.`head_content_id` 
+						FROM `liberty_edge` le 
+						INNER JOIN `liberty_content` lc ON lc.`content_id` = le.`head_content_id` 
+						$whereSql";
+
+			$ret = $this->mDb->getArray( $query, $bindVars );
+{{elseif $typemap.graph.head.input.type eq 'checkbox'}}
 			$query = "SELECT  le.`head_content_id`, lc.`title` 
 						FROM `liberty_edge` le 
 						INNER JOIN `liberty_content` lc ON lc.`content_id` = le.`head_content_id` 
 						$whereSql";
 
 			$ret = $this->mDb->getAssoc( $query, $bindVars );
+{{/if}}
 		}
 
 		return $ret;

@@ -39,6 +39,7 @@
 			</div>
 			<div class="editcontainer">
 			{jstabs}
+{{if !isset($type.preview) || $type.preview eq true}}
 				{if $preview eq 'y'}
 					{jstab title="Preview"}
 						{legend legend="Preview"}
@@ -48,6 +49,7 @@
 						{/legend}
 					{/jstab}
 				{/if}
+{{/if}}
 				{jstab title="Edit"}
 				{legend legend=$gContent->getContentTypeName() class="inlineLabels"}
 						<input type="hidden" name="{{$type.name}}[{{$type.name}}_id]" value="{$gContent->mInfo.{{$type.name}}_id}" />
@@ -98,7 +100,9 @@
 {{/if}}
 
 						<div class="buttonHolder row submit">
+{{if !isset($type.preview) || $type.preview eq true}}
 							<input class="button" type="submit" name="preview" value="{tr}Preview{/tr}" />
+{{/if}}
 							<input class="button" type="submit" name="save_{{$type.name}}" value="{tr}Save{/tr}" />
 						</div>
 					{/legend}

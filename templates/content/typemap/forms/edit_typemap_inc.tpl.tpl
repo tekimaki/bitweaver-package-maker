@@ -40,9 +40,9 @@
 {/forminput}
 </div>
 {* link to load multiforms*}
-<div class="row" id="{{$config.plugin}}_{{$typemapName}}_add_button">
+<div class="buttonHolder row" id="{{$config.plugin}}_{{$typemapName}}_add_button">
 	{forminput}
-		<a href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}{{if empty($typemap.sortable)}}_multiform{{else}}_sortable{{/if}}'{{if $typemap.validate.max}},{{$typemap.validate.max|default:-1}}{{/if}})" />{tr}Add another {{$typemap.label}}{/tr}</a>
+		<a class="button add" href="javascript:void(0);" onclick="BitMultiForm.addForm('{{$config.plugin}}_{{$typemapName}}_temp', '{{$config.plugin}}_{{$typemapName}}{{if empty($typemap.sortable)}}_multiform{{else}}_sortable{{/if}}'{{if $typemap.validate.max}},{{$typemap.validate.max|default:-1}}{{/if}})" />{tr}Add another {{$typemap.label}}{/tr}</a>
 	{/forminput}
 </div>
 
