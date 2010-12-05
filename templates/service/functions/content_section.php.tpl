@@ -11,7 +11,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 {{if $section.modes && in_array('edit',$section.modes)}}
             if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' )
                 || !empty( $pParamHash['store_{{$sectionName}}'] ) ){
-                $pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_edit');
+                $pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_update');
             }
 {{/if}}
 			break;
