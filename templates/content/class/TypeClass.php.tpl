@@ -724,7 +724,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{/foreach}}
 
 			if( !empty( $pParamHash['{{$type.name|lower}}_atch_store'] ) ){
-				$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}']['{{$type.name|lower}}_id'] );
+				$locId = array( "{{$type.name|lower}}_id" => $pParamHash['{{$type.name}}_store']['{{$type.name|lower}}_id'] );
 				$table = BIT_DB_PREFIX."{{$type.name|lower}}_data";
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_atch_store'], $locId );
 			}

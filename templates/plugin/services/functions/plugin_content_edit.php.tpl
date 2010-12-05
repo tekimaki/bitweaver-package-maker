@@ -24,7 +24,7 @@
 {{if $field.input.type == "reference" || $field.input.type == "select"}}
 		${{$config.class_name}} = new {{$config.class_name}}();
 		${{$field.field}}_options = ${{$config.class_name}}->get{{$field.field}}Options();
-		$gBitSmarty->assign('{{$field.field}}_options', ${{$field.field}}_options);
+		$gBitSmarty->assign('{{$typemapName}}_{{$field.field}}_options', ${{$field.field}}_options);
 {{/if}}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
@@ -32,7 +32,7 @@
 {{if $field.input.type == "reference" || $field.input.type == "select"}}
 		${{$config.class_name}} = new {{$config.class_name}}();
 		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
-		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
+		$gBitSmarty->assign('{{$typemapName}}_{{$fieldName}}_options', ${{$fieldName}}_options);
 {{/if}}
 {{if !empty($typemap.sortable)}}
 		$gBitThemes->loadAjax( 'jquery', array('ui/jquery.ui.all.js') );
