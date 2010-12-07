@@ -15,9 +15,18 @@
  `{{$attachment}}_id`{{if !empty($typemap.fields) || !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
- `{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
+{{if $field.input.desc_table && $field.input.desc_column}}
+ `".BIT_DB_PREFIX."{{$field.input.desc_table}}`.{{$field.input.desc_column}} AS {{$fieldName}}_desc,
+{{/if}}
+ `{{$type.name}}_{{$typemapName}}`.`{{$fieldName}}`{{if !$smarty.foreach.fields.last}},{{/if}}
 {{/foreach}}
- FROM `{{$type.name}}_{{$typemapName}}`".$whereSql;
+ FROM `{{$type.name}}_{{$typemapName}}`";
+{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
+{{if $field.input.desc_table && $field.input.desc_column}}
+		$query .= " LEFT JOIN `".BIT_DB_PREFIX."{{$field.input.desc_table}}` ON (`{{$type.name}}_{{$typemapName}}`.`{{$fieldName}}` = `{{$field.input.desc_table}}`.`{{$field.validator.column}}`) ";
+{{/if}}
+{{/foreach}}
+		$query .= $whereSql;
 {{if $typemap.sequence}}
 		$ret = $this->mDb->getAssoc( $query, $bindVars );
 {{else}}

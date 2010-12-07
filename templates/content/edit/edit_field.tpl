@@ -11,15 +11,17 @@
 {{if $field.input.default}}
 {{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`|default:`$field.input.default`}"}}
 {{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`|default:`$field.input.default`"}}
+{{assign var=inputValueDesc value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`_desc}"}}
 {{else}}
 {{assign var=inputValue value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`}"}}
 {{assign var=inputValueAlt value='$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`"}}
+{{assign var=inputValueDesc value='{$gContent->mInfo.'|cat:"`$typemapName`."|cat:'$index'|cat:".`$fieldName`_desc}"}}
 {{/if}}
 {{else}}{{* no index *}}
 {{assign var=fieldId value=$fieldName}}
 {{/if}}
 
-{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden' && $field.input.type != 'reference'}}
 	{formfeedback warning=$errors.{{$fieldName}}}
 	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
@@ -38,7 +40,7 @@
 	<input class="textInput" type="text" name="{{$namespace}}[{{$fieldName}}]" value="{$gContent->getField('{{$fieldName}}')}" id="{{$fieldId}}" />
 {{/if}}
 
-{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden'}}
+{{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden' && $field.input.type != "reference" }}
 	{formhelp note="{{$field.help}}"}
 	{/forminput}
 {{/if}}

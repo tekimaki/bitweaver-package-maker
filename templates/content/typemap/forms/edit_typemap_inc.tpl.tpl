@@ -11,10 +11,14 @@
 		{if is_int($index)} {* temp index can be set on submit so we need to exclude it from list *}
 			{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" {{$typemapName}}={{$typemapName}} errors=$errors.{{$typemapName}}.$index index=$index}
 		{/if}
+{{if $typemap.list.style == 'list' }}
+	{/foreach}
+{{else}}
 	{* if we have none we present a blank input block *}
 	{foreachelse}
 		{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl"}
 	{/foreach}
+{{/if}}
 {{if !empty($typemap.sortable)}}</ul>
 <script>
 	jQuery( "#{{$config.name}}_{{$typemapName}}_sortable" ).sortable({ldelim}
@@ -31,14 +35,52 @@
 	jQuery( "#{{$config.name}}_{{$typemapName}}_sortable" ).disableSelection();
 </script>
 {{/if}}
-</div>
-
+ 
 {* Display a message about sorting *}
 <div class="row">
 {forminput}
 	{formhelp note="You can sort the {{$typemap.label}} by dragging and dropping"}
 {/forminput}
 </div>
+</div>
+{{if $typemap.input.style == 'list' }}
+{* TODO: this only works with one reference field typemaps *}
+{legend legend="Available {{$typemap.label}}"}
+{* TODO: extrac this div and include here and in plugin_ajax.tpl *}
+<div id="available_{{$typemapName}}">
+{{foreach from=$typemap.fields item=field key=fieldName name=fields}}
+{{if $field.input.type == 'reference'}}
+
+{foreach from=${{$typemapName}}_{{$fieldName}}_options item=option key=index name=options}
+<div class="row" id="{{$config.name}}_{{$typemapName}}_{$index}">
+<span class="title">{$option}</span>
+<div class="listbuttons">
+<input type-"button" class="button small multiform_add" href="javascript:void(0);" name="add_{{$typemapName}}_temp" value="Add" onclick="BitMultiForm.addList('{{$config.name}}_{{$typemapName}}_temp', '{$index}', '{$option}', '{{$config.name}}_{{$typemapName}}_sortable'{{if $typemap.validate.max}}, {{$typemap.validate.max}}{{/if}});" />
+<input type-"button" class="button small multiform_delete" href="javascript:void(0);"  value="Delete" onclick="alert('Delete Not Inplemented')" />
+</div>
+</div>
+{/foreach}
+
+{{/if}}
+{{/foreach}}
+
+{{foreach from=$typemap.fields item=field key=fieldName name=fields}}
+{{if $field.input.type == 'reference'}}
+
+{* pagination *}
+{include file="bitpackage:kernel/jspagination.tpl" ajaxHandler="{{$config.class_name}}.{{$typemapName}}_list" listInfo="${{$typemapName}}_{{$fieldName}}_listInfo" ajaxParams="'available_{{$typemapName}}','{{$config.plugin}}_{{$typemapName}}_multiform'" forceAjaxPagination=true}
+{* Empty one to fill *}
+{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" index="temp" rep=0}
+{{* <input type="submit" class="button small multiform_prev" value="&lt;- {tr}Previous{/tr}" href="javascript:void(0);" onclick="{{$config.plugin}}.{{$typemapName}}_{{$fieldName}}_page('-1');return false;"/>
+<input type="submit" class="button small right multiform_next" value="{tr}Next{/tr} -&gt;"  href="javascript:void(0);" onclick="{{$config.plugin}}.{{$typempName}}_{{$fieldName}}_page('1');return false;"/>
+*}}
+
+{{/if}}
+{{/foreach}}
+</div>
+
+{/legend}
+{{else}}
 {* link to load multiforms*}
 <div class="buttonHolder row" id="{{$config.plugin}}_{{$typemapName}}_add_button">
 	{forminput}
@@ -48,6 +90,7 @@
 
 {* to support multiple {{$typemapName}} instances a temp input block which can be cloned by js is included - requires BitBase.MultiForm.js handlers *}
 {include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" index="temp" rep=0}
+{{/if}}
 
 {{* one-to-many typemaps with attachment fields *}}
 {{elseif $typemap.relation eq 'one-to-many' && $typemap.attachments}}

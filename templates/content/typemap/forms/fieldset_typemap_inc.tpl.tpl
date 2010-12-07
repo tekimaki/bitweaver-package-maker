@@ -65,11 +65,19 @@
 {{/if}}
 {{/foreach}}
 {{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
+{{if $typemap.input.style != 'list'}}
 {if $index != '0'}
+{{/if}}
+{{if $typemap.input.style == "list"}}
+<div class="listbuttons">
+{{else}}
 <div class="row">
-	<input type="buttom" class="button small multiform_remove" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Remove link" onclick="BitMultiForm.removeForm('{{$config.name}}_{{$typemapName}}_{$index}');"/>
+{{/if}}
+	<input type="button" class="button small multiform_remove" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Remove" onclick="BitMultiForm.removeForm('{{$config.name}}_{{$typemapName}}_{$index}');"/>
 </div>
+{{if $typemap.input.style != 'list'}}
 {/if}
+{{/if}}
 {{/if}}
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_attachment_field.tpl"}}

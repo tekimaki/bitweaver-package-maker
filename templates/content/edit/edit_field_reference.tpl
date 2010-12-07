@@ -1,3 +1,8 @@
+{{if $typemap.input.style == 'list'}}
+	<span class="title"><input type="hidden" name="{{$namespace}}[{{$fieldName}}]" value="{if $inputValue}{$inputValue}{else}{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}{/if}" class="multiform_input" />
+		{if $inputValueDesc}{$inputValueDesc}{else}{{$inputValueDesc}}{/if}
+	</span>
+{{else}}
 {if empty($req)}
 <div class="row">
 {/if}
@@ -18,3 +23,4 @@
 </script>
 </div>
 {/if}
+{{/if}}

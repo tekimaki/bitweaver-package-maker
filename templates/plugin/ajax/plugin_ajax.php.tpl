@@ -23,6 +23,7 @@ if( !empty( $_POST['req'] ) ){
             $gBitSmarty->assign('index', $_POST['index'] );
             $gBitSmarty->assign('selected', $_POST['selected'] );
             $gBitSmarty->assign_by_ref( '{{$typemapName}}_{{$fieldName}}_options', $options );
+            $gBitSmarty->assign_by_ref( '{{$typemapName}}_{{$fieldName}}_listInfo', $_POST['listInfo'] );
             $gBitSmarty->assign( '{{$fieldName}}_search', $_POST['{{$fieldName}}_search'] );
             break;
 {{/if}}
