@@ -3,7 +3,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 	if( $pObject->hasService( LIBERTY_SERVICE_{{$config.name|strtoupper}} ) ){
 {{* permission checks *}}
 		// Check permissions on the section
-		global $gBitUser, $gBitSmarty, $gBitThemes;
+		global $gBitUser, $gBitSmarty, $gBitThemes, $gBitSystem;
 		switch( $pParamHash['section'] ){
 {{foreach from=$config.sections key=sectionName item=section}}
 		case '{{$sectionName}}':
@@ -66,7 +66,13 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
             if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
                 {{$config.name}}_content_store( $pObject, $pParamHash );
                 if( count ($pObject->mErrors ) == 0 ) {
-                    bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
+                    if( $gBitSystem->getConfig('edit_success_return_to_form')=='n' ){
+						bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
+					}else {
+						{{$config.name}}_content_preview( $pObject, $pParamHash );
+						$gBitSmarty->assign_by_ref( 'success', tra( 'Successfully updated {{$sectionName|replace:"_":" "}}.' ) );
+						$_REQUEST['action'] = 'edit';
+					}
                 }else{
                     {{$config.name}}_content_preview( $pObject, $pParamHash );
                     $gBitSmarty->assign_by_ref( 'errors', $pObject->getErrors() ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
