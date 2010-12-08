@@ -3,7 +3,7 @@
 	 */
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
 {{if $typemap.base_table eq 'liberty_content'}}
-		if( empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] ) && $this->isValid() ){
+		if( !isset( $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] ) && $this->isValid() ){
 			$pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] = $this->mContentId; 
 		}
 {{/if}}

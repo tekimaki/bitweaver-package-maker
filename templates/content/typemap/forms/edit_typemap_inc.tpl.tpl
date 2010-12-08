@@ -15,8 +15,10 @@
 	{/foreach}
 {{else}}
 	{* if we have none we present a blank input block *}
+{{if $typemap.input.style != 'list'}}
 	{foreachelse}
 		{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl"}
+{{/if}}
 	{/foreach}
 {{/if}}
 {{if !empty($typemap.sortable)}}</ul>
