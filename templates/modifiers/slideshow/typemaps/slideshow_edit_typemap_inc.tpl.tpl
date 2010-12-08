@@ -1,6 +1,6 @@
 {{* one-to-many typemaps with attachment fields *}}
-{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
-	$gContent->hasUserPermission('p_{{$typemapName}}_service_create')}
+{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$config.name}}_{{$typemapName}}_service_update') ||
+	$gContent->hasUserPermission('p_{{$config.name}}_{{$typemapName}}_service_create')}
 {if !$formid && $smarty.request.section}
 {assign var=formid value="edit`$smarty.request.section`form"}
 {/if}

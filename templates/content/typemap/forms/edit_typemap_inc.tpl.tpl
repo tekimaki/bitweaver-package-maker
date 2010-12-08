@@ -1,5 +1,5 @@
-{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$typemapName}}_service_update') ||
-	$gContent->hasUserPermission('p_{{$typemapName}}_service_create')}
+{if $gContent->isValid() && $gContent->hasUserPermission('p_{{$config.name}}_{{$typemapName}}_service_update') ||
+	$gContent->hasUserPermission('p_{{$config.name}}_{{$typemapName}}_service_create')}
 {legend legend="{{$typemap.label}}"}
 {{* one-to-many typemaps without attachment fields *}}
 {{if $typemap.relation eq 'one-to-many' && !$typemap.attachments}}
