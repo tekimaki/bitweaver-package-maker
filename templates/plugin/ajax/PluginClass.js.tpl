@@ -1,5 +1,29 @@
 {{$config.class_name}} = {
 {{foreach from=$config.typemaps item=typemap key=typemapName name=typemaps}}{{foreach from=$typemap.fields item=field key=fieldName name=fields}}{{if $field.input.type == "reference"}}
+{{if $typemap.input.style == 'list'}}
+	{{$typemapName}}_list:function( result, source, args ) {
+               args += "&req=fetch_{{$typemapName}}_{{$fieldName}}_list";
+               jQuery( "#"+source+" .multiform_input" ).each( function() {
+                       args += "&exclude_content_id[]="+this.value;
+               });
+               BitBase.showSpinner();
+               jQuery.ajax({
+{{if empty($PLUGIN)}}
+			url:BitSystem.urls.{{$package}}+'ajax.php',
+{{else}}
+			url:BitSystem.urls.{{$package}}_{{$plugin}}+'plugin_ajax.php',
+{{/if}}
+                        type:'POST',
+                        context:document.body,
+                        data: args,
+                        success:function(dom){
+                            jQuery('#'+result).replaceWith(dom);
+                           BitBase.hideSpinner();
+                        }
+                      });
+               return false;
+	},
+{{else}}
 	fetch_{{$fieldName}}_list:function( fieldId, index, errMsg ){
 		{{$fieldName}}_search = jQuery('#'+fieldId+'_search').val();
 		selectedItem = jQuery('#'+fieldId).val();
@@ -23,6 +47,7 @@
                       });
 		return false;
 	},
+{{/if}}
 {{/if}}{{/foreach}}{{/foreach}}
 {{if $config.js}}
 {{foreach from=$config.js.funcs item=func name=jsfuncs}}

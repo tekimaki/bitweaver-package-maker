@@ -1,8 +1,13 @@
+{{if $typemap.input.style == 'list'}}
+	<span class="title"><input type="hidden" name="{{$namespace}}[{{$fieldName}}]" value="{if $inputValue}{$inputValue}{else}{{if $inputValue}}{{$inputValue}}{{else}}{$gContent->getField('{{$fieldName}}')}{{/if}}{/if}" class="multiform_input" />
+		{if $inputValueDesc}{$inputValueDesc}{else}{{$inputValueDesc}}{/if}
+	</span>
+{{else}}
 {if empty($req)}
 <div class="row">
 {/if}
 <select style="width:100%" name="{{$namespace}}[{{$fieldName}}]" id='{{$fieldId}}' size="{{$field.input.size|default:10}}" >
-	{html_options options=${{$fieldName}}_options  selected={{if $inputValueAlt}}{{$inputValueAlt}}{{else}}$gContent->getField('{{$fieldName}}'){{/if}} }
+	{html_options options=${{$typemapName}}_{{$fieldName}}_options  selected={{if $inputValueAlt}}{{$inputValueAlt}}{{else}}$gContent->getField('{{$fieldName}}'){{/if}} }
 </select>
 {*  If this isn't an ajax request *}
 {if empty($req)}
@@ -18,3 +23,4 @@
 </script>
 </div>
 {/if}
+{{/if}}

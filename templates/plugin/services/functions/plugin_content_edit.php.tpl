@@ -34,15 +34,23 @@
 		foreach( ${{$field.field}}_list as $key=>$value ){
 			${{$field.field}}_options[$key] = $value;
 		}
-		$gBitSmarty->assign_by_ref('{{$field.field}}_options', ${{$field.field}}_options);
+		$gBitSmarty->assign_by_ref('{{$typemapName}}_{{$field.field}}_options', ${{$field.field}}_options);
 {{/if}}
 {{/foreach}}
 {{* reference fields *}}
 {{foreach from=$typemap.fields key=fieldName item=field}}
 {{if $field.input.type == "reference" || $field.input.type == "select" || $field.input.type == "checkbox"}}
 		${{$config.class_name}} = new {{$config.class_name}}();
-		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options();
-		$gBitSmarty->assign('{{$fieldName}}_options', ${{$fieldName}}_options);
+{{if $field.input.type == "reference"}}
+		// Exclude existing from the list
+		if ( $pObject->isValid() && empty($pParamHash['exclude_content_id_list'] ) ) {
+			foreach( $pObject->mInfo['{{$typemapName}}'] as $data )
+			$pParamHash['exclude_content_id_list'][] = $data['{{$fieldName}}'];
+		}
+{{/if}}
+		${{$fieldName}}_options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options($pParamHash);
+		$gBitSmarty->assign('{{$typemapName}}_{{$fieldName}}_options', ${{$fieldName}}_options);
+		$gBitSmarty->assign('{{$typemapName}}_{{$fieldName}}_listInfo', $pParamHash['listInfo']);
 {{/if}}
 {{if !empty($typemap.sortable)}}
 		$gBitThemes->loadAjax( 'jquery', array('ui/jquery.ui.all.js') );
