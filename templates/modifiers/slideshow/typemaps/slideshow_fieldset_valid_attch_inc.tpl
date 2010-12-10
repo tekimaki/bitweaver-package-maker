@@ -19,6 +19,22 @@
 	<a class="hide" href="javascript:void(0);" onclick="BitSlideshow.hideFieldset('{{$config.name}}_{{$typemapName}}_{$index}');">{tr}Hide{/tr}</a>
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_valid_attachment_field.tpl"}} 
+{if $gContent->hasUserPermission('p_liberty_attach_attachments') }
+	{assign var=attachment_id value=${{$typemapName}}.{{$attachment}}_id}
+	{if $gContent->mStorage.$attachment_id}
+		{assign var=storage value=$gContent->mStorage.$attachment_id}
+		<div class="html_attachment_code">
+			<h5>{tr}HTML Code:{/tr}</h5>
+			{if $storage.attachment_plugin_guid eq 'mimeimage'}
+				{foreach name=size key=size from=$storage.thumbnail_url item=url}
+				{if $size == 'medium'}
+					<input name="attachment_source_{$size}_{$storage.attachment_id}" value='&lt;img src="{$url|escape}" /&gt;' readonly="readonly" class="textInput html-include" />
+				{/if}
+				{/foreach}
+			{/if}
+		</div>
+	{/if}
+{/if}
 {{/foreach}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}
 {{if $fieldName != 'content_id'}}
@@ -36,7 +52,7 @@
 <div class="row buttonHolder">
 	<a href="javascript:void(0);"
 		onclick="LibertyPreflight.expunge(
-			this.form, 
+			document.getElementById('{$formid}'), 
 			'{$smarty.const.LIBERTY_PKG_URL}preflight_uploader.php',
 			'{tr}Please wait for the delete process to finish.{/tr}',
 			'liberty_upload_frame_{{$config.name}}_{{$typemapName}}',
