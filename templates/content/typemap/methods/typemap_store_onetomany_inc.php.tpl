@@ -19,7 +19,6 @@
 	 * uses bulk delete to avoid storage of duplicate records
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-//		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
 		$query = "DELETE FROM `{{$type.name}}_{{$typemapName}}` WHERE `content_id` = ?";
 		$bindVars[] = $this->mContentId;
 		$this->mDb->query( $query, $bindVars );
@@ -27,7 +26,7 @@
             if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ) ){
                 unset( $pParamHash['{{$type.name}}']['{{$typemapName}}']['temp'] ); 
             } 
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) /* && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) */){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
 					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
 					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
