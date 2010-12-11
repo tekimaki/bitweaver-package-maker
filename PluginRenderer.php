@@ -81,6 +81,11 @@ class PluginRenderer extends aRenderer{
 
 			// prep ajax
 			foreach( $config['typemaps'] as $typemapName=>&$typemap ){
+				if( !empty( $typemap['input'] ) && 
+				    !empty( $typemap['input']['style'] ) &&
+				    $typemap['input']['style'] == 'list' ) {
+					$config['modifier'][] = 'ajax';
+				}
 				if( !empty( $typemap['fields'] ) ){
 					foreach( $typemap['fields'] as $field ){
 						if( !empty( $field['input']['ajax'] ) ){

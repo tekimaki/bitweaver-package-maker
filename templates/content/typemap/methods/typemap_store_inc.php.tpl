@@ -26,7 +26,7 @@
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
 		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] )){
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
 				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
 					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
 					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );

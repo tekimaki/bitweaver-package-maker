@@ -22,7 +22,8 @@ if( !empty( $_POST['req'] ) ){
             $options = ${{$config.class_name}}->get{{$typemapName|ucfirst}}{{$field.name|default:$fieldName|replace:" ":""|ucfirst}}Options($_POST);
             $gBitSmarty->assign('index', $_POST['index'] );
             $gBitSmarty->assign('selected', $_POST['selected'] );
-            $gBitSmarty->assign_by_ref( '{{$fieldName}}_options', $options );
+            $gBitSmarty->assign_by_ref( '{{$typemapName}}_{{$fieldName}}_options', $options );
+            $gBitSmarty->assign_by_ref( '{{$typemapName}}_{{$fieldName}}_listInfo', $_POST['listInfo'] );
             $gBitSmarty->assign( '{{$fieldName}}_search', $_POST['{{$fieldName}}_search'] );
             break;
 {{/if}}

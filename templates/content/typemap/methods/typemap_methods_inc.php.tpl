@@ -150,35 +150,25 @@
 
 {{foreach from=$typemap.fields item=field key=fieldName name=fields}}
 {{if $field.input.type == "reference" }}
-	function get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options($pParams = NULL) {
-		$ret = array();
-		$bindVars = array();
-		$whereSql = '';
-		$query = "SELECT lc.`{{$field.validator.column}}` as hash_key, lc.`{{$field.input.desc_column}}` as desc FROM `".BIT_DB_PREFIX."{{$field.input.desc_table}}` lc";
-{{if !empty($field.input.type_limit)}}
-		$whereSql .= " AND lc.`content_type_guid` IN (";
-{{foreach from=$field.input.type_limit item=guid name=guids}}
-		$whereSql .= "?{{if !$smarty.foreach.guids.last}},{{/if}}";
-		$bindVars[] = "{{$guid}}";
-{{/foreach}}
-		$whereSql .= ")";
-{{/if}}
+	function get{{$typemapName|ucfirst}}{{$field.name|default:fieldName|ucfirst|replace:" ":""}}Options(&$pParams = NULL) {
 		if ( !empty($pParams['{{$fieldName}}_search'] ) ) {
-                    $whereSql .= " AND lc.`{{$field.input.desc_column}}` LIKE ?";
-		    $bindVars[] = "%".$pParams['{{$fieldName}}_search']."%";  
-                }
-		// Must come last
-		if ( !empty($pParams['selected'] ) ) {
-			$whereSql = preg_replace( '/^[\s]*AND\b/i', '', $whereSql );
-			$whereSql = ' AND ('.$whereSql.') OR lc.`{{$field.validator.column}}` = ?';
-			$bindVars[] = $pParams['selected'];
+			$pParams['find'] = $pParams['{{$fieldName}}_search'];
 		}
-		if ( !empty($whereSql) ) {
-			$whereSql = preg_replace( '/^[\s]*AND\b/i', ' WHERE ', $whereSql );
-			$query .= $whereSql;
+{{if !empty($field.input.type_limit)}}
+		$pParams['content_type_guid'] = array(
+{{foreach from=$field.input.type_limit item=guid name=guids}}
+			"{{$guid}}"{{if !$smarty.foreach.guids.last}},{{/if}}
+{{/foreach}}
+
+		);
+{{/if}}
+		$lc = new LibertyContent();
+		$list = $lc->getContentList($pParams);
+		$ret = array();
+		foreach( $list as $values) {
+			$ret[$values['content_id']] = $values['title'];
 		}
-		$ret = $this->mDb->getAssoc($query, $bindVars);
-		return $ret;	
+		return $ret;
 	}
 {{/if}}
 {{/foreach}}
