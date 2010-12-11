@@ -66,13 +66,19 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
             if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
                 {{$config.name}}_content_store( $pObject, $pParamHash );
                 if( count ($pObject->mErrors ) == 0 ) {
-                    if( $gBitSystem->getConfig('edit_success_return_to_form')=='n' ){
+                    {{if $section.success_redirect == 'edit'}}
+					
+					if( $gBitSystem->getConfig('edit_success_return_to_form')=='n' ){
 						bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
 					}else {
 						{{$config.name}}_content_preview( $pObject, $pParamHash );
 						$gBitSmarty->assign_by_ref( 'success', tra( 'Successfully updated {{$sectionName|replace:"_":" "}}.' ) );
 						$_REQUEST['action'] = 'edit';
 					}
+					{{else}}
+					bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
+					{{/if}}
+
                 }else{
                     {{$config.name}}_content_preview( $pObject, $pParamHash );
                     $gBitSmarty->assign_by_ref( 'errors', $pObject->getErrors() ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
