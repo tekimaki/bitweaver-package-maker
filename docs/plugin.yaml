@@ -45,6 +45,7 @@ plugin:
       title: 'A Page Title'                   # a custom title for the display page
       bodyfields: [{table: fieldname}, ... ]  # a list of fields to display, can use typemap tables or liberty_content
       modes: [view, edit]                     # a list of modes to render - view is always rendered by default
+      success_redirect: edit                  # when successfully submitted, set whether to redirect based on 'edit_success_return_to_form' system config or to view.
       typemaps:
         editcontainer: [typemap, typemap, ... ] # a list of the typemaps whoes fieldsets should be included in the section edit page (required modes: [edit])
         servicetab: [typemap, typemap, ... ]  # these fieldsets will appear in a panel that floats to the left or right
