@@ -4,7 +4,7 @@
 		$whereSql = "";
 
 		// limit results by head_content_id
-		if( !empty( $pParamHash['expunge_{$typemap.graph.head.field}}'] ) ){
+		if( !empty( $pParamHash['expunge_{{$typemap.graph.head.field}}'] ) ){
 			$expungeHash['head_content_id'] = $pParamHash['expunge_{{$typemap.graph.head.field}}'];
 		}
 

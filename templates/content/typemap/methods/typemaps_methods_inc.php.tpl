@@ -34,6 +34,7 @@
 			$this->expunge{{$typemapName|ucfirst}}($paramHash);
 {{/foreach}}
 		}
+		return ( count($this->mErrors) == 0 );
 	}
 
 	function loadTypemaps() {

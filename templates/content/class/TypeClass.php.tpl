@@ -806,6 +806,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$this->expunge{{$typemapName|ucfirst}}($paramHash);
 {{/foreach}}
 		}
+		return ( count($this->mErrors) == 0 );
 	}
 
 	function loadTypemaps() {
