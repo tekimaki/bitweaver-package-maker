@@ -10,7 +10,9 @@
 		{assign var=storage value=$gContent->mStorage.$attachment_id}
 		<img class="thumb" src="{$storage.thumbnail_url.icon}" alt="{$storage.filename}" title="{$storage.filename}"/>&nbsp;
 	{/if}
-	Image Title Here
+	{{foreach from=$typemap.modifier.slideshow.caption item=caption}}
+		{{literal}}{${{/literal}}{{$caption}}{{literal}}|truncate:40}{{/literal}}
+	{{/foreach}}
 {/if}
 {{/foreach}}
 </div>
