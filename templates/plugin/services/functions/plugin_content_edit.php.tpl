@@ -19,8 +19,8 @@
 {{* attachments *}}
 {{if $typemap.attachments}}
 {{assign var=jsPreflightIncluded value=true}}
-		$gBitThemes->loadAjax( 'MochiKit', array( 'DOM.js' ));
-		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
+		$gBitThemes->loadAjax( 'jquery' ));
+		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/JQuery.LibertyPreflight.js', FALSE );
 {{/if}}
 {{* graph reference fields *}}
 {{foreach from=$typemap.graph key=fieldName item=field}}

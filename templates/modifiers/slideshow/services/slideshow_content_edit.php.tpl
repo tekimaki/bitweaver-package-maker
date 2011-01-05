@@ -17,8 +17,8 @@
 {{if $typemap.attachments}}
 {{if !$jsPreflightIncluded}}
 {{assign var=jsPreflightIncluded value=true}}
-		$gBitThemes->loadAjax( 'MochiKit', array( 'DOM.js' ));
-		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyPreflight.js', FALSE );
+		$gBitThemes->loadAjax( 'jquery' );
+		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/JQuery.LibertyPreflight.js', FALSE );
 {{/if}}
 {{if !$jsBitSlideshowIncluded}}
 {{assign var=jsBitSlideshowIncluded value=true}}
