@@ -94,7 +94,7 @@
 				"name" => "{{$prefs.name}}",
 				"format" => array({{foreach from=$prefs.validator.format item=format name=format}}"{{$format}}"{{if !$smarty.foreach.format.last}},{{/if}}{{/foreach}})
 			),
-			$this
+			$this->mErrors
 		);
 {{/if}}
 {{/foreach}}	
@@ -110,7 +110,7 @@
 			LibertyValidator::validate(
 				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
 				$pParamHash['{{$type.name}}']['{{$typemapName}}'],
-				$this, $pParamHash['{{$type.name}}_store']['{{$typemapName}}']);
+				$this->mErrors, $pParamHash['{{$type.name}}_store']['{{$typemapName}}']);
 		}
 	}
 

@@ -1,5 +1,5 @@
 {{**
-@param $tyepmapName
+@param $typemapName
 @param $fieldName
 @param $field
 *}}
@@ -22,9 +22,13 @@
 {{/if}}
 
 {{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden' && $field.input.type != 'reference'}}
-	{formfeedback warning=$errors.{{$fieldName}}}
 	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
+	{{if $typemapName}}
+		{formfeedback error=$errors.{{$typemapName}}.{{$fieldName}}}
+	{{else}}
+		{formfeedback error=$errors.{{$fieldName}}}
+	{{/if}}
 {{/if}}
 
 {{if !empty($field.input.type)}}
