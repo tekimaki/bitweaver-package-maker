@@ -19,7 +19,7 @@
 {{* attachments *}}
 {{if $typemap.attachments}}
 {{assign var=jsPreflightIncluded value=true}}
-		$gBitThemes->loadAjax( 'jquery' ));
+		$gBitThemes->loadAjax( 'jquery' );
 		$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/JQuery.LibertyPreflight.js', FALSE );
 {{/if}}
 {{* graph reference fields *}}
