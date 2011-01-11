@@ -25,6 +25,7 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 {{* data processing: load *}}
 			// load (for view and edit modes)
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
+{{* @TODO the following if should also account for section based editiing and loading the data *}}
 {{if ($section.view_typemaps && in_array($typemapName,$section.view_typemaps))||($section.typemaps && in_array($typemapName,$section.typemaps)) }}
 {{if $typemap.relation == "one-to-one"}}
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}

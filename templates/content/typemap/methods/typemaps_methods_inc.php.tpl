@@ -6,22 +6,34 @@
 	function verifyTypemaps( &$pParamHash ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// verify {{$typemapName}} fieldset
+{{if $typemap.relation eq 'one-to-many'}}
+			$this->verify{{$typemapName|ucfirst}}Mixed($pParamHash);
+{{else}}
 			$this->verify{{$typemapName|ucfirst}}($pParamHash);
+{{/if}}
 {{/foreach}}
 			return ( count($this->mErrors) == 0);
 	}
 
 	function previewTypemaps( &$pParamHash ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
-			// verify {{$typemapName}} fieldset
+			// preview {{$typemapName}} fieldset
+{{if $typemap.relation eq 'one-to-many'}}
+			$this->preview{{$typemapName|ucfirst}}FieldsMixed($pParamHash);
+{{else}}
 			$this->preview{{$typemapName|ucfirst}}Fields($pParamHash);
+{{/if}}
 {{/foreach}}
 	}
 
 	function storeTypemaps( &$pParamHash, $skipVerify = TRUE ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// store {{$typemapName}} fieldset
+{{if $typemap.relation eq 'one-to-many'}}
 			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, $skipVerify);
+{{else}}
+			$this->store{{$typemapName|ucfirst}}($pParamHash, $skipVerify);
+{{/if}}
 {{/foreach}}
 			return ( count($this->mErrors) == 0);
 	}

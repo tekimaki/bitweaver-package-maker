@@ -9,10 +9,10 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 		case '{{$sectionName}}':
 			$pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_view');
 {{if $section.modes && in_array('edit',$section.modes)}}
-            if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' )
-                || !empty( $pParamHash['store_{{$sectionName}}'] ) ){
-                $pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_update');
-            }
+			if( ( !empty( $pParamHash['action'] ) && $pParamHash['action'] == 'edit' )
+				|| !empty( $pParamHash['store_{{$sectionName}}'] ) ){
+				$pObject->verifyUserPermission('p_{{$config.name}}_{{$sectionName}}_section_update');
+			}
 {{/if}}
 			break;
 {{/foreach}}
@@ -65,17 +65,17 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 				$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/BitSlideshow.js', TRUE );
 			}
 {{* data processing: store *}}
-            // store
-            if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
-                {{$config.name}}_content_store( $pObject, $pParamHash );
-                if( count ($pObject->mErrors ) == 0 ) {
-                    bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
-                }else{
-                    {{$config.name}}_content_preview( $pObject, $pParamHash );
-                    $gBitSmarty->assign_by_ref( 'errors', $pObject->mErrors['{{$section.name}}'] ); {{* @TODO this is a little funky - for now the section must match the typemap name *}} 
-                    $_REQUEST['action'] = 'edit'; //force us back to the edit panel
-                }
-            }
+			// store
+			if( !empty( $pParamHash['store_{{$sectionName}}'] ) ){
+				{{$config.name}}_content_store( $pObject, $pParamHash );
+				if( count ($pObject->mErrors ) == 0 ) {
+					bit_redirect( $pObject->getDisplayUrl( $pParamHash['section'] ) );
+				}else{
+					{{$config.name}}_content_preview( $pObject, $pParamHash );
+					$gBitSmarty->assign_by_ref( 'errors', $pObject->mErrors ); 
+					$_REQUEST['action'] = 'edit'; //force us back to the edit panel
+				}
+			}
 
 			break;
 {{/if}}

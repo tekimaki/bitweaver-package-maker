@@ -2,6 +2,17 @@
 		${{$config.name}}->setServiceContent( $pObject ); {{*@TODO maybe this and the instance declaration should go in *service_functions_inc.tpl *}} 
 		if( !${{$config.name}}->storeTypemaps( $pParamHash, FALSE ) ){
 			$pObject->setError( '{{$config.name}}', ${{$config.name}}->mErrors );
+			// if store fails make sure we've got the base data loaded - preview will modify 
+{{foreach from=$config.typemaps item=typemap key=typemapName}}
+{{if $typemap.relation eq 'one-to-many'}}
+			$pObject->mInfo['{{$typemapName}}'] = ${{$config.name}}->list{{$typemapName|ucfirst}}(array( 'content_id' => $pObject->mContentId) ); 
+{{elseif !$typemap.relation || $typemap.relation == 'one-to-one'}}
+			if( $data = ${{$config.name}}->get{{$typemapName|ucfirst}}ByContentId( $pObject->mContentId ) ){
+				$pObject->mInfo = array_merge( $pObject->mInfo, $data );
+			}
+{{/if}}
+{{/foreach}}
+			{{$config.name}}_content_preview( $pObject, $pParamHash );
 		}
 		else{
 {{foreach from=$config.typemaps item=typemap key=typemapName}}

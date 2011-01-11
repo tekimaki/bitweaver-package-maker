@@ -14,7 +14,15 @@
 		{{/if}}
 
 		{forminput}
+{{if $plugin}}
+{{if $typemap.relation eq 'one-to-many'}}
+			{formfeedback error=$errors.{{$plugin}}.{{$typemapName}}.$index.{{$typemapName}}_{{$attachment}}}
+{{else}}
+			{formfeedback error=$errors.{{$plugin}}.{{$typemapName}}.{{$typemapName}}_{{$attachment}}}
+{{/if}}
+{{else}}
 			{formfeedback error=$errors.{{$typemapName}}.{{$typemapName}}_{{$attachment}}}
+{{/if}}
 			<input class="fileUpload" type="file" name="{{$typemapName}}_{{$attachment}}" size="{{$prefs.input.size|default:40}}" />
 			{{if $typemap.relation eq 'one-to-one'}}
 				{formhelp note="Select a new {{$prefs.name|ucfirst}}."}

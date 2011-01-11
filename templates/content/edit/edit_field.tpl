@@ -24,11 +24,17 @@
 {{if $field.input.type != 'parsed' && $field.input.type != 'none' && $field.input.type != 'hidden' && $field.input.type != 'reference'}}
 	{formlabel label="{{$field.name}}" for="{{$fieldName}}" {{if $field.validator.required}}required="y"{{/if}}}
 	{forminput}
-	{{if $typemapName}}
+{{if $plugin}}
+{{if $index}}
+		{formfeedback error=$errors.{{$plugin}}.{{$typemapName}}.$index.{{$fieldName}}}
+{{else}}
+		{formfeedback error=$errors.{{$plugin}}.{{$typemapName}}.{{$fieldName}}}
+{{/if}}
+{{elseif $typemapName}}
 		{formfeedback error=$errors.{{$typemapName}}.{{$fieldName}}}
-	{{else}}
+{{else}}
 		{formfeedback error=$errors.{{$fieldName}}}
-	{{/if}}
+{{/if}}
 {{/if}}
 
 {{if !empty($field.input.type)}}

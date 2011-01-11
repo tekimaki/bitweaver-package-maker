@@ -20,7 +20,9 @@
 {* place a fieldset for each existing instance *}
 {legend legend="Existing {{$typemap.label}}"}
 {foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
+{if $index|is_int && $index > 0}
 {{include file="slideshow_fieldset_valid_attch_inc.tpl"}} 
+{/if}
 {/foreach}
 {/legend}
 

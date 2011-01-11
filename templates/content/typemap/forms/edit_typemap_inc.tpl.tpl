@@ -9,7 +9,7 @@
 	{* if we have existing rows we create an input block for each one *}
 	{foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
 		{if is_int($index)} {* temp index can be set on submit so we need to exclude it from list *}
-			{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" {{$typemapName}}={{$typemapName}} errors=$errors.{{$typemapName}}.$index index=$index}
+			{include file="bitpackage:{{$config.package}}/{{$config.plugin}}/fieldset_{{$typemapName}}_inc.tpl" {{$typemapName}}={{$typemapName}} errors=$errors index=$index}
 		{/if}
 {{if $typemap.list.style == 'list' }}
 	{/foreach}

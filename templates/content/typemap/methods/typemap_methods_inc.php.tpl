@@ -32,10 +32,13 @@
 {{/if}}
 
 {{* verify *}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
+{{include file="typemap_verify_mixed_inc.php.tpl"}} 
+{{/if}}
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
-{{include file="typemap_verify_onetomany_attch_inc.php.tpl"}}
+{{include file="typemap_verify_onetomany_attch_inc.php.tpl"}} 
 {{else}}
-{{include file="typemap_verify_inc.php.tpl"}}
+{{include file="typemap_verify_inc.php.tpl"}} 
 {{/if}}
 
 {{* expunge *}}
@@ -52,79 +55,22 @@
 {{include file="typemap_list_inc.php.tpl"}}
 {{/if}}
 
-	/**
-	 * preview{{$typemapName|ucfirst}}Fields prepares the fields in this type for preview
-	 */
-	 function preview{{$typemapName|ucfirst}}Fields(&$pParamHash) {
-		$this->prep{{$typemapName|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
-			LibertyValidator::preview(
-				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
-				$pParamHash['{{$type.name}}']['{{$typemapName}}'],
-				$pParamHash['{{$type.name}}_store']['{{$typemapName}}']);
-{{* Need a LibertyContent context to parse with which sucks. *}}
-{{assign var=parser value=false}}
-{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-{{if $field.input.type == 'parsed' && !$parser}}
-			$parser = new LibertyContent($this->mContentId);
-			{{assign var=parser value=true}}
+{{* preview *}}
+{{if !$typemap.relation || $typemap.relation eq 'one-to-one'}}
+{{include file="typemap_preview_inc.php.tpl"}}
+{{elseif $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
+{{include file="typemap_preview_onetomany_inc.php.tpl"}}
+{{include file="typemap_preview_mixed_inc.php.tpl"}}
 {{/if}}
-{{/foreach}}
-{{foreach from=$typemap.fields key=fieldName item=field name=fields}}
-{{if $field.input.type == 'parsed'}}
-			// Parse the {{$fieldName}}
-			$parseHash['data'] = $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$fieldName}}'];
-			$parseHash['cache_extension'] = "{{$type.name}}_{{$typemapName}}_{{$fieldName}}";
-			$pParamHash['{{$typemapName}}_store']['{{$typemapName}}']['parsed_{{$fieldName}}'] = $parser->parseData($parseHash);
-{{/if}}
-{{/foreach}}
-		}
-	}
 
+{{* validate *}}
 {{if !empty($typemap.attachments)}}
-	/**
-	 * validate{{$typemapName|ucfirst}}Attachments validates the attachments in this type
-	 */
-	function validate{{$typemapName|ucfirst}}Attachments() {
-{{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
-		// Validate {{$attachment}}
-{{if !empty($prefs.validator.format)}}
-		LibertyValidator::validateAttachment("{{$typemapName}}_{{$attachment}}", 
-			array( 
-				"name" => "{{$prefs.name}}",
-				"format" => array({{foreach from=$prefs.validator.format item=format name=format}}"{{$format}}"{{if !$smarty.foreach.format.last}},{{/if}}{{/foreach}})
-			),
-			$this->mErrors
-		);
+{{include file="typemap_validate_attachments_inc.php.tpl"}} 
 {{/if}}
-{{/foreach}}	
-	}
+{{include file="typemap_validate_inc.php.tpl"}} 
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
+{{include file="typemap_validate_mixed_inc.php.tpl"}} 
 {{/if}}
-
-	/**
-	 * validate{{$typemapName|ucfirst}}Fields validates the fields in this type
-	 */
-	function validate{{$typemapName|ucfirst}}Fields(&$pParamHash) {
-		$this->prep{{$typemapName|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
-			LibertyValidator::validate(
-				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
-				$pParamHash['{{$type.name}}']['{{$typemapName}}'],
-				$this->mErrors, $pParamHash['{{$type.name}}_store']['{{$typemapName}}']);
-		}
-	}
-
-	/**
-	 * validate{{$typemapName|ucfirst}}FieldsMixed validates the fields in this type
-	 */
-	function validate{{$typemapName|ucfirst}}FieldsMixed(&$pParamHash) {
-		$this->prep{{$typemapName|ucfirst}}Verify();
-		if (!empty($pParamHash['{{$type.name}}']['{{$typemapName}}'])) {
-			foreach($pParamHash['{{$type.name}}']['{{$typemapName}}'] as $key => &$data) {
-				$this->validate{{$typemapName|ucfirst}}Fields( $pParamHash['{{$type.name}}']['{{$typemapName}}'][$key]);
-			}
-		}
-	}
 
 {{* prepverify *}}
 {{if $typemap.graph}}

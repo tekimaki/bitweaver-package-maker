@@ -1,22 +1,22 @@
 	/**
 	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 */
-	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
+	function store{{$typemapName|ucfirst}}( &$pParamHash, $pIndex = NULL, $skipVerify = FALSE ){
 {{if $type.base_package eq "liberty" || $typemap.base_table eq "liberty_content"}}
-		if( empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] ) && $this->isValid() ){
-			$pParamHash['{{$type.name}}']['{{$typemapName}}']['content_id'] = $this->mContentId; 
+		if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
+			$pParamHash['content_id'] = $this->mContentId; 
 		}
 {{/if}}
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
+		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash, $pIndex ) ) {
 			$table = '{{$type.name}}_{{$typemapName}}';
-			$data = $pParamHash['{{$type.name}}_store']['{{$typemapName}}'];
+			$data = &$pParamHash['{{$type.name}}_store'];
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
 			// Store the {{$attachment}} attachment
 			if( empty( $data['{{$attachment}}_id'] ) && !empty( $_FILES['{{$typemapName}}_{{$attachment}}']['tmp_name'] ) ){
 				$fileStoreHash['file'] = $_FILES['{{$typemapName}}_{{$attachment}}'];
 				if( $this->mServiceContent->storeAttachment( $fileStoreHash ) ){
 					// add the attachment id to our store hash
-					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$attachment}}_id'] = $data['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
+					$pParamHash['{{$type.name}}_store']['{{$attachment}}_id'] = $data['{{$attachment}}_id'] = $fileStoreHash['upload_store']['attachment_id'];
 				}
 			}
 {{/foreach}}
@@ -28,7 +28,7 @@
 					$result = $this->mDb->associateUpdate( $table, $data, $locId );
 				// {{$typemapName}} id is not set create a new record
 				}else{
-					$pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'] = $data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
+					$data['{{$typemapName}}_id'] = $this->mDb->GenID('{{$type.name}}_{{$typemapName}}_id_seq');
 					$result = $this->mDb->associateInsert( $table, $data );
 				}
 			}
@@ -45,16 +45,20 @@
 			$stored{{$typemapName|ucfirst}} = array();
 
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){ 
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}'] = $data;
-					if( $this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify ) ){
-						$stored{{$typemapName|ucfirst}}[] = $storeHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'];
+				if( !$this->verifyTestMixed( $pParamHash ) ){
+					return FALSE;
+				}
+
+				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $key=>&$data ){
+					if( $this->store{{$typemapName|ucfirst}}( $data, $key, TRUE ) ){
+						$stored{{$typemapName|ucfirst}}[] = $data['{{$type.name}}_store']['{{$typemapName}}_id'];
 					}
 					unset( $storeHash ); //f'n php
 				}
 			}else{
-				if( $this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify ) ){
-					$stored{{$typemapName|ucfirst}}[] = $pParamHash['{{$type.name}}_store']['{{$typemapName}}']['{{$typemapName}}_id'];
+				$data = &$pParamHash['{{$type.name}}']['{{$typemapName}}'];
+				if( $this->store{{$typemapName|ucfirst}}( $data, NULL, $skipVerify ) ){
+					$stored{{$typemapName|ucfirst}}[] = $data['{{$type.name}}_store']['{{$typemapName}}_id'];
 				}
 			}
 
