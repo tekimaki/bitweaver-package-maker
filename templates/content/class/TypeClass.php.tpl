@@ -585,7 +585,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		LibertyValidator::validate(
 			$this->mVerification['{{$type.name}}_data'],
 			$pParamHash['{{$type.name}}'],
-			$this, $pParamHash['{{$type.name}}_store']);
+			$this->mErrors, $pParamHash['{{$type.name}}_store']);
 	}
 
 	/**
