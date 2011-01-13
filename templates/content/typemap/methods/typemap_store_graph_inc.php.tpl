@@ -1,36 +1,36 @@
 	/**
 	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 */
-	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
+	function store{{$typemapName|ucfirst}}( &$pParamHash, $pIndex = NULL, $skipVerify = FALSE ){
 {{* determine if head or tail references the pObject - default is tail *}}
 {{if $typemap.graph.head.input.value.object }}
-		if( empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && $this->isValid() ){
-			$pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] = $this->mContentId; 
+		if( empty( $pParamHash['{{$typemap.graph.head.field}}'] ) && $this->isValid() ){
+			$pParamHash['{{$typemap.graph.head.field}}'] = $this->mContentId; 
 		}
 {{else}}
-		if( empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) && $this->isValid() ){
-			$pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] = $this->mContentId; 
+		if( empty( $pParamHash['{{$typemap.graph.tail.field}}'] ) && $this->isValid() ){
+			$pParamHash['{{$typemap.graph.tail.field}}'] = $this->mContentId; 
 		}
 {{/if}}
 
-		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) && 
-			!empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) 
+		if( !empty( $pParamHash['{{$typemap.graph.head.field}}'] ) && 
+			!empty( $pParamHash['{{$typemap.graph.tail.field}}'] ) 
 		){
 			// load a LibertyEdge instance
 			require_once( LIBERTYGRAPH_PKG_PATH.'LibertyEdge.php' );
 			$LE = new LibertyEdge( $graphStoreHash['liberty_edge']['tail_content_id'] );
 
         	// expunge first then we repopulate the record
-			$expungeHash = array( 'head_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'], 
-								  'tail_content_id' => $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] 
+			$expungeHash = array( 'head_content_id' => $pParamHash['{{$typemap.graph.head.field}}'], 
+								  'tail_content_id' => $pParamHash['{{$typemap.graph.tail.field}}'] 
 								);
 			// expunge the liberty edge record
         	$LE->expunge( $expungeHash );
 
 			// must have a tail content id 
-			$graphStoreHash['liberty_edge']['tail_content_id'] = $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'];
+			$graphStoreHash['liberty_edge']['tail_content_id'] = $pParamHash['{{$typemap.graph.tail.field}}'];
 			// must have a head content id to store
-			$graphStoreHash['liberty_edge']['head_content_id'] = $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'];
+			$graphStoreHash['liberty_edge']['head_content_id'] = $pParamHash['{{$typemap.graph.head.field}}'];
 
 			// store the liberty edge record
 			$LE->store( $graphStoreHash );
@@ -42,7 +42,8 @@
 	 * stores multiple records in the {{$type.name}}_{{$typemapName}} table
 	 */
 	function store{{$typemapName|ucfirst}}Mixed( &$pParamHash, $skipVerify = FALSE ){
-//		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
+		$this->mDb->StartTrans();
+		require_once( UTIL_PKG_PATH.'phpcontrib_lib.php' );
 
 {{if $typemap.graph.head.input.value.object }}
 		// drop associations and re-add them
@@ -54,13 +55,14 @@
 		$this->mDb->query( $query, $bindVars );
 
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) ){
-			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) /* && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) */){
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] = $data;
-					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] ) ){
+			foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.tail.field}}'] as $key=>$id ){
+					$data = array( '{{$typemap.graph.tail.field}}' => $id );
+					$this->store{{$typemapName|ucfirst}}( $data, $key, $skipVerify );
 				}
 			}else{
-				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+				$data = &$pParamHash['{{$type.name}}']['{{$typemapName}}'];
+				$this->store{{$typemapName|ucfirst}}( $data, NULL, $skipVerify );
 			}
 		}
 {{else}}
@@ -74,14 +76,19 @@
 
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) ){
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) /* && array_is_indexed( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] ) */){
-				foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] as $data ){
-					$storeHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] = $data;
-					$this->store{{$typemapName|ucfirst}}( $storeHash, $skipVerify );
+			foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'] as $key=>&$data ){
+					$this->store{{$typemapName|ucfirst}}( $data, $key, $skipVerify );
 				}
 			}else{
-				$this->store{{$typemapName|ucfirst}}( $pParamHash, $skipVerify );
+				$data = &$pParamHash['{{$type.name}}']['{{$typemapName}}']['{{$typemap.graph.head.field}}'];
+				$this->store{{$typemapName|ucfirst}}( $data, NULL, $skipVerify );
 			}
 		}
 {{/if}}
+		if( count( $this->mErrors ) > 0 ){
+			// something failed undo delete and store
+			$this->mDb->RollbackTrans();
+		}
+		$this->mDb->CompleteTrans();
 		return count( $this->mErrors ) == 0;
 	}

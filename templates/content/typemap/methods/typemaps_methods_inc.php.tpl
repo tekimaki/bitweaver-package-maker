@@ -18,7 +18,7 @@
 	function previewTypemaps( &$pParamHash ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// preview {{$typemapName}} fieldset
-{{if $typemap.relation eq 'one-to-many'}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many' }}
 			$this->preview{{$typemapName|ucfirst}}FieldsMixed($pParamHash);
 {{else}}
 			$this->preview{{$typemapName|ucfirst}}Fields($pParamHash);

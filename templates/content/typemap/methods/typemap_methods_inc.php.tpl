@@ -32,7 +32,7 @@
 {{/if}}
 
 {{* verify *}}
-{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
+{{if $typemap.relation eq 'one-to-many' || ( $typemap.relation eq 'many-to-many' && !$typemap.graph )}}
 {{include file="typemap_verify_mixed_inc.php.tpl"}} 
 {{/if}}
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}
@@ -58,7 +58,7 @@
 {{* preview *}}
 {{if !$typemap.relation || $typemap.relation eq 'one-to-one'}}
 {{include file="typemap_preview_inc.php.tpl"}}
-{{elseif $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
+{{elseif $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many' }}
 {{include file="typemap_preview_onetomany_inc.php.tpl"}}
 {{include file="typemap_preview_mixed_inc.php.tpl"}}
 {{/if}}

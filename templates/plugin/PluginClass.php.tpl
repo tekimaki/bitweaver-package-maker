@@ -112,8 +112,13 @@ class {{$config.class_name}} extends {{$config.base_class}} {
 	function get{{$field.field|ucfirst}}Options( $pParamHash=array() ){
 		$bindVars = array();
 		$selectSql = $joinSql = $whereSql = "";
+{{if $field.class_reference}}
+		${{$vertex}}Object = new {{$field.class_reference}}();
+		${{$vertex}}Object->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
+{{else}}
 		$LC = new LibertyContent();
 		$LC->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
+{{/if}}
 {{foreach from=$field.input.type_limit item=ctype}}
 		$whereSql .= "AND lc.`content_type_guid` = ?";
 		$bindVars[] = "{{$ctype}}";

@@ -2,9 +2,14 @@
 	function list{{$typemapName|ucfirst}}( $pParamHash = NULL ){
 		$selectSql = $joinSql = $whereSql = "";
 		$ret = $bindVars = array();
-
-		$LC = new LibertyContent();
-		$LC->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
+{{if $typemap.graph.tail.input != 'hidden' && $typemap.graph.tail.class_reference}}
+		$Object = new {{$typemap.graph.tail.class_reference}}();
+{{elseif $typemap.graph.head.input != 'hidden' && $typemap.graph.head.class_reference}}
+		$Object = new {{$typemap.graph.head.class_reference}}();
+{{else}}
+		$Object = new LibertyContent();
+{{/if}}
+		$Object->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 		// vd( $selectSql ); vd( $joinSql ); vd( $whereSql ); vd( $bindVars );
 
 		// limit results by head_content_id

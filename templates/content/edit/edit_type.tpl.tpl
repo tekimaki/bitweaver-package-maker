@@ -14,6 +14,7 @@
 	</div>
 
 	<div class="body">
+		{formfeedback success=$success}
 		{formfeedback error=$errors.store}
 		{form enctype="multipart/form-data" id="edit{{$type.name}}form"}
 			{* =-=- CUSTOM BEGIN: input -=-= *}

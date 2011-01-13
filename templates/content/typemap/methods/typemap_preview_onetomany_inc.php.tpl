@@ -26,9 +26,9 @@
 {{/foreach}}
 			if( !empty( $pParamHash['preview'] ) ) {
 				if( is_null( $pIndex ) ){
-					$infoHash = &$this->mServiceContent->mInfo['{{$type.name}}'];
+					$infoHash = &$this->mServiceContent->mInfo['{{$typemapName}}'];
 				}else{
-					$infoHash = &$this->mServiceContent->mInfo['{{$type.name}}'][$pIndex];
+					$infoHash = &$this->mServiceContent->mInfo['{{$typemapName}}'][$pIndex];
 				}
 
 				if( !empty( $infoHash ) ){
