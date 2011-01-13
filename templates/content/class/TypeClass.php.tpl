@@ -293,22 +293,12 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$pParamHash['{{$type.name}}']['{{$type.name|lower}}_store']['content_id'] = $pParamHash['{{$type.name}}']['content_id'];
 		}
 
-		// Use $pParamHash here since it handles validation right
-		$this->validateFields($pParamHash);
-
 		if( !empty( $pParamHash['{{$type.name}}']['data'] ) ) {
 			$pParamHash['{{$type.name}}']['edit'] = $pParamHash['{{$type.name}}']['data'];
 		}
 
-{{if $type.title}}
-		// If title specified truncate to make sure not too long
-		// TODO: This shouldn't be required. LC should validate this.
-		if( !empty( $pParamHash['{{$type.name}}']['title'] ) ) {
-			$pParamHash['{{$type.name}}']['content_store']['title'] = substr( $pParamHash['{{$type.name}}']['title'], 0, 160 );
-		} else if( empty( $pParamHash['{{$type.name}}']['title'] ) ) { // else is error as must have title
-			$this->mErrors['title'] = tra('You must enter a title for this '.$this->getContentTypeName());
-		}
-{{/if}}
+		// Use $pParamHash here since it handles validation right
+		$this->validateFields($pParamHash);
 
 		// collapse the hash that is passed to parent class so that service data is passed through properly - need to do so before verify service call below
 		$hashCopy = $pParamHash;
@@ -592,6 +582,34 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	 * prepVerify prepares the object for input verification
 	 */
 	function prepVerify() {
+{{if $type.fields.title || $type.fields.data}}
+	 	/* Validation for liberty_content - modify base settings */
+		if (empty($this->mVerification['liberty_content'])) {
+			LibertyContent::prepVerify();
+{{foreach from=$type.fields key=fieldName item=field name=fields}}
+{{if $fieldName eq 'title' || $fieldName eq 'data'}}
+	 		/* Validation for liberty_content {{$fieldName}} */
+			$this->mVerification['liberty_content']['string']['{{$fieldName}}'] = array_merge( $this->mVerification['liberty_content']['string']['{{$fieldName}}'], array(
+				'name' => '{{$field.name|default:$fieldName|addslashes}}',
+{{foreach from=$field.validator key=k item=v name=keys}}
+{{if $k != 'type'}}
+				'{{$k}}' => {{if is_array($v)}}array(
+{{foreach from=$v key=vk item=vv name=values}}
+					{{if is_numeric($vk)}}{{$vk}}{{else}}'{{$vk}}'{{/if}} => '{{$vv}}'{{if !$smarty.foreach.values.last}},{{/if}}
+
+{{/foreach}}
+					){{else}}'{{$v}}'{{/if}}{{if !$smarty.foreach.keys.last}},{{/if}}
+
+{{/if}}
+{{/foreach}}
+			));
+{{/if}}
+{{/foreach}}
+		}
+{{else}}
+		LibertyContent::prepVerify();
+{{/if}}
+
 		if (empty($this->mVerification['{{$type.name}}_data'])) {
 
 {{foreach from=$type.fields key=fieldName item=field name=fields}}

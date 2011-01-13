@@ -56,9 +56,9 @@
 
 {{if $type.title}}
 						<div class="row" id="row_title">
-							{formfeedback error=$errors.title}
-							{formlabel label="{{$type.fields.title.name|default:'Title'}}" for="title"}
+							{formlabel label="{{$type.fields.title.name|default:'Title'}}" for="title" {{if $type.fields.title.validator.required}}required="y"{{/if}}}
 							{forminput}
+								{formfeedback error=$errors.title}
 								<input class="textInput" type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
@@ -71,7 +71,7 @@
 {{/if}}
 {{/foreach}}
 {{if $type.data}} 
-						{textarea label="{{$type.fields.data.name}}" name="{{$type.name}}[edit]" help="{{$type.fields.data.help}}"}{$gContent->mInfo.data}{/textarea}
+{textarea label="{{$type.fields.data.name}}" name="{{$type.name}}[edit]" help="{{$type.fields.data.help}}" error=$errors.data {{if $type.fields.data.validator.required}}required="y"{{/if}}}{$gContent->mInfo.data}{/textarea}
 {{/if}}
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl" formid="edit{{$type.name}}form"}
