@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="body">
-		{formfeedback warning=$errors}
+		{formfeedback error=$errors.store}
 		{form enctype="multipart/form-data" id="edit{{$type.name}}form"}
 			{* =-=- CUSTOM BEGIN: input -=-= *}
 {{if !empty($customBlock.input)}}
@@ -53,11 +53,10 @@
 				{jstab title="Edit"}
 				{legend legend=$gContent->getContentTypeName() class="inlineLabels"}
 						<input type="hidden" name="{{$type.name}}[{{$type.name}}_id]" value="{$gContent->mInfo.{{$type.name}}_id}" />
-						{formfeedback warning=$errors.store}
 
 {{if $type.title}}
 						<div class="row" id="row_title">
-							{formfeedback warning=$errors.title}
+							{formfeedback error=$errors.title}
 							{formlabel label="{{$type.fields.title.name|default:'Title'}}" for="title"}
 							{forminput}
 								<input class="textInput" type="text" size="50" name="{{$type.name}}[title]" id="title" value="{$gContent->mInfo.title|escape}" />
