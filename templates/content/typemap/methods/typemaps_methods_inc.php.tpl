@@ -29,7 +29,7 @@
 	function storeTypemaps( &$pParamHash, $skipVerify = TRUE ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// store {{$typemapName}} fieldset
-{{if $typemap.relation eq 'one-to-many'}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
 			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, $skipVerify);
 {{else}}
 			$this->store{{$typemapName|ucfirst}}($pParamHash, $skipVerify);
@@ -40,10 +40,15 @@
 
 	function expungeTypemaps() {
 		if ($this->isValid() ) {
-			$paramHash = array('content_id' => $this->mContentId);
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// expunge {{$typemapName}} fieldset
-			$this->expunge{{$typemapName|ucfirst}}($paramHash);
+{{if $typemap.graph}}
+			${{$typemapName}}ExpungeHash = array('expunge_{{if $typemap.graph.head.input.value.object }}{{$typemap.graph.head.field}}{{else}}{{$typemap.graph.tail.field}}{{/if}}' => $this->mContentId);
+			$this->expunge{{$typemapName|ucfirst}}(${{$typemapName}}ExpungeHash);
+{{else}}
+			${{$typemapName}}ExpungeHash = array('content_id' => $this->mContentId);
+			$this->expunge{{$typemapName|ucfirst}}(${{$typemapName}}ExpungeHash);
+{{/if}}
 {{/foreach}}
 		}
 		return ( count($this->mErrors) == 0 );
