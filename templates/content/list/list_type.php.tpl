@@ -18,7 +18,7 @@ $gBitSystem->verifyPackage( '{{$package}}' );
 require_once( {{$PACKAGE}}_PKG_PATH.'lookup_{{$type.name}}_inc.php' );
 
 // Now check permissions to access this page
-$gContent->verifyViewPermission();
+$gContent->verifyListViewPermission();
 
 // Remove {{$type.name}} data if we don't want them anymore
 if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQUEST["submit_mult"] == "remove_{{$type.name}}_data" ) {

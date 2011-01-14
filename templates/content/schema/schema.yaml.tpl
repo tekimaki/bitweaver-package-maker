@@ -88,6 +88,9 @@
     p_{{$typeName}}_view:
       description:  Can view {{$typeName}} entries
       level: {{$type.permissions.default.view|default:basic}}
+    p_{{$typeName}}_list:
+      description:  Can view lists of {{$typeName}} entries
+      level: {{$type.permissions.default.list|default:basic}}
     p_{{$typeName}}_update:
       description: Can update any {{$typeName}} entry
       level: {{$type.permissions.default.update|default:editors}}

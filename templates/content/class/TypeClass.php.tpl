@@ -75,6 +75,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		// Permission setup
 		$this->mCreateContentPerm  = 'p_{{$type.name|lower}}_create';
 		$this->mViewContentPerm	   = 'p_{{$type.name|lower}}_view';
+		$this->mListViewContentPerm	= 'p_{{$type.name|lower}}_list';
 		$this->mUpdateContentPerm  = 'p_{{$type.name|lower}}_update';
 		$this->mExpungeContentPerm = 'p_{{$type.name|lower}}_expunge';
 		$this->mAdminContentPerm   = 'p_{{$package}}_admin';
