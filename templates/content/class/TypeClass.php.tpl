@@ -211,6 +211,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 		$abort = ignore_user_abort(FALSE);
 		// A flag to let the custom store block know if we updated or inserted.
 		$new = FALSE;
+		$pParamHash['new'] = &$new;
 		if( $this->verify( $pParamHash )
 {{if count($type.typemaps) > 0}}
 			&& $this->verifyTypemaps( $pParamHash )
@@ -258,7 +259,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 			$this->mDb->CompleteTrans();
 			$this->load();
 		} else {
-			$this->mErrors['store'] = tra('Failed to save this').' {{$type.name|lower}}.';
+			$this->mErrors['store'] = tra('Failed to save this '.$this->getContentTypeName());
 		}
 		// Restore previous state for user abort
 		ignore_user_abort($abort);
@@ -781,9 +782,9 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['{{$type.name|lower}}_atch_store'], $locId );
 			}
 
-			if( !empty( $old_{{$attachment}}_id ) ) {
+			if( !empty( $old_attachments ) ) {
 				foreach( $old_attachments as $attachment_id ) {
-					$this->mServiceContent->expungeAttachment( $attachment_id );
+					$this->expungeAttachment( $attachment_id );
 				}
 			}
 	}

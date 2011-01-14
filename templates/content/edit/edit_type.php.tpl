@@ -29,7 +29,9 @@ if( !empty( $_REQUEST["save_{{$type.name}}"] ) ) {
 	// Editing requires general ticket verification
 	$gBitUser->verifyTicket();
 
-	if( $gContent->store( $_REQUEST ) ) {
+	$storeHash = $_REQUEST;
+
+	if( $gContent->store( $storeHash ) ) {
 		bit_redirect( $gContent->getDisplayUrl() );
 	} else {
 		// if store fails set preview
