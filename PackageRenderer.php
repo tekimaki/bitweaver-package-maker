@@ -95,7 +95,14 @@ class PackageRenderer extends aRenderer{
 
 		// Now figure out the real directory and file names
 		foreach ($gFiles as $file_dir => $actions) {
-			$dir = $this->convertName($file_dir, $config);
+			global $argv;
+			// if destination directory is specified from the command line then use it
+			if (count($argv) ==3){
+				$dir = $this->convertName($file_dir, array('package'=>$argv[2]) );
+			// default create the package in a directory of the same name
+			}else{
+				$dir = $this->convertName($file_dir, $config);
+			}
 
 			// Does the directory exist
 			if (!is_dir($dir)) {
