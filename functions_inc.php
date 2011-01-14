@@ -62,10 +62,17 @@ function pkgmkr_setup() {
 }
 
 function check_args($argv) {
-	if (count($argv) != 2) {
+	if (count($argv) ==1 || count($argv)> 3 ) {
 		usage($argv);
 	}
-	$files = array($argv[1], BIT_ROOT_PATH.$argv[1].'/admin/pkg_'.$argv[1].'.yaml' );
+	// ./generate [pkg_name | path_to_yaml]
+	if (count($argv) ==2){
+		$files = array($argv[1], BIT_ROOT_PATH.$argv[1].'/admin/pkg_'.$argv[1].'.yaml' );
+	}
+	// ./generate pkg_name pkg_directory_name
+	if (count($argv) ==3){
+		$files = array( BIT_ROOT_PATH.$argv[2].'/admin/pkg_'.$argv[1].'.yaml' );
+	}
 	foreach ($files as $file) {
 		if (is_file($file) && is_readable($file)) {
 			echo "Loading $file\n";
