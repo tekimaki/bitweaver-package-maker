@@ -101,7 +101,7 @@
     tpl:
 {{foreach from=$config.services.templates key=tpl item=typemaps}}
 {{if $tpl eq 'content_edit_mini'}}{{assign var=tplfile value='service_edit_mini_inc.tpl'}}{{/if}}
-{{if $tpl eq 'content_ajax_edit_mini'}}{{assign var=tplfile value='service_ajax_edit_mini_inc.tpl'}}{{/if}}
+{{if $tpl eq 'content_ajax_edit'}}{{assign var=tplfile value='service_ajax_edit_inc.tpl'}}{{/if}}
 {{if $tpl eq 'content_edit_tab'}}{{assign var=tplfile value='service_edit_tab_inc.tpl'}}{{/if}}
       {{$tpl}}: 'bitpackage:{{$config.package}}/{{$config.name}}/{{$tplfile}}'
 {{/foreach}}
