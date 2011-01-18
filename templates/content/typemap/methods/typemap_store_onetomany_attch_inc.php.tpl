@@ -45,7 +45,7 @@
 			$stored{{$typemapName|ucfirst}} = array();
 
 			if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){ 
-				if( !$this->verifyTestMixed( $pParamHash ) ){
+			if( !$this->verify{{$typemapName|ucfirst}}Mixed( $pParamHash ) ){
 					return FALSE;
 				}
 
@@ -63,27 +63,27 @@
 			}
 
 			// expunge records not submitted
-            // get existing records
-            $curr{{$typemapName|ucfirst}} = $this->list{{$typemapName|ucfirst}}( array( 'content_id' => $pObject->mContentId) );
-            // walk existing records
-            foreach( $curr{{$typemapName|ucfirst}} as ${{$typemapName}}_id => $currData ){
-                // if not in stored hash expunge
-                if( !in_array( ${{$typemapName}}_id, $stored{{$typemapName|ucfirst}} ) ){
-                    // if the record has attachments store a reference
-                    $attachment_ids = array();
+			// get existing records
+			$curr{{$typemapName|ucfirst}} = $this->list{{$typemapName|ucfirst}}( array( 'content_id' => $this->mServiceContent->mContentId) );
+			// walk existing records
+			foreach( $curr{{$typemapName|ucfirst}} as ${{$typemapName}}_id => $currData ){
+				// if not in stored hash expunge
+				if( !in_array( ${{$typemapName}}_id, $stored{{$typemapName|ucfirst}} ) ){
+					// if the record has attachments store a reference
+					$attachment_ids = array();
 {{foreach from=$typemap.attachments key=attachment item=prefs}}
-                    if( !empty( $currData['{{$attachment}}_id'] ) ){
-                        $attachment_ids[] = $currData['{{$attachment}}_id'];
-                    }
+					if( !empty( $currData['{{$attachment}}_id'] ) ){
+						$attachment_ids[] = $currData['{{$attachment}}_id'];
+					}
 {{/foreach}}
-                    // expunge the priority_images
-                    $this->expunge{{$typemapName|ucfirst}}( $currData );
-                    foreach( $attachment_ids as $attachment_id ){
-                        // after expunge drop the attachments too
-                        $this->mServiceContent->expungeAttachment( $attachment_id );
-                    }
-                }
-            }
+					// expunge the images
+					$this->expunge{{$typemapName|ucfirst}}( $currData );
+					foreach( $attachment_ids as $attachment_id ){
+						// after expunge drop the attachments too
+						$this->mServiceContent->expungeAttachment( $attachment_id );
+					}
+				}
+			}
 
 		}
 		return count( $this->mErrors ) == 0;

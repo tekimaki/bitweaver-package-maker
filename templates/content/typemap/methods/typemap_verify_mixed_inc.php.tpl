@@ -4,7 +4,7 @@
 				if( empty( $data['content_id'] ) && $this->isValid() ){
 					$data['content_id'] = $this->mContentId; 
 				}
-				$this->verifyTest( $data, $index );
+				$this->verify{{$typemapName|ucfirst}}( $data, $index );
 			}
 		}
 		return count( $this->mErrors ) == 0;
