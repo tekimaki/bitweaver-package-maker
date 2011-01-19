@@ -54,6 +54,9 @@ function {{$config.name}}_content_section( $pObject, &$pParamHash ){
 {{/if}}
 {{/foreach}}
 			$pParamHash['has_section'] = TRUE;
+{{if $section.page_title}}
+			$pParamHash['section_page_title'] = tra('{{$section.page_title}}');
+{{/if}}
 {{* data processing: edit *}}
 {{if $section.modes && in_array('edit',$section.modes)}}
 			// edit

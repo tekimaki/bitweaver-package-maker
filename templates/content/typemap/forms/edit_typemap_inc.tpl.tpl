@@ -102,7 +102,9 @@
 <div id="{{$config.plugin}}_{{$typemapName}}">
 {* place a fieldset for each existing instance *}
 {foreach from=$gContent->mInfo.{{$typemapName}} item={{$typemapName}} key=index}
+{if $index|is_int && $index > 0}
 {{include file="fieldset_valid_attch_inc.tpl"}} 
+{/if}
 {/foreach}
 {* place empty fieldset at the bottom *}
 {{include file="fieldset_typemap_inc.tpl.tpl"}} 

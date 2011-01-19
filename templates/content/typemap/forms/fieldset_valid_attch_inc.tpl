@@ -16,7 +16,7 @@
 {{foreach from=$typemap.attachments key=attachment item=prefs name=attachments}}
 {{include file="typemap_valid_attachment_field.tpl"}} 
 {{/foreach}}
-<div class="row">
+<div class="row remove">
 	<input type="buttom" class="button small" href="javascript:void(0);" name="expunge_{{$typemapName}}_{$index}" value="Delete" 
 		onclick="LibertyPreflight.expunge(
 			this.form, 
