@@ -3,11 +3,8 @@
 	 */
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $pIndex = NULL, $skipVerify = FALSE ){
 {{if $type.base_package eq "liberty" || $typemap.base_table eq "liberty_content"}}
-		if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
-			$pParamHash['content_id'] = $this->mContentId; 
-		}
 {{/if}}
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash, $pIndex ) ) {
+		if( ( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash, $pIndex ) ) && !empty( $pParamHash['{{$type.name}}_store'] ) ){
 			$table = '{{$type.name}}_{{$typemapName}}';
 			$data = &$pParamHash['{{$type.name}}_store'];
 {{foreach from=$typemap.attachments key=attachment item=prefs}}

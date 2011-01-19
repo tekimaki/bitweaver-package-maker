@@ -16,18 +16,23 @@
 {{/if}}
 		if( !empty( $errors ) ){
 {{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}} 
-			// errors already assigned need to merge errors
-			if( !empty( $this->mErrors['{{$type.name}}'][$pIndex] ) ){
-				$this->mErrors['{{$type.name}}'][$pIndex] = array_merge( $this->mErrors['test'][$pIndex], $errors );
+			if( is_null( $pIndex ) ){
+				$errorsHash = &$this->mErrors['{{$typemapName}}'];
 			}else{
-				$this->mErrors['{{$type.name}}'][$pIndex] = $errors;
+				$errorsHash = &$this->mErrors['{{$typemapName}}'][$pIndex];
+			}
+			// errors already assigned need to merge errors
+			if( !empty( $errorsHash ) ){
+				$errorsHash = array_merge( $errorsHash, $errors );
+			}else{
+				$errorsHash = $errors;
 			}
 {{else}}
 			// errors already assigned need to merge errors
-			if( !empty( $this->mErrors['{{$type.name}}'] ) ){
-				$this->mErrors['{{$type.name}}'] = array_merge( $this->mErrors['{{$type.name}}'], $errors );
+			if( !empty( $this->mErrors['{{$typemapName}}'] ) ){
+				$this->mErrors['{{$typemapName}}'] = array_merge( $this->mErrors['{{$typemapName}}'], $errors );
 			}else{
-				$this->mErrors['{{$type.name}}'] = $errors;
+				$this->mErrors['{{$typemapName}}'] = $errors;
 			}
 {{/if}}
 		}

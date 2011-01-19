@@ -2,10 +2,7 @@
 	 * stores a single record in the {{$type.name}}_{{$typemapName|ucfirst}} table
 	 */
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
-		if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
-			$pParamHash['content_id'] = $this->mContentId; 
-		}
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) {
+		if( ( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash ) ) && !empty( $pParamHash['{{$type.name}}_store'] ) ){
 			$table = '{{$type.name}}_{{$typemapName}}';
 {{if $typemap.base_table eq 'liberty_content'}}
 {{foreach from=$typemap.attachments key=attachment item=prefs}}

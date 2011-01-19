@@ -13,6 +13,11 @@
             }
         }
         if( $hasValue ){
+{{if $type.base_package eq "liberty" || $typemap.base_table eq "liberty_content"}}
+			if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
+				$pParamHash['content_id'] = $this->mContentId; 
+			}
+{{/if}}
 			$this->validate{{$typemapName|ucfirst}}Fields( $pParamHash{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}, $pIndex{{/if}} );
 {{if !empty($typemap.attachments)}}
 			$this->validate{{$typemapName|ucfirst}}Attachments();

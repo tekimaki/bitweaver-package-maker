@@ -3,11 +3,8 @@
 	 */
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $pIndex = NULL, $skipVerify = FALSE ){
 {{if $typemap.base_table eq 'liberty_content'}}
-		if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
-			$pParamHash['content_id'] = $this->mContentId; 
-		}
 {{/if}}
-		if( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash, $pIndex ) ) {
+		if( ( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $pParamHash, $pIndex ) ) && !empty( $pParamHash['{{$type.name}}_store'] ) ){
 			$table = '{{$type.name}}_{{$typemapName}}';
 			$result = $this->mDb->associateInsert( $table, $pParamHash['{{$type.name}}_store'] );
 		}

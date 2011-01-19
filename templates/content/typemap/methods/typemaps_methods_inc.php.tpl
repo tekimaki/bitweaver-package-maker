@@ -9,7 +9,9 @@
 {{if $typemap.relation eq 'one-to-many'}}
 			$this->verify{{$typemapName|ucfirst}}Mixed($pParamHash);
 {{else}}
-			$this->verify{{$typemapName|ucfirst}}($pParamHash);
+			if( !empty( $pParamHash['{{$config.name}}']['{{$typemapName}}'] ) ){
+				$this->verify{{$typemapName|ucfirst}}($pParamHash['{{$config.name}}']['{{$typemapName}}']);
+			}
 {{/if}}
 {{/foreach}}
 			return ( count($this->mErrors) == 0);
