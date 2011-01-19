@@ -6,7 +6,7 @@
 	function verifyTypemaps( &$pParamHash ) {
 {{foreach from=$config.typemaps key=typemapName item=typemap}}
 			// verify {{$typemapName}} fieldset
-{{if $typemap.relation eq 'one-to-many'}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
 			$this->verify{{$typemapName|ucfirst}}Mixed($pParamHash);
 {{else}}
 			if( !empty( $pParamHash['{{$config.name}}']['{{$typemapName}}'] ) ){

@@ -4,7 +4,7 @@
 	 */
 	function verify{{$typemapName|ucfirst}}( &$pParamHash{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}, $pIndex = NULL{{/if}} ){
 		// Use $pParamHash here since it handles validation right
-{{if $typemap.relation eq 'one-to-many'}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
         // confirm all the fields are not null before we store a row 
         $hasValue = FALSE;
 		foreach( $pParamHash as $key=>$value ) {
@@ -13,7 +13,7 @@
             }
         }
         if( $hasValue ){
-{{if $type.base_package eq "liberty" || $typemap.base_table eq "liberty_content"}}
+{{if ($type.base_package eq "liberty" || $typemap.base_table eq "liberty_content" ) && !$typemap.graph}}
 			if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
 				$pParamHash['content_id'] = $this->mContentId; 
 			}
@@ -26,6 +26,11 @@
 		}
 		return FALSE;
 {{else}}
+{{if $type.base_package eq "liberty" || $typemap.base_table eq "liberty_content"}}
+		if( empty( $pParamHash['content_id'] ) && $this->isValid() ){
+			$pParamHash['content_id'] = $this->mContentId; 
+		}
+{{/if}}
 		$this->validate{{$typemapName|ucfirst}}Fields($pParamHash);
 {{if !empty($typemap.attachments)}}
 		$this->validate{{$typemapName|ucfirst}}Attachments();

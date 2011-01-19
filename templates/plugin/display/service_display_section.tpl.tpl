@@ -11,6 +11,9 @@
 			<h1>{tr}Edit {{$section.title|default:$sectionName|ucfirst}}{/tr}</h1>
 		</div>
 		<div class="body">
+        {if $errors.{{$config.name}}}
+            {formfeedback error="There was a problem trying to save, please review errors below."}
+        {/if}
 		{form id="edit{{$sectionName}}form" enctype="multipart/form-data"}
 			<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 			<input type="hidden" name="content_type_guid" value="{$gContent->mContentTypeGuid}" />

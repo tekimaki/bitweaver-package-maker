@@ -4,7 +4,7 @@
 	function store{{$typemapName|ucfirst}}( &$pParamHash, $skipVerify = FALSE ){
 		if( !empty( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){
 			$data = &$pParamHash['{{$type.name}}']['{{$typemapName}}'];
-			if( ( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $data ) ) && !empty( $pParamHash['{{$type.name}}_store'] ) ) {
+			if( ( $skipVerify || $this->verify{{$typemapName|ucfirst}}( $data ) ) && !empty( $data['{{$type.name}}_store'] ) ) {
 				$table = '{{$type.name}}_{{$typemapName}}';
 				// record already exists, update it
 				if( $this->get{{$typemapName|ucfirst}}ByContentId( $data['{{$type.name}}_store']['content_id'] ) ){
