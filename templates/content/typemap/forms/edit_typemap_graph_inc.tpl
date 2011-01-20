@@ -16,7 +16,7 @@
 {{if $typemap.validate.max}}
 	<ul id="{{$config.plugin}}_{{$typemapName}}_multiform">
 	{section name="{{$typemapName}}_{{$field.field}}" loop={{$typemap.validate.max}} start=0}
-		<li>{html_options id="row_{{$typemapName}}_{{$field.field}}" options=${{$field.input.optionsHashName}} name="{{$namespace}}[{{$field.field}}][]" selected=$gContent->mInfo.{{$typemapName}}.{{$field.field}}[$smarty.section.{{$typemapName}}_{{$field.field}}.index] {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}}}</li>
+		<li>{html_options id="row_{{$typemapName}}_{{$field.field}}" options=${{$typemapName}}_{{$field.input.optionsHashName}} name="{{$namespace}}[{{$field.field}}][]" selected=$gContent->mInfo.{{$typemapName}}.{{$field.field}}[$smarty.section.{{$typemapName}}_{{$field.field}}.index] {{foreach from=$field.input.jshandlers key=event item=handlerName}}{{$event}}="{{$handlerName}}(this);" {{/foreach}}}</li>
 	{/section}
 	</ul>
 {{/if}}

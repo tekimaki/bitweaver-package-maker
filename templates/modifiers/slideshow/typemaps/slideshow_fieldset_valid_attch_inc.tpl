@@ -62,7 +62,7 @@
 			'{{$typemapName}}',
 			'{{$config.name}}_{{$typemapName}}_{$index}'
 		);"
-	/>Delete Image&raquo;</a>
+		/>{tr}Delete Image{/tr}&raquo;</a>
 </div>
 </div>
 </div>{* edit {{$config.name}}_{{$typemapName}}_{$index} *}
