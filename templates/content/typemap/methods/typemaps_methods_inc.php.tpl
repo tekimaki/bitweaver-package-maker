@@ -34,7 +34,9 @@
 {{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
 			$this->store{{$typemapName|ucfirst}}Mixed($pParamHash, $skipVerify);
 {{else}}
-			$this->store{{$typemapName|ucfirst}}($pParamHash, $skipVerify);
+			if( !empty( $pParamHash['{{$config.name}}']['{{$typemapName}}'] ) ){
+				$this->store{{$typemapName|ucfirst}}($pParamHash['{{$config.name}}']['{{$typemapName}}'], $skipVerify);
+			}
 {{/if}}
 {{/foreach}}
 			return ( count($this->mErrors) == 0);
