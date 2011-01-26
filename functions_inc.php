@@ -117,7 +117,9 @@ function generate( $spec ){
 }
 
 function usage($argv) {
-	echo "Usage: ".$argv[0]." <package>\n\n";
+	echo "Usage: ".$argv[0]." <package_name>\n";
+	echo "Usage: ".$argv[0]." <path_to_yaml>\n";
+	echo "Usage: ".$argv[0]." <package_name> <package_directory_name>\n\n";
 	die;
 }
 
