@@ -319,12 +319,12 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 * preview prepares the fields in this type for preview
 	 */
 	 function previewFields( &$pParamHash ) {
-		$this->prepVerify();
+		$this->prepVerify($pParamHash);
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 			LibertyValidator::preview(
 				$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
 				$pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
-				$this, $pParamHash['{{$service.name}}_store']);
+				$this->mInfo);
 		}
 	}
 
@@ -332,7 +332,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	 * validateFields validates the fields in this type
 	 */
 	function validateFields( &$pParamHash ) {
-		$this->prepVerify();
+		$this->prepVerify($pParamHash);
 {{if $service.relation == 'one-to-many' || $service.relation == 'many-to-many'}}
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 			foreach ($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'] as $key => $data) {
@@ -341,8 +341,9 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 				LibertyValidator::validate(
 					$this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'],
 					$data,
-					$this, $pParamHash['{{$service.name}}_store'][$key]);
-			}
+					$this->mErrors, 
+					$pParamHash['{{$service.name}}_store'][$key],
+					$this);
 		}
 {{else}}
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
@@ -357,7 +358,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 	/**
 	 * prepVerify prepares the object for input verification
 	 */
-	function prepVerify() {
+	function prepVerify(&$pParamHash) {
 		if (empty($this->mVerification['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
 
 {{foreach from=$service.fields key=fieldName item=field name=fields}}

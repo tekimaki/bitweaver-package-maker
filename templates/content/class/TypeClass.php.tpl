@@ -562,7 +562,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	 * previewFields prepares the fields in this type for preview
 	 */
 	function previewFields(&$pParamHash) {
-		$this->prepVerify();
+		$this->prepVerify($pParamHash);
 		LibertyValidator::preview(
 		$this->mVerification['{{$type.name}}_data'],
 			$pParamHash['{{$type.name}}'],
@@ -573,25 +573,32 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 	 * validateFields validates the fields in this type
 	 */
 	function validateFields(&$pParamHash) {
-		$this->prepVerify();
+		$this->prepVerify($pParamHash);
 		LibertyValidator::validate(
 			$this->mVerification['{{$type.name}}_data'],
 			$pParamHash['{{$type.name}}'],
-			$this->mErrors, $pParamHash['{{$type.name}}_store']);
+			$this->mErrors, 
+			$pParamHash['{{$type.name}}_store'],
+			$this);
 	}
 
 	/**
 	 * prepVerify prepares the object for input verification
 	 */
-	function prepVerify() {
+	function prepVerify(&$pParamHash) {
 {{if $type.fields.title || $type.fields.data}}
 	 	/* Validation for liberty_content - modify base settings */
 		if (empty($this->mVerification['liberty_content'])) {
-			LibertyContent::prepVerify();
+			LibertyContent::prepVerify($pParamHash);
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $fieldName eq 'title' || $fieldName eq 'data'}}
 	 		/* Validation for liberty_content {{$fieldName}} */
+{{if $fieldName eq 'data'}}
+			$format = !empty( $pParamHash['format_guid'] ) && $pParamHash['format_guid'] == 'bithtml' ? 'html' : 'string';
+			$this->mVerification['liberty_content'][$format]['data'] = array_merge( $this->mVerification['liberty_content'][$format]['data'], array(
+{{else}}
 			$this->mVerification['liberty_content']['string']['{{$fieldName}}'] = array_merge( $this->mVerification['liberty_content']['string']['{{$fieldName}}'], array(
+{{/if}}
 				'name' => '{{$field.name|default:$fieldName|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}
@@ -609,7 +616,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{/foreach}}
 		}
 {{else}}
-		LibertyContent::prepVerify();
+		LibertyContent::prepVerify($pParamHash);
 {{/if}}
 
 		if (empty($this->mVerification['{{$type.name}}_data'])) {
@@ -642,13 +649,14 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 
 {{foreach from=$type.typemaps key=typemapName item=typemap}}
 		// prepVerify {{$typemapName}} fieldset
-		$this->prep{{$typemapName|ucfirst}}Verify();
+		$this->prep{{$typemapName|ucfirst}}Verify($pParamHash);
 {{/foreach}}
 		}
 	}
 
 	/**
-	 * prepVerify prepares the object for input verification
+	 * getSchema returns the data schema 
+	 * This feature is still under development
 	 */
 	public function getSchema() {
 		if (empty($this->mSchema['{{$type.name}}_data'])) {

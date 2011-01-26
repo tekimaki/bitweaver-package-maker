@@ -1,7 +1,7 @@
 	/**
 	 * prep{{$typemapName|ucfirst}}Verify prepares the object for input verification
 	 */
-	function prep{{$typemapName|ucfirst}}Verify() {
+	function prep{{$typemapName|ucfirst}}Verify($pParamHash) {
 		if (empty($this->mVerification['{{$type.name}}_{{$typemapName}}'])) {
 
 {{foreach from=$typemap.fields key=fieldName item=field name=fields}}

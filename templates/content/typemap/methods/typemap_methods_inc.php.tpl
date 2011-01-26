@@ -32,7 +32,7 @@
 {{/if}}
 
 {{* verify *}}
-{{if $typemap.relation eq 'one-to-many' || ( $typemap.relation eq 'many-to-many' && !$typemap.graph )}}
+{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many' }}
 {{include file="typemap_verify_mixed_inc.php.tpl"}} 
 {{/if}}
 {{if $typemap.sequence && $typemap.relation eq 'one-to-many' && $typemap.attachments}}

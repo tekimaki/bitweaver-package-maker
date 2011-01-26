@@ -3,12 +3,14 @@
 	 */
 	function validate{{$typemapName|ucfirst}}Fields( &$pParamHash{{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}, $pIndex = NULL{{/if}} ) {
 		$errors = array();
-		$this->prep{{$typemapName|ucfirst}}Verify();
+		$this->prep{{$typemapName|ucfirst}}Verify($pParamHash);
 		if (!empty($pParamHash)) {
 			LibertyValidator::validate(
 				$this->mVerification['{{$type.name}}_{{$typemapName}}'],
 				$pParamHash,
-				$errors, $pParamHash['{{$type.name}}_store']);
+				$errors, 
+				$pParamHash['{{$type.name}}_store'],
+				$this->mServiceContent);
 		}
 		if( !empty( $errors ) ){
 {{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}} 
