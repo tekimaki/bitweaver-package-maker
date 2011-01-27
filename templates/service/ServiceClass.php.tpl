@@ -344,6 +344,7 @@ class {{$service.class_name}} extends {{$service.base_class}} {
 					$this->mErrors, 
 					$pParamHash['{{$service.name}}_store'][$key],
 					$this);
+			}
 		}
 {{else}}
 		if (!empty($pParamHash['{{$service.name}}{{if $service.base_package == "liberty"}}_data{{/if}}'])) {
