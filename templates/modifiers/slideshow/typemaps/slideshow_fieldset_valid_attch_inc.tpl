@@ -27,7 +27,7 @@
 		{assign var=storage value=$gContent->mStorage.$attachment_id}
 		<div class="html_attachment_code">
 			<h5>{tr}HTML Code:{/tr}</h5>
-			{if $storage.attachment_plugin_guid eq 'mimeimage'}
+			{if $storage.attachment_plugin_guid eq 'mimeimage' || $storage.attachment_plugin_guid eq 'mimedefault'}
 				{foreach name=size key=size from=$storage.thumbnail_url item=url}
 				{if $size == 'medium'}
 					<input name="attachment_source_{$size}_{$storage.attachment_id}" value='&lt;img src="{$url|escape}" /&gt;' readonly="readonly" class="textInput html-include" />
