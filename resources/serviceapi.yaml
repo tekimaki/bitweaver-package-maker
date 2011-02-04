@@ -24,6 +24,7 @@ functions:
   - upload_expunge
   - upload_expunge_attachment
   - users_register
+  - users_expunge
 templates:
   - content_list_options
   - content_list_sort
