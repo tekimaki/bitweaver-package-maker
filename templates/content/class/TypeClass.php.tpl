@@ -593,12 +593,7 @@ class {{$type.class_name}} extends {{$type.base_class}} {
 {{foreach from=$type.fields key=fieldName item=field name=fields}}
 {{if $fieldName eq 'title' || $fieldName eq 'data'}}
 	 		/* Validation for liberty_content {{$fieldName}} */
-{{if $fieldName eq 'data'}}
-			$format = !empty( $pParamHash['format_guid'] ) && $pParamHash['format_guid'] == 'bithtml' ? 'html' : 'string';
-			$this->mVerification['liberty_content'][$format]['data'] = array_merge( $this->mVerification['liberty_content'][$format]['data'], array(
-{{else}}
 			$this->mVerification['liberty_content']['string']['{{$fieldName}}'] = array_merge( $this->mVerification['liberty_content']['string']['{{$fieldName}}'], array(
-{{/if}}
 				'name' => '{{$field.name|default:$fieldName|addslashes}}',
 {{foreach from=$field.validator key=k item=v name=keys}}
 {{if $k != 'type'}}

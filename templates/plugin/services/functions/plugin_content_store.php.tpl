@@ -26,7 +26,7 @@
 {{if $typemap.relation eq 'one-to-many' || $typemap.relation eq 'many-to-many'}}
 					${{$config.name}}->store{{$typemapName|ucfirst}}Mixed($pParamHash, TRUE);
 {{else}}
-					${{$config.name}}->store{{$typemapName|ucfirst}}($pParamHash, TRUE);
+					${{$config.name}}->store{{$typemapName|ucfirst}}($pParamHash['{{$config.name}}']['{{$typemapName}}'], TRUE);
 {{/if}}
 					break;
 {{/foreach}}
