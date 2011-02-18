@@ -1,5 +1,5 @@
 	function verify{{$typemapName|ucfirst}}Mixed( &$pParamHash ){
-		if( is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){ 
+		if( !empty($pParamHash['{{$type.name}}']['{{$typemapName}}']) && is_array( $pParamHash['{{$type.name}}']['{{$typemapName}}'] ) ){ 
 			foreach( $pParamHash['{{$type.name}}']['{{$typemapName}}'] as $index=>&$data ){
 				$this->verify{{$typemapName|ucfirst}}( $data, $index );
 			}
